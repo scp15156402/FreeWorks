@@ -52,11 +52,17 @@ What's New notes, and forum threads. Where sources disagree the newest SOLIDWORK
 | 90_hidden_interactions.md | Ctrl / Shift / Alt / Tab / RMB / double-click / drag behaviours, pointer cues | draft 1 (help "Time Saving Keyboard Shortcuts" + blogs) |
 | 91_release_changes.md | milestones 2008–2025, SOLIDWORKS 2026 SP0–SP5 behaviour changes | draft 1 |
 
-Remaining verification queue (items tagged [K]): Mirror PM; Axis and Coordinate System PMs;
-Begin Assembly / Insert Components PM; Replace Components; Exploded View; Spline/Ellipse/Text/
-Point PMs; per-selection context toolbar contents; System Options page lists; Section View PM
-(parts); Interference Detection PM; Add Configuration PM; Design Table PM; Sketch status colours
-for dangling/not solved/invalid; Instant3D ruler details.
+Verified after the first draft (2026-11-08): Mirror, Axis, Coordinate System, Begin Assembly /
+Insert Components, Instant3D rulers, Design Table, Add Configuration / Configuration Table,
+Interference Detection.
+
+Remaining verification queue (items still tagged [K]): Replace Components; Exploded View;
+Spline/Ellipse/Text/Point PMs; **per-selection context toolbar contents (needs owner
+screenshots — V2_PLAN Q1)**; System Options page lists; Section View PM (parts); sketch status
+colours for dangling/not solved/invalid; Revolve auto-axis from a single centerline; Extrude
+preview colours and depth callout; FeatureManager rollback details; Shortcut-menu contents.
+
+Also see `92_community_painpoints.md` (forum evidence) and `95_gap_matrix.md` (gaps and approach).
 
 ## Research log
 - 2026-11-08: help.solidworks.com now serves a JavaScript shell (WebFetch sees "Loading JS…");

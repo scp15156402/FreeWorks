@@ -70,14 +70,25 @@ PM "Section View":
   faces shown in a colour/hatch. Toggling Section View again turns it off; *Section view stays
   active when the PM closes*. [K]
 
-## 12.4 Interference Detection (assemblies; also Clearance Verification, Hole Alignment)  [K — verify]
-PM: **Selected Components** (default: whole assembly) + **Calculate** · **Excluded Components** ·
-**Results** list (Interference1 … with volume; expand to see the two components; select to zoom;
-**Ignore** / **Component view** toggle) · **Options**: *Treat coincidence as interference*, *Show
-ignored interferences*, *Treat subassemblies as components*, *Include multibody part
-interferences*, *Make interfering parts transparent*, *Create fasteners folder*, *Create matching
-cosmetic threads folder*, *Ignore hidden bodies/components* · **Non-interfering Components**:
-*Wireframe / Hidden / Transparent / Use current*. Interference volumes show in red.
+## 12.4 Interference Detection (assemblies; also Clearance Verification, Hole Alignment)  [H 2010–2025, B CATI, GrabCAD]
+Evaluate tab / Assembly tab / Tools > Interference Detection. PM:
+- **Selected Components**: *Components to Check* (default: the **top-level assembly** is
+  preselected; clear it to pick parts/subassemblies) + **Calculate** button.
+- **Excluded Components** (checkbox group): components box, *Hide excluded components from view*,
+  *Remember excluded components*.
+- **Results**: list "Interference1 (volume)…", expand → the two component names; **select an
+  interference → its volume is shaded red** in the graphics area; right-click → *Zoom to
+  selection*, *Ignore* / *Un-Ignore* (button too); **Component view** toggle (list by component
+  instead of number); ignored items grey (when shown).
+- **Options**: *Treat coincidence as interference* · *Show ignored interferences* · *Treat
+  subassemblies as components* · *Include multibody part interferences* · *Include surface
+  bodies* (2024+; no volume) · *Make interfering parts transparent* · *Create fasteners folder*
+  (Toolbox fasteners) · *Create matching cosmetic threads folder* · *Ignore hidden bodies/
+  components* (incl. isolated-hidden).
+- **Non-interfering Components**: *Wireframe / Hidden / Transparent / Use current*.
+- Coincident-curved-face false positives possible (facets). [H 2025]
+- FreeCAD note: no equivalent PM; Part Common/check geometry can compute overlaps — FreeWorks
+  candidate (CSWP segment 3 lists interference detection).
 
 ## 12.5 Section Properties, Check, Draft/Thickness/Curvature analysis [K]
 - **Section Properties** (select planar faces or a sketch): area, centroid, moments of area;
