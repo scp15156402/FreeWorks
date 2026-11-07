@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P18 – Drawing sheet formats (v1.4)
+**Next part:** P20 – Drawing annotations (model items, centre marks, hole callout, BOM)
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -47,8 +47,8 @@ then P23, P25, P28 → P34.
 | P15 | Assembly | Advanced: Width (centred, computed from current geometry), Limit Distance / Limit Angle (limits on the Concentric/Slot/Hinge joint, offset to SW face distance/angle; enforced while dragging); Mechanical: Hinge, Gear (ratio from radii, flip = reverse), Rack Pinion (pitch diameter), Screw (distance/revolution). Symmetric, Cam, Slot, Universal Joint, Path: not possible with FreeCAD 1.1 joints (documented). 8 tests; released 1.1.3 | ✅ |
 | P16 | Assembly | Assembly FeatureManager: instance names `Bracket<1>`, `(f)` for fixed components, Mates folder, FreeCAD joints renamed as SW mates, Edit Mate (context menu) in the Mate PM with in-place type/value changes; perf: command search model built once in idle time, CommandManager panels of all environments prebuilt, 2 s startup grace for the slow-callback rule. Not done: `(-)` under-defined prefix (solver gives no per-part DOF), own Insert Components PM (FreeCAD's is used) | ✅ |
 | P17 | Assembly | Move / Rotate Component PM (By Delta XYZ, rotate About Entity / X / Y / Z) with Collision Detection (stop at first contact, bisection to 0.001 mm/deg, colliding component reported + selected), Free Drag hand-off; Replace Components with mated-entity re-attachment by geometry signature; Make Subassembly Rigid/Flexible (AssemblyLink.Rigid); v1.2.0 released. Exploded view stays FreeCAD's panel | ✅ |
-| P18 | Drawing | Sheet formats ANSI A–E / ISO A4–A0 with SW-style title blocks; sheet properties (scale, 1st/3rd angle) | ⬜ |
-| P19 | Drawing | View workflows: Model View PM, Standard 3 View, projected by drag direction, section, detail, aux, break, crop | ⬜ |
+| P18 | Drawing | 11 sheet formats (tools/make_templates.py: ISO A0–A4 + A4 portrait, ANSI A–E) with zone borders, projection symbol and a SW-organised title block (tolerances, NAME/SIGNATURE/DATE grid, MATERIAL, WEIGHT, TITLE, DWG NO., REV, SCALE, SHEET, size); TechDraw defaults; ISO = first angle, ANSI = third angle; MATERIAL/WEIGHT/DWG NO./TITLE filled from the part | ✅ |
+| P19 | Drawing | Standard 3 View (Front/Top/Right laid out per projection at a standard scale; scripted TechDraw projection groups mis-place in 1.1.4 so three views are used) and Model View (part chooser + named orientations); projected/section/detail/break/crop stay FreeCAD's tools with SW names; released 1.4.0 | ✅ |
 | P20 | Drawing | Annotations: model items, smart dimension, centre marks/lines, hole callout, notes with properties, balloons/auto balloon, BOM, revision table | ⬜ |
 | P21 | Drawing | Display styles, tangent edges, line fonts, v1.3 release | ⬜ |
 | P22 | Part | SOLIDWORKS terms inside FreeCAD's feature panels (pmskin.py, display-only relabel while a panel is open, 400 ms timer only then): Boss-Extrude/Cut-Extrude titles, Directions, End Condition (Blind, Through All, Up To Next, Up To Surface, Offset From Surface, Up To Body, Mid Plane), Depth, Draft angle, Reverse Direction; Revolve, Chamfer (Angle Distance / Distance Distance), Shell, Draft, patterns; green ✓ / red ✗ OK/Cancel; Options toggle. Not available in FreeCAD: From offset, Thin Feature, Selected Contours | ✅ |
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P18–P19 | Sheet formats, title block fill, Standard 3 View, Model View; **v1.4.0 released**. |
 | 2026-11-07 | P22, P24 | SOLIDWORKS terms in feature panels (Extrude, Revolve, Hole Wizard ...); **v1.3.0 released**. |
 | 2026-11-07 | P27 | Configurations + design tables; released 1.2.2. |
 | 2026-11-07 | P26 | Equations dialog on VarSet + expressions; released 1.2.1. |

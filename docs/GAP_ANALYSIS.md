@@ -74,8 +74,8 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 ## 6. Drawings
 | ID | FreeCAD | FreeWorks | Gap | Plan |
 |---|---|---|---|---|
-| R-DR-1 Sheets | ✅ templates ISO/ANSI, scale, 1st/3rd angle | 🟡 mapped | SW-style sheet formats with title-block fields (part number, material, mass) | **P18** |
-| R-DR-2 Standard views | ✅ ProjectionGroup (= Standard 3 View / projected), View (= Model View); ❌ relative / predefined / empty views as such | 🟡 mapped | Model View PM workflow (pick part → orientation → place; then drag to project) | **P19** |
+| R-DR-1 Sheets | ✅ templates ISO/ANSI, scale, 1st/3rd angle | ✅ 1.4.0 FreeWorks sheet formats + auto title block | SW-style sheet formats with title-block fields (part number, material, mass) | **P18** |
+| R-DR-2 Standard views | ✅ ProjectionGroup (= Standard 3 View / projected), View (= Model View); ❌ relative / predefined / empty views as such | ✅ 1.4.0 Standard 3 View, Model View | Model View PM workflow (pick part → orientation → place; then drag to project) | **P19** |
 | R-DR-3 Derived views | ✅ Section, ComplexSection (aligned/offset), Detail, BrokenView, ClipGroup (≈ crop); 🟡 auxiliary (view direction from edge); ❌ broken-out section, alternate position, removed section | 🟡 mapped | Auxiliary view from edge (own helper); broken-out & alternate position ❌ (document) | P19 |
 | R-DR-4 Annotations | ✅ dimensions (all types, chain/coord), centerlines/marks, notes, balloons, surface finish, weld, GD&T via symbols, hole/shaft fits, BOM via spreadsheet view; ❌ model items import, hole callout, hole table, revision table | 🟡 mapped | **Model Items** (import sketch dims as drawing dims), hole callout from Hole feature data, revision table | **P20** |
 | R-DR-5 View display | ✅ hidden lines, smooth (tangent) edges, shaded via `CoarseView`/`ActiveView`, lock view | 🟡 | SW display-style buttons per view | P21 |

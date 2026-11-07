@@ -179,8 +179,8 @@ add("fastener_bom", "Fastener BOM", ["Fasteners_BOM"], "bom", "Lists the fastene
 # ------------------------------------------------------------------- Drawing
 add("new_sheet", "Drawing Sheet", "TechDraw_PageDefault", "new_drawing", "Inserts a new drawing sheet with the default sheet format.", ["page", "sheet"])
 add("sheet_format", "Sheet Format...", "TechDraw_PageTemplate", "new_drawing", "Inserts a drawing sheet from a sheet format / template.", ["template", "title block"])
-add("model_view", "Model View", "TechDraw_View", "model_view", "Inserts an orthographic or named view of a model.", ["view", "base view"])
-add("std3view", "Standard 3 View", "TechDraw_ProjectionGroup", "standard_3view", "Creates three related default orthographic views.", ["projection group", "three view"])
+add("model_view", "Model View", "FW_ModelView", "model_view", "Inserts a named view (Front, Top, Right, Isometric ...) of an open part or assembly.", ["view", "base view", "isometric view"])
+add("std3view", "Standard 3 View", "FW_Standard3View", "standard_3view", "Front, Top and Right views of a part, in the sheet's projection (ISO: first angle, ANSI: third angle).", ["projection group", "three view"])
 add("projected_view", "Projected View", "TechDraw_ProjectionGroup", "projected_view", "Inserts a projected view from an existing view.", ["projection"])
 add("section_dview", "Section View", "TechDraw_SectionView", "section_drawing_view", "Adds a section view by cutting the parent view with a section line.", ["section"])
 add("aligned_section", "Aligned Section View", "TechDraw_ComplexSection", "section_drawing_view", "Adds a section along a multi-segment line.", ["complex section"])

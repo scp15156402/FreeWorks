@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:freecad="https://www.freecad.org/wiki/index.php?title=Svg_Namespace" width="594mm" height="420mm" viewBox="0 0 594 420" version="1.1">
+  <title>FreeWorks sheet format A2 (ISO)</title>
+  <rect x="10.00" y="10.00" width="574.00" height="400.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.70"/>
+  <rect x="5.00" y="5.00" width="584.00" height="410.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="45.88" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>8</tspan></text>
+  <text x="45.88" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>8</tspan></text>
+  <path d="M 81.75,5.00 L 81.75,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 81.75,410.00 L 81.75,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="117.62" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>7</tspan></text>
+  <text x="117.62" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>7</tspan></text>
+  <path d="M 153.50,5.00 L 153.50,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 153.50,410.00 L 153.50,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="189.38" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>6</tspan></text>
+  <text x="189.38" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>6</tspan></text>
+  <path d="M 225.25,5.00 L 225.25,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 225.25,410.00 L 225.25,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="261.12" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>5</tspan></text>
+  <text x="261.12" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>5</tspan></text>
+  <path d="M 297.00,5.00 L 297.00,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 297.00,410.00 L 297.00,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="332.88" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>4</tspan></text>
+  <text x="332.88" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>4</tspan></text>
+  <path d="M 368.75,5.00 L 368.75,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 368.75,410.00 L 368.75,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="404.62" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>3</tspan></text>
+  <text x="404.62" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>3</tspan></text>
+  <path d="M 440.50,5.00 L 440.50,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 440.50,410.00 L 440.50,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="476.38" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>2</tspan></text>
+  <text x="476.38" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>2</tspan></text>
+  <path d="M 512.25,5.00 L 512.25,10.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 512.25,410.00 L 512.25,415.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="548.12" y="8.70" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>1</tspan></text>
+  <text x="548.12" y="413.80" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>1</tspan></text>
+  <text x="7.50" y="44.33" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>F</tspan></text>
+  <text x="586.50" y="44.33" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>F</tspan></text>
+  <path d="M 5.00,76.67 L 10.00,76.67" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 584.00,76.67 L 589.00,76.67" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="7.50" y="111.00" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>E</tspan></text>
+  <text x="586.50" y="111.00" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>E</tspan></text>
+  <path d="M 5.00,143.33 L 10.00,143.33" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 584.00,143.33 L 589.00,143.33" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="7.50" y="177.67" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>D</tspan></text>
+  <text x="586.50" y="177.67" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>D</tspan></text>
+  <path d="M 5.00,210.00 L 10.00,210.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 584.00,210.00 L 589.00,210.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="7.50" y="244.33" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>C</tspan></text>
+  <text x="586.50" y="244.33" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>C</tspan></text>
+  <path d="M 5.00,276.67 L 10.00,276.67" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 584.00,276.67 L 589.00,276.67" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="7.50" y="311.00" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>B</tspan></text>
+  <text x="586.50" y="311.00" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>B</tspan></text>
+  <path d="M 5.00,343.33 L 10.00,343.33" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 584.00,343.33 L 589.00,343.33" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="7.50" y="377.67" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>A</tspan></text>
+  <text x="586.50" y="377.67" style="font-size:3.00px;font-family:osifont;text-anchor:middle;fill:#000000"><tspan>A</tspan></text>
+  <rect x="414.00" y="360.00" width="170.00" height="50.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.50"/>
+  <path d="M 509.00,360.00 L 509.00,410.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.50"/>
+  <path d="M 414.00,374.00 L 509.00,374.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="415.50" y="363.40" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>UNLESS OTHERWISE SPECIFIED:</tspan></text>
+  <text x="415.50" y="366.40" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>DIMENSIONS ARE IN MILLIMETERS</tspan></text>
+  <text x="415.50" y="369.20" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>SURFACE FINISH:</tspan></text>
+  <text x="415.50" y="372.00" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>TOLERANCES:  LINEAR:</tspan></text>
+  <text x="448.00" y="372.00" freecad:editable="tol_linear" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>±0.1</tspan></text>
+  <text x="460.00" y="372.00" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>ANGULAR:</tspan></text>
+  <text x="474.00" y="372.00" freecad:editable="tol_angular" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>±0.5°</tspan></text>
+  <text x="474.00" y="363.40" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>FINISH:</tspan></text>
+  <text x="474.00" y="366.60" freecad:editable="finish" style="font-size:2.60px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="474.00" y="369.40" style="font-size:2.00px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>DEBUR AND BREAK SHARP EDGES</tspan></text>
+  <path d="M 472.00,360.00 L 472.00,374.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 430.00,374.00 L 430.00,410.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 458.00,374.00 L 458.00,410.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 480.00,374.00 L 480.00,410.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="431.20" y="378.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>NAME</tspan></text>
+  <text x="459.20" y="378.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>SIGNATURE</tspan></text>
+  <text x="481.20" y="378.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>DATE</tspan></text>
+  <path d="M 414.00,380.00 L 509.00,380.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 414.00,386.00 L 509.00,386.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 414.00,392.00 L 509.00,392.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 414.00,398.00 L 509.00,398.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <path d="M 414.00,404.00 L 509.00,404.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="415.20" y="384.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>DRAWN</tspan></text>
+  <text x="431.20" y="384.40" freecad:editable="drawn_name" freecad:autofill="author" style="font-size:2.80px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="481.20" y="384.40" freecad:editable="drawn_date" freecad:autofill="date" style="font-size:2.60px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="415.20" y="390.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>CHK'D</tspan></text>
+  <text x="431.20" y="390.40" freecad:editable="checked_name" style="font-size:2.80px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="481.20" y="390.40" freecad:editable="checked_date" style="font-size:2.60px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="415.20" y="396.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>APPV'D</tspan></text>
+  <text x="431.20" y="396.40" freecad:editable="approved_name" style="font-size:2.80px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="481.20" y="396.40" freecad:editable="approved_date" style="font-size:2.60px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="415.20" y="402.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>MFG</tspan></text>
+  <text x="431.20" y="402.40" freecad:editable="mfg_name" style="font-size:2.80px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="481.20" y="402.40" freecad:editable="mfg_date" style="font-size:2.60px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="415.20" y="408.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>Q.A</tspan></text>
+  <text x="431.20" y="408.40" freecad:editable="qa_name" style="font-size:2.80px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="481.20" y="408.40" freecad:editable="qa_date" style="font-size:2.60px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <text x="510.50" y="366.00" freecad:editable="company" freecad:autofill="organization" style="font-size:3.00px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <path d="M 509.00,369.00 L 584.00,369.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="510.50" y="372.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>TITLE:</tspan></text>
+  <text x="510.50" y="378.50" freecad:editable="title" freecad:autofill="title" style="font-size:5.00px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <path d="M 509.00,382.00 L 584.00,382.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="510.50" y="385.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>MATERIAL:</tspan></text>
+  <text x="510.50" y="389.50" freecad:editable="material" style="font-size:3.20px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <path d="M 554.00,382.00 L 554.00,391.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="555.50" y="385.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>WEIGHT:</tspan></text>
+  <text x="555.50" y="389.50" freecad:editable="weight" style="font-size:3.20px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <path d="M 509.00,391.00 L 584.00,391.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="510.50" y="394.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>DWG NO.</tspan></text>
+  <text x="510.50" y="399.50" freecad:editable="drawing_number" style="font-size:3.60px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <path d="M 561.00,391.00 L 561.00,402.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="562.50" y="394.20" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>REV</tspan></text>
+  <text x="562.50" y="399.50" freecad:editable="revision" style="font-size:3.20px;font-family:osifont;text-anchor:start;fill:#000000"><tspan> </tspan></text>
+  <path d="M 573.00,391.00 L 573.00,410.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="578.50" y="400.50" style="font-size:6.00px;font-family:osifont;font-weight:bold;text-anchor:middle;fill:#000000"><tspan>A2</tspan></text>
+  <path d="M 509.00,402.00 L 573.00,402.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="510.50" y="406.80" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>SCALE:</tspan></text>
+  <text x="521.00" y="406.90" freecad:editable="scale" freecad:autofill="scale" style="font-size:3.00px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>1:1</tspan></text>
+  <text x="539.00" y="406.80" style="font-size:2.20px;font-family:osifont;font-weight:bold;text-anchor:start;fill:#000000"><tspan>SHEET</tspan></text>
+  <text x="550.00" y="406.90" freecad:editable="sheet" freecad:autofill="sheet" style="font-size:3.00px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>1 OF 1</tspan></text>
+  <rect x="552.00" y="351.00" width="32.00" height="9.00" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.35"/>
+  <text x="553.50" y="356.50" style="font-size:2.10px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>FIRST ANGLE</tspan></text>
+  <path d="M 570.00,352.50 l -5,1.5 v 3 l 5,1.5 z" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.3"/>
+  <circle cx="577.50" cy="355.50" r="2.2" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.3"/>
+  <circle cx="577.50" cy="355.50" r="1.1" style="stroke:#000000;fill:none;stroke-linecap:square;stroke-width:0.3"/>
+  <text x="12.00" y="408.00" style="font-size:2.00px;font-family:osifont;text-anchor:start;fill:#000000"><tspan>DO NOT SCALE DRAWING</tspan></text>
+</svg>

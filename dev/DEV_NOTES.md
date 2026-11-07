@@ -115,6 +115,15 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
 - `setExpression(prop, None)` on a property without an expression raises; check
   `prop in dict(obj.ExpressionEngine)` first.
 
+## TechDraw (P18/P19)
+- Templates: SVG with `freecad:editable="key"` (+ `freecad:autofill="title|author|date|scale|sheet|organization"`);
+  an empty editable text should hold a non-breaking space so it stays clickable. Fill via
+  `page.Template.EditableTexts` (dict).
+- Defaults: `Preferences/Mod/TechDraw/Files` TemplateDir / TemplateFile.
+- Scripted `DrawProjGroup` in 1.1.4: views render but the group stays at the page origin whatever
+  X/Y is set to (before/after recompute, delayed). FreeWorks' Standard 3 View therefore places
+  three `DrawViewPart` views itself. `XSource` (cross-document) needs both documents saved.
+
 ## Sandbox constraint (Claude sessions)
 Running third-party add-on code may be blocked in Claude's sandbox; test FreeWorks' own code
 only, read add-on sources instead.

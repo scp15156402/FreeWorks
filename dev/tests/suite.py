@@ -1042,6 +1042,55 @@ def t_pm_terms_check():
     Gui.Control.closeDialog()
     App.closeDocument(STATE["skin_doc"])
 
+
+@step(2500)
+def t_drawings():
+    from freeworks import drawing, materials, naming
+    import xml.dom.minidom
+    tp = drawing.templates()
+    ok = len(tp) == 11
+    for f in tp:
+        d = xml.dom.minidom.parse(os.path.join(drawing.TEMPLATE_DIR, f))
+        eds = [t.getAttribute("freecad:editable") for t in d.getElementsByTagName("text") if t.getAttribute("freecad:editable")]
+        ok = ok and {"title", "material", "weight", "drawing_number", "scale", "sheet"} <= set(eds)
+    record("drawings: 11 sheet formats with title-block fields", ok, tp)
+    g = App.ParamGet(drawing.TD_FILES)
+    record("drawings: FreeWorks sheet formats are TechDraw's default", g.GetString("TemplateFile", "").endswith(drawing.DEFAULT_ISO),
+           g.GetString("TemplateFile", ""))
+    part = App.newDocument("Bracket")
+    b = part.addObject("PartDesign::Body", "Body")
+    bx = b.newObject("PartDesign::AdditiveBox", "Box")
+    bx.Length, bx.Width, bx.Height = 81, 57, 43
+    part.recompute()
+    materials.apply([b], materials.card_by_name("AISI 1020")["uuid"])
+    STATE["dw_part"] = part.Name
+    dw = naming.new_document("drawing")
+    STATE["dw_doc"] = dw.Name
+    page = drawing.page_of(dw)
+    record("drawings: new drawing uses a FreeWorks sheet format", page is not None and drawing.is_freeworks_template(page),
+           page and page.Template.Template)
+    vs = drawing.standard_3view(page, b)
+    roles = {v.StandardView: v for v in vs}
+    f, t, r = roles.get("Front"), roles.get("Top"), roles.get("Right")
+    ok = f and t and r and float(t.Y) < float(f.Y) and float(r.X) < float(f.X) and abs(float(t.X) - float(f.X)) < 1e-6
+    record("drawings: Standard 3 View = Front, Top, Right in first-angle layout (ISO)", ok,
+           [(v.StandardView, round(float(v.X), 1), round(float(v.Y), 1), v.Scale) for v in vs])
+    v = drawing.model_view(page, b, "Isometric")
+    dw.recompute()
+    et = dict(page.Template.EditableTexts)
+    record("drawings: title block material + weight from the part", et.get("material") == "AISI 1020" and et.get("weight") == "1.568 kg"
+           and et.get("drawing_number") == "Bracket", {k: et.get(k) for k in ("material", "weight", "drawing_number")})
+
+
+@step(500)
+def t_drawings_close():
+    for k in ("dw_doc", "dw_part"):
+        try:
+            App.closeDocument(STATE[k])
+        except Exception:
+            pass
+    record("drawings: close", True)
+
 @step(800)
 def t_no_errors():
     import freeworks

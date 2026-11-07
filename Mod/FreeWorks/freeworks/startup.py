@@ -33,8 +33,9 @@ def on_activated():
         if Gui.activeWorkbench().name() != "FreeWorksWorkbench":
             Gui.activateWorkbench("FreeWorksWorkbench")
         naming.install_observer()
-        from . import asmtree
+        from . import asmtree, drawing
         asmtree.install()
+        drawing.install()
         sketchmode.install()
         shell.install()
         shortcuts.install()

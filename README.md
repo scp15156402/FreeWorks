@@ -116,6 +116,10 @@ Documents\FreeWorks\   your projects and macros (never touched by updates/uninst
 - **Mass Properties** (Evaluate tab): mass, volume, surface area, centre of mass, principal axes and moments, and moments of inertia at the centre of mass and at the output coordinate system, laid out like SolidWorks' report. You can report relative to any coordinate system, in MMGS, CGS, MKS or IPS, with your choice of decimal places, and include or leave out hidden bodies. It works for parts, assemblies (sub-assemblies included, each component with its own material) and selections.
 - **Move / Rotate Component** with Collision Detection (the component stops at the first contact), **Replace Components** that re-attaches the mates, and **Make Subassembly Rigid / Flexible**.
 - **Equations** (Tools > Equations) with SolidWorks syntax (`"D1@Sketch1" = "A" * 2`) and **configurations with design tables** (Tools > ConfigurationManager: `D1@Sketch1`, `$STATE@Fillet1` columns, CSV/Excel import).
+- **Drawings:** ISO and ANSI sheet formats with a SolidWorks-style title block that fills in material, weight, drawing number and title from the part, plus **Standard 3 View** and **Model View**.
+
+  <img src="docs/assets/drawing_example.png" alt="FreeWorks drawing: Standard 3 View, isometric view and title block" width="640">
+
 - **Edit Material** (right-click a body): a material library with SolidWorks names and densities (AISI 1020, Alloy Steel, 6061 Alloy, 1060 Alloy, Copper, Brass, ABS and more), or a custom density taken from the drawing. With no material assigned, the density is 1000 kg/m³, the same default as SolidWorks.
 - **Section Properties**.
 - **Interference Detection**: lists the clashes and highlights the interference volume in red.
@@ -164,7 +168,7 @@ FreeWorks changes what you see and how you work. It doesn't change FreeCAD's geo
 
 FreeWorks aims to cover everything a CSWA/CSWP-certified SolidWorks user does.
 - [What that scope is](docs/CSWA_CSWP_SCOPE.md), [what FreeCAD can and can't do today](docs/GAP_ANALYSIS.md), and [which community add-ons FreeWorks uses](docs/COMMUNITY.md).
-- Done in **v1.2**: SolidWorks materials and Mass Properties, the Mate PropertyManager, assembly tree names, collision detection and Replace Components. Done in **v1.3**: equations, configurations and design tables, and SolidWorks wording in feature panels. Next: **v1.4** drawings. **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
+- Done in **v1.2**: SolidWorks materials and Mass Properties, the Mate PropertyManager, assembly tree names, collision detection and Replace Components. Done in **v1.3**: equations, configurations and design tables, and SolidWorks wording in feature panels. Done in **v1.4**: sheet formats, title blocks, Standard 3 View and Model View. Next: drawing annotations, then the remaining part tools and GUI polish. **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
 
 ## Credits and licences
 

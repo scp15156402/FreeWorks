@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.4.0 - 2026-11-07
+Drawings.
+- **Sheet formats:** ISO A0 - A4 (and A4 portrait) and ANSI A - E, with zone borders, the
+  projection symbol and a title block organised like SOLIDWORKS' (tolerance notes; NAME /
+  SIGNATURE / DATE for DRAWN, CHK'D, APPV'D, MFG, Q.A; MATERIAL; WEIGHT; TITLE; DWG NO.; REV; SCALE;
+  SHEET; size). They are the default for new drawings (A3 for MMGS, B for IPS).
+- The title block fills itself from the part on the sheet: **MATERIAL, WEIGHT, DWG NO. and TITLE**;
+  author, date, scale and sheet are filled by TechDraw. ISO sheets use first-angle projection,
+  ANSI sheets third-angle.
+- **Standard 3 View:** Front, Top and Right in the sheet's projection layout at a standard scale.
+  **Model View:** pick an open part or assembly and a named orientation (Front ... Isometric,
+  Dimetric, Trimetric).
+
 ## v1.3.0 - 2026-11-07
 CSWP Segments 1 and 2 milestone (1.2.1 Equations + 1.2.2 Configurations + the items below).
 - **SOLIDWORKS terms inside feature panels (PropertyManager):** Boss-Extrude / Cut-Extrude with
