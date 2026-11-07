@@ -19,6 +19,9 @@ def on_activated():
     _state["done"] = True
     t0 = time.time()
     win = Gui.getMainWindow()
+    from . import safemode
+    safemode.mark("starting")          # if FreeWorks fails before "ready", next start is safe mode
+    safemode.install_exit_hook()
     try:
         from . import commands, shell, naming, shortcuts, sketchmode, gestures
         win.statusBar().showMessage("FreeWorks: loading environments...")
@@ -44,6 +47,11 @@ def on_activated():
         STATS["startup_s"] = round(time.time() - t0, 2)
         log("startup %.2fs" % (time.time() - t0))
         watchdog.start()
+        safemode.mark("ready")
+        if safemode.previous_session_crashed():
+            log("previous session ended unexpectedly")
+            win.statusBar().showMessage("The last FreeWorks session ended unexpectedly - FreeCAD offers to recover "
+                                        "unsaved documents. Help > FreeWorks Diagnostics has details.", 12000)
         QtCore.QTimer.singleShot(800, lambda: shell._S["cm"].prebuild())
         if params().GetBool("ShowWelcome", True) and not App.listDocuments() and not os.environ.get("FREEWORKS_NO_WELCOME"):
             from .widgets import NewDocumentDialog

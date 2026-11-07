@@ -231,10 +231,13 @@ try {
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 public static class FreeWorksLauncher {
+    [DllImport("user32.dll")] static extern short GetAsyncKeyState(int vKey);
     [STAThread]
     public static void Main(string[] args) {
         string root = AppDomain.CurrentDomain.BaseDirectory;
+        bool safe = (GetAsyncKeyState(0x10) & 0x8000) != 0;   // Shift held at launch = Safe Mode
         ProcessStartInfo psi = new ProcessStartInfo(Path.Combine(root, "FreeCAD", "bin", "freecad.exe"));
         psi.UseShellExecute = false;
         string projects = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "FreeWorks");
@@ -242,8 +245,12 @@ public static class FreeWorksLauncher {
         catch { psi.WorkingDirectory = Path.Combine(root, "FreeCAD", "bin"); }
         psi.EnvironmentVariables["FREECAD_USER_HOME"] = Path.Combine(root, "UserData");
         string a = "";
-        foreach (string s in args) { a += "\"" + s + "\" "; }
+        foreach (string s in args) {
+            if (s == "--safe") { safe = true; continue; }
+            a += "\"" + s + "\" ";
+        }
         psi.Arguments = a;
+        if (safe) { psi.EnvironmentVariables["FREEWORKS_SAFE"] = "1"; }
         try { Process.Start(psi); }
         catch (Exception e) { File.WriteAllText(Path.Combine(root, "launcher-error.txt"), e.ToString()); }
     }
@@ -267,9 +274,11 @@ public static class FreeWorksLauncher {
     Set-Content -Path $cmd -Encoding ASCII -Value @(
         "@echo off",
         "set FREECAD_USER_HOME=%~dp0UserData",
+        "set ARGS=%*",
+        "if /i `"%~1`"==`"--safe`" (set FREEWORKS_SAFE=1& set ARGS=%ARGS:--safe=%)",
         "if not exist `"%USERPROFILE%\Documents\FreeWorks`" mkdir `"%USERPROFILE%\Documents\FreeWorks`"",
         "cd /d `"%USERPROFILE%\Documents\FreeWorks`"",
-        "start `"`" `"%~dp0FreeCAD\bin\freecad.exe`" %*"
+        "start `"`" `"%~dp0FreeCAD\bin\freecad.exe`" %ARGS%"
     )
     if (-not $made) { $launcher = $cmd }
     Ok $launcher
@@ -286,7 +295,14 @@ public static class FreeWorksLauncher {
             if ($launcher -like "*.cmd") { $lnk.WindowStyle = 7 }
             $lnk.Save()
         }
-        Ok "Desktop and Start Menu shortcuts"
+        $safeLnk = $sh.CreateShortcut((Join-Path ([Environment]::GetFolderPath("Programs")) "FreeWorks (Safe Mode).lnk"))
+        $safeLnk.TargetPath = $launcher
+        $safeLnk.Arguments = "--safe"
+        $safeLnk.WorkingDirectory = $InstallDir
+        $safeLnk.IconLocation = (Join-Path $InstallDir "freeworks.ico") + ",0"
+        $safeLnk.Description = "FreeWorks without the FreeWorks interface (plain FreeCAD) - for troubleshooting"
+        $safeLnk.Save()
+        Ok "Desktop and Start Menu shortcuts (+ Safe Mode)"
     }
 
     # -------------------------------------------------------------- registration

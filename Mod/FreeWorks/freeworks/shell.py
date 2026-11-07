@@ -239,6 +239,10 @@ def build_menubar(bar):
     _sub(m, "Hide/Show", ["hide_show", "toggle_vis", "cmd:Std_ShowSelection", "cmd:Std_HideSelection", "cmd:Std_ShowObjects", "cmd:Std_HideObjects"], "hide_show")
     _sub(m, "Modify (Orientation)", ["view_orient", "prev_view", "normal_to", "|", "v_front", "v_back", "v_left", "v_right", "v_top", "v_bottom", "v_iso", "v_dimetric", "v_trimetric", "|", "zoom_fit", "zoom_area", "zoom_sel", "zoom_in", "zoom_out"], "view_orientation")
     _act(m, "scene")
+    lm = _act(m, "large_mode")
+    if lm is not None:
+        lm.setCheckable(True)
+        m.aboutToShow.connect(lambda lm=lm: lm.setChecked(__import__("freeworks.perf", fromlist=["is_on"]).is_on()))
     m.addSeparator()
     ui = m.addMenu("User Interface")
     for title, opt in (("CommandManager", "CommandManager"), ("Heads-up View Toolbar", "HeadsUpToolbar")):
@@ -334,6 +338,7 @@ def build_menubar(bar):
     m.aboutToShow.connect(lambda rb=rb: rb.setEnabled(bool(updater.previous_version())))
     a = m.addAction("FreeWorks Diagnostics")
     a.triggered.connect(lambda: __import__("freeworks.watchdog", fromlist=["show"]).show())
+    _act(m, "reset_settings")
     a = m.addAction("Open FreeWorks Log Folder")
     a.triggered.connect(lambda: QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(App.getUserAppDataDir())))
     a = m.addAction("FreeWorks on GitHub")
@@ -993,6 +998,13 @@ class Controller(QtCore.QObject):
             if d:
                 d.show()
                 d.raise_()
+        doc0 = App.ActiveDocument
+        if doc0 is not None and getattr(self, "hinted", None) != doc0.Name:
+            self.hinted = doc0.Name
+            from . import perf
+            hint = perf.suggest(doc0)
+            if hint:
+                mw().statusBar().showMessage(hint, 15000)
         tb = _S.get("topbar")
         if tb:
             doc = App.ActiveDocument

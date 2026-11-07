@@ -175,7 +175,7 @@ def t_freeze():
 def t_freeze_check():
     import freeworks
     st = freeworks.STATS["stalls"]
-    ok = len(st) > STATE["stalls0"] and st[-1][1] >= 700
+    ok = len(st) > STATE["stalls0"] and st[-1][1] >= 550   # 900 ms block minus up to one 250 ms beat
     record("stability: watchdog detects a UI freeze", ok, st[-1][1] if st else None)
     if ok:
         st.pop()
@@ -335,6 +335,25 @@ def t_drawing_check():
     record("drawing: context", context.current() == "drawing", context.current())
     record("drawing: tabs View Layout + Annotation", "View Layout" in tabs and "Annotation" in tabs, tabs)
     shot("04_drawing")
+
+
+@step(300)
+def t_session_and_modes():
+    import freeworks
+    from freeworks import safemode, perf, params
+    sess = os.path.join(App.getUserAppDataDir(), "FreeWorks.session")
+    ph = json.load(open(sess)).get("phase") if os.path.exists(sess) else None
+    record("crash sentinel: session marked ready", ph == "ready", ph)
+    pv = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Part")
+    perf.set_mode(True)
+    on = (pv.GetFloat("MeshDeviation") == 0.5 and perf.is_on())
+    perf.set_mode(False)
+    off = (pv.GetFloat("MeshDeviation") == 0.1 and not perf.is_on())
+    record("large model mode: on/off switches display quality", on and off)
+    params().SetBool("Gestures", False)
+    safemode.reset_settings()
+    record("reset settings: FreeWorks defaults restored", params().GetBool("Gestures", True) and
+           params().GetInt("PrefsVersion", 0) > 0 and params().GetString("ProjectsDir", "") != "")
 
 
 @step(300)

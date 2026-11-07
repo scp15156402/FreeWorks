@@ -50,8 +50,10 @@ param([string]$InstallDir = "")
     }
 
     foreach ($f in @([Environment]::GetFolderPath("Desktop"), [Environment]::GetFolderPath("Programs"))) {
-        $l = Join-Path $f "FreeWorks.lnk"
-        if (Test-Path $l) { Remove-Item -Force $l -ErrorAction SilentlyContinue }
+        foreach ($n in @("FreeWorks.lnk", "FreeWorks (Safe Mode).lnk")) {
+            $l = Join-Path $f $n
+            if (Test-Path $l) { Remove-Item -Force $l -ErrorAction SilentlyContinue }
+        }
     }
     Remove-Item -Path $RegKey -Recurse -Force -ErrorAction SilentlyContinue
     Remove-Item -Path $UninstKey -Recurse -Force -ErrorAction SilentlyContinue

@@ -545,6 +545,16 @@ def tangent_arc():
     run("Sketcher_CreatePolyline")
 
 
+def _reset_settings():
+    r = QtWidgets.QMessageBox.question(Gui.getMainWindow(), "Reset FreeWorks Settings",
+                                       "Restore the FreeWorks defaults (layout, colours, options)?\n"
+                                       "Your projects and documents are not affected.")
+    if r == QtWidgets.QMessageBox.Yes:
+        from . import safemode
+        safemode.reset_settings()
+        msg("FreeWorks settings restored")
+
+
 # ---------------------------------------------------------------- registry
 class _Cmd:
     def __init__(self, key, fn, label=None, tip=None, icon_key=None, active="doc", accel=""):
@@ -628,6 +638,8 @@ def register():
         ("sel_filter", toggle_filter_toolbar, "FW_ToggleFilterToolbar", "always"),
         ("magnify", magnify, "FW_Magnify", "view"),
         ("shortcut_bar", shortcut_bar, "FW_ShortcutBar", "always"),
+        ("large_mode", lambda: __import__("freeworks.perf", fromlist=["toggle"]).toggle(), "FW_LargeModelMode", "always"),
+        ("reset_settings", _reset_settings, "FW_ResetSettings", "always"),
     ]
     for key, fn, name, act in defs:
         Gui.addCommand(name, _Cmd(key, fn, active=act))

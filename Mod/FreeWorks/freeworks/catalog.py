@@ -274,6 +274,8 @@ add("suppress", "Suppress", "FW_Suppress", "delete_face", "Suppresses the select
 add("rollback", "Roll Back", "PartDesign_MoveTip", "rebuild", "Rolls the model back to the selected feature.", ["move tip", "rollback", "set tip"])
 add("roll_end", "Roll to End", "FW_RollToEnd", "rebuild", "Rolls forward to the end of the FeatureManager tree.", ["roll forward"])
 add("body", "Body", "PartDesign_Body", "insert_component", "Creates a new solid body.", ["new body", "solid body"])
+add("large_mode", "Large Model Mode", "FW_LargeModelMode", "display_shaded", "Faster display for big parts and assemblies: coarser tessellation, no anti-aliasing, no view animations (like Large Assembly Mode).", ["large assembly mode", "large design review", "performance", "speed"])
+add("reset_settings", "Reset FreeWorks Settings", "FW_ResetSettings", "options", "Restores the FreeWorks defaults (layout, colours, options). Projects are not affected.", ["reset", "restore defaults"])
 add("magnify", "Magnified Selection", "FW_Magnify", "zoom_in_out", "Shows a magnifying glass at the pointer (G).", ["magnifier", "magnifying glass"])
 add("shortcut_bar", "Shortcut Bar", "FW_ShortcutBar", "options", "Shows the context shortcut bar at the pointer (S).", ["s key"])
 

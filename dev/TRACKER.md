@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P6 – Safe mode (FreeWorks.exe --safe / Shift at start), crash sentinel → automatic safe start, Reset FreeWorks settings; large-model mode
+**Next part:** P7 – Stress test suite
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -32,7 +32,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | P3 | Install | Rollback (keeps previous FreeWorks/add-ons/FreeCAD, swap back and forth, in-app + one-liner), What's New dialog + notes in update offer, add-ons pinned to commits; released 1.0.2. Windows field-test fixes move to a new part when feedback arrives | ✅ |
 | P4 | Dev/AI | dev/check_updates.py (+--apply), dev/fetch_freecad.sh, dev/run_tests.sh + suite.py (33 checks, perf budgets, report); found+fixed Mass Properties 1000x density bug; released 1.0.3 | ✅ |
 | P5 | Stability | Audit of all hook points; @harden/@safe/@safe_slow guards, lazy sketch observer, no main-window filter, async right-click replay, overlay shortcuts disabled, layout self-heal, idle tab prebuild, UI-stall watchdog + slow-callback detector + Diagnostics; 44 tests; released 1.0.4 | ✅ |
-| P6 | Stability | Safe mode (`FreeWorks.exe --safe`, Shift at start), crash sentinel → auto safe start, "Reset FreeWorks settings"; large-model mode (lighter tessellation, manual rebuild) | ⬜ |
+| P6 | Stability | Safe mode (--safe, Shift at launch, Start-menu shortcut), crash sentinel → automatic safe start + notice, Reset FreeWorks Settings, Large Model Mode (+ suggestion for big documents); tests for all | ✅ |
 | P7 | Stability | Stress test suite (open/close docs, context switching ×200, gestures, sketches); memory/time report | ⬜ |
 | P8 | Research | CSWA + CSWP exam scope (official topic lists, sample exams) → docs/CSWA_CSWP_SCOPE.md | ⬜ |
 | P9 | Research | Gap analysis CSWA/CSWP vs FreeCAD 1.1 + FreeWorks → prioritized backlog (may reorder P12+) | ⬜ |
@@ -70,6 +70,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | Date (IST) | Part | Summary |
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
+| 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
 | 2026-11-07 | P5 | Stability audit and fixes, watchdog, diagnostics; suite 44/44; released 1.0.4. |
 | 2026-11-07 | P4 | Update checker, automated suite (33/33 pass), interactive tests made repo-relative; Mass Properties density fix; released 1.0.3. |
 | 2026-11-07 | P3 | Rollback, What's New, add-on commit pins, dev/tests/pscheck.py (PowerShell structure check); released 1.0.2 to stable. |

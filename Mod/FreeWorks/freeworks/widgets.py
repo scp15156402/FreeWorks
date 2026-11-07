@@ -545,6 +545,13 @@ class OptionsDialog(QtWidgets.QDialog):
         btn = QtWidgets.QPushButton("Re-apply FreeWorks look && settings (colors, lighting, performance)")
         btn.clicked.connect(self.reapply)
         lay.addWidget(btn)
+        self.large = QtWidgets.QCheckBox("Large Model Mode (faster display for big models)")
+        from . import perf
+        self.large.setChecked(perf.is_on())
+        lay.addWidget(self.large)
+        rb = QtWidgets.QPushButton("Reset FreeWorks Settings...")
+        rb.clicked.connect(lambda: (self.reject(), __import__("freeworks.commands", fromlist=["run"]).run("FW_ResetSettings")))
+        lay.addWidget(rb)
         note = QtWidgets.QLabel("FreeCAD's own settings remain under Tools > Options (System Options).")
         note.setStyleSheet("color:#666")
         lay.addWidget(note)
@@ -564,6 +571,9 @@ class OptionsDialog(QtWidgets.QDialog):
             p.SetBool(k, cb.isChecked())
         App.ParamGet("User parameter:BaseApp/Preferences/View").SetBool("InvertZoom", self.zoom.currentIndex() == 1)
         p.SetInt("LargeIconSize", 24 if self.icon_size.currentIndex() == 0 else 32)
+        from . import perf
+        if self.large.isChecked() != perf.is_on():
+            perf.set_mode(self.large.isChecked())
         from . import shell
         shell.refresh_options()
         self.accept()

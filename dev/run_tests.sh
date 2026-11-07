@@ -40,6 +40,11 @@ cp -r "$ROOT/Mod/FreeWorks" "$PROFILE/Mod/"
 cp "$ROOT/CHANGELOG.md" "$PROFILE/"
 export FREECAD_USER_HOME="$PROFILE" FREEWORKS_NO_WELCOME=1 FREEWORKS_DEBUG_LOG="$OUT/freeworks.log" FREEWORKS_TEST_OUT="$OUT" LANG=C.UTF-8
 timeout 300 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/suite.py" > "$OUT/freecad.out" 2>&1
+
+echo "== safe mode: requested (FREEWORKS_SAFE=1) and automatic (crash during last startup)"
+FREEWORKS_SAFE=1 FREEWORKS_SAFE_CASE=safe timeout 120 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/safe_suite.py" > "$OUT/freecad_safe.out" 2>&1
+echo '{"phase": "starting", "pid": 1, "time": 0, "version": "test"}' > "$PROFILE/FreeWorks.session"
+FREEWORKS_SAFE_CASE=crash timeout 120 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/safe_suite.py" > "$OUT/freecad_crash.out" 2>&1
 rm -rf "$PROFILE"
 
 python3 - "$OUT" <<'EOF' || FAIL=1
@@ -49,6 +54,13 @@ p = os.path.join(out, "results.json")
 if not os.path.exists(p):
     print("suite did not finish - see", os.path.join(out, "freecad.out")); sys.exit(1)
 d = json.load(open(p))
+for extra in ("safe_safe.json", "safe_crash.json"):
+    ep = os.path.join(out, extra)
+    rs = json.load(open(ep)) if os.path.exists(ep) else [{"test": extra + " did not run", "ok": False, "detail": ""}]
+    for r in rs:
+        r["detail"] = str(r["detail"])
+        d["results"].append(r)
+        d["passed" if r["ok"] else "failed"] += 1
 lines = ["# FreeWorks test report", "", "FreeCAD %s - %d passed, %d failed" % (d["freecad"], d["passed"], d["failed"]), "",
          "| | Test | Detail |", "|---|---|---|"]
 for r in d["results"]:
