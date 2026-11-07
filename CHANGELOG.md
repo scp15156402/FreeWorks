@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.3 - 2026-11-07
+- **Fix: Mass Properties** used FreeCAD's placeholder "Default" material (1 kg/m³) and reported masses
+  1000× too low. Unassigned material now means 1000 kg/m³, exactly like SOLIDWORKS.
+- Developer/AI tooling: `dev/run_tests.sh` automated test suite (33 checks incl. performance budgets),
+  `dev/check_updates.py` (upstream FreeCAD/add-on versions, `--apply`), `dev/fetch_freecad.sh`.
+- The sketch Text tool appears automatically once FreeCAD provides it (1.2+).
+
 ## v1.0.2 - 2026-11-07
 - **Rollback:** every update keeps the previous FreeWorks, add-ons and (if it changed) FreeCAD.
   Help → *Roll Back to Previous Version*, or

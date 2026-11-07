@@ -48,7 +48,8 @@ release.
 | `dev/TRACKER.md` | Roadmap, part list, status, session log. **Keep it current.** |
 | `dev/UPDATE_PROTOCOL.md` | The "get it up to date" procedure. |
 | `dev/DEV_NOTES.md` | Technical findings about FreeCAD internals. |
-| `dev/tests/` | Headless test harness (FreeCAD AppImage + Xvfb + XTEST input). |
+| `dev/run_tests.sh`, `dev/tests/` | Automated test suite (+ interactive XTEST tests). |
+| `dev/check_updates.py`, `dev/fetch_freecad.sh` | Upstream version check (`--apply` updates pins); test FreeCAD download. |
 
 ## Rules that keep FreeWorks stable and fast
 
@@ -68,10 +69,13 @@ release.
 
 ## Testing
 
-`dev/tests/README.md` describes the harness: FreeCAD AppImage (version from
-`versions.json`), Xvfb, screenshots, and real input via XTEST. Run a smoke test
-after every change to Python code. Windows-only parts (installer, launcher) are
-reviewed by reading; ask the owner to report results.
+**Run `dev/run_tests.sh` after every change** (≈1 min, exit code 0 = pass). It does static
+checks, then runs `dev/tests/suite.py` inside the pinned FreeCAD (auto-downloaded) under Xvfb:
+catalog, UI, naming, Mass Properties numbers, contexts, performance budgets, error log. Add a
+test to `suite.py` for every feature or bug fix. Interactive input tests (gestures, shortcuts)
+are in `dev/tests/interactive/`. `dev/check_updates.py` compares pins with upstream.
+Windows-only parts (installer, launcher) get `dev/tests/pscheck.py` + review; ask the owner
+to report results.
 
 ## Git
 

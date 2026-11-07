@@ -1,6 +1,7 @@
+import os
 import FreeCADGui as Gui, FreeCAD as App, time, os
 from PySide import QtWidgets, QtCore, QtGui
-exec(open('/tmp/model.py').read())
+exec(open(os.path.join(os.environ['FREEWORKS_TESTS'], 'model.py')).read())
 L=open('/tmp/inter.log','w'); T0=float(os.environ['T0'])
 from freeworks import context
 def log(msg):

@@ -8,9 +8,7 @@ SOLIDWORKS UI/workflows. Work in ≤ 30-minute parts; record progress in `dev/TR
 ## 1. What is new? (≈5 min)
 - `python3 dev/check_updates.py` → prints pinned vs latest:
   FreeCAD stable release (GitHub `FreeCAD/FreeCAD` releases, excluding pre-releases),
-  Windows asset names + SHA-256 digests, add-on repos (latest commit / tags).
-  *(Script is added in P4. Until then: `git ls-remote --tags https://github.com/FreeCAD/FreeCAD.git`
-  and check the release page.)*
+  Windows asset names (checked to exist) + SHA-256 digests, add-on branch heads vs pinned commits.
 - Web research (search, read the sources, cite them in the commit/notes):
   - FreeCAD release notes for every version since the pinned one
     (`wiki.freecad.org/Release_notes_<x.y>`, `blog.freecad.org`): UI changes (themes,
@@ -21,9 +19,12 @@ SOLIDWORKS UI/workflows. Work in ≤ 30-minute parts; record progress in `dev/TR
   - CSWA/CSWP exam updates (`docs/CSWA_CSWP_SCOPE.md`).
 
 ## 2. Test FreeWorks against the new FreeCAD (≈10 min)
-- `dev/fetch_freecad.sh <version>` (P4) downloads and extracts the Linux AppImage.
-- `dev/run_tests.sh` (P4): startup without errors, every catalog command resolves,
-  contexts (part/sketch/assembly/drawing), docks/overlay, shortcuts, gestures, screenshots.
+- `dev/fetch_freecad.sh <new version>` downloads and extracts the Linux AppImage
+  (and points `dev/.freecad/current` at it).
+- `dev/run_tests.sh`: must end with 0 failures. Also run `dev/tests/interactive/run_inter.sh`
+  for gestures/shortcuts and look at the screenshots in `dev/tests/out/`.
+- Add-on updates: `python3 dev/check_updates.py --apply` pins new commits; read the add-on
+  changelogs / commits for renamed commands (catalog uses their command names).
 - Fix what broke: `catalog.py` command names, `prefs.py` parameter names
   (`strings libFreeCADGui.so | grep <Name>` helps), `shell.py` dock/overlay handling,
   theme tokens (`Stylesheets/parameters/*.yaml` of the new FreeCAD), icon overrides.
@@ -35,11 +36,12 @@ SOLIDWORKS UI/workflows. Work in ≤ 30-minute parts; record progress in `dev/TR
 - New SOLIDWORKS UI behaviour → add parts to `dev/TRACKER.md` backlog.
 
 ## 4. Pin and release (≈5 min)
-- Update `versions.json` (FreeCAD version, asset names, SHA-256, add-on refs).
+- `python3 dev/check_updates.py --apply` updates `versions.json` (FreeCAD version, asset names,
+  SHA-256, add-on commits); review the diff.
 - Bump version in `versions.json`, `Mod/FreeWorks/package.xml`, `freeworks/__init__.py`;
   add a `CHANGELOG.md` entry.
-- `dev/make_release.sh` → `dist/FreeWorks.zip`; commit, tag, push; GitHub release with the zip.
-- Installed copies pick the release up through the in-app update check / `Update.cmd`.
+- `dev/run_tests.sh` green → commit → `git push origin main` → `git push origin main:stable`.
+- Installed copies pick it up via the one-line command, the in-app daily check or `Update.cmd`.
 
 ## Rollback
 If a new FreeCAD breaks FreeWorks and cannot be fixed quickly, keep the old pin in

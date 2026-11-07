@@ -1,3 +1,4 @@
+import os
 import FreeCADGui as Gui, FreeCAD as App, time
 from PySide import QtCore, QtGui, QtWidgets
 from freeworks import naming, widgets
