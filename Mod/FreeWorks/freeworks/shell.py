@@ -807,12 +807,84 @@ class HeadsUp(QtWidgets.QFrame):
         x = max(0, (self.mdi.width() - self.width()) // 2)
         self.move(x, 4)
         self.raise_()
+        c = _S.get("corner")
+        if c is not None and c.isVisible():
+            c.reposition()
 
     def refresh(self):
         show = params().GetBool("HeadsUpToolbar", True) and bool(context.mdi_area().subWindowList())
         self.setVisible(show)
         if show:
             self.raise_()
+
+
+@harden
+class ConfirmationCorner(QtWidgets.QFrame):
+    """SOLIDWORKS confirmation corner: green check / red cross in the top-right of the graphics area
+    while a PropertyManager (task panel) or a sketch is open."""
+
+    def __init__(self, mdi):
+        super().__init__(mdi)
+        self.setObjectName("FreeWorksCorner")
+        self.mdi = mdi
+        lay = QtWidgets.QHBoxLayout(self)
+        lay.setContentsMargins(2, 2, 2, 2)
+        lay.setSpacing(2)
+        self.ok = QtWidgets.QToolButton()
+        self.ok.setIcon(icon("ok"))
+        self.ok.setIconSize(QtCore.QSize(28, 28))
+        self.ok.setAutoRaise(True)
+        self.ok.clicked.connect(self.accept)
+        self.no = QtWidgets.QToolButton()
+        self.no.setIcon(icon("cancel"))
+        self.no.setIconSize(QtCore.QSize(28, 28))
+        self.no.setAutoRaise(True)
+        self.no.clicked.connect(self.cancel)
+        lay.addWidget(self.ok)
+        lay.addWidget(self.no)
+        self.setStyleSheet("#FreeWorksCorner { background: rgba(255,255,255,170); border: 1px solid rgba(120,130,140,120); border-radius: 4px; }"
+                           "#FreeWorksCorner QToolButton:hover { background: #E5F1FB; border: 1px solid #A9CDEF; border-radius: 3px; }")
+        self.hide()
+
+    def reposition(self):
+        self.adjustSize()
+        self.move(max(0, self.mdi.width() - self.width() - 28), 8)
+        self.raise_()
+
+    def update_for(self, task_open, ctx):
+        show = params().GetBool("ConfirmationCorner", True) and (task_open or ctx == "sketch") \
+            and bool(self.mdi.subWindowList())
+        if show:
+            sketch = ctx == "sketch" and not task_open
+            self.ok.setToolTip("Exit Sketch" if sketch else "OK")
+            self.no.setToolTip("Exit Sketch" if sketch else "Cancel")
+            self.reposition()
+        if show != self.isVisible():
+            self.setVisible(show)
+
+    def _task_button(self, ok):
+        d = _dock("Tasks")
+        if d is None or d.widget() is None:
+            return None
+        names = ("OK", "&OK") if ok else ("Cancel", "&Cancel", "Close", "&Close")
+        for b in d.widget().findChildren(QtWidgets.QPushButton):
+            if b.text() in names and b.isVisible() and b.isEnabled():
+                return b
+        return None
+
+    def accept(self):
+        b = self._task_button(True) or self._task_button(False)
+        if b is not None:
+            b.click()
+        elif context.current() == "sketch":
+            commands.run_key("exit_sketch")
+
+    def cancel(self):
+        b = self._task_button(False)
+        if b is not None:
+            b.click()
+        elif context.current() == "sketch":
+            commands.run_key("exit_sketch")
 
 
 @harden
@@ -1006,6 +1078,9 @@ class Controller(QtCore.QObject):
             if open_:
                 from . import pmskin
                 pmskin.start()          # SOLIDWORKS terms in FreeCAD's feature panels
+        corner = _S.get("corner")
+        if corner is not None:
+            corner.update_for(bool(open_), c)
         doc0 = App.ActiveDocument
         if doc0 is not None and getattr(self, "hinted", None) != doc0.Name:
             self.hinted = doc0.Name
@@ -1159,6 +1234,7 @@ def install():
     _S["dock"] = dock
     mdi = context.mdi_area()
     _S["headsup"] = HeadsUp(mdi)
+    _S["corner"] = ConfirmationCorner(mdi)
     _S["filters"] = FilterBar(mdi)
     _S["headsup"].setStyleSheet(STYLE)
     _S["filters"].setStyleSheet(STYLE)

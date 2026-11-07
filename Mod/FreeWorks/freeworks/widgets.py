@@ -518,6 +518,7 @@ class OptionsDialog(QtWidgets.QDialog):
         ("CommandManagerText", "Show command text in the CommandManager", True),
         ("CheckForUpdates", "Check GitHub for FreeWorks updates (once a day)", True),
         ("SolidWorksTerms", "SOLIDWORKS terms inside feature panels (Blind, Up To Next, Depth, Draft ...)", True),
+        ("ConfirmationCorner", "Confirmation corner (OK / Cancel in the graphics area)", True),
         ("HighQualityAA", "High-quality anti-aliasing (MSAA 4x; smoother silhouettes, more GPU memory; applies to new windows)", False),
     ]
 

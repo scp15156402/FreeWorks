@@ -1031,6 +1031,15 @@ def t_pm_terms_check():
     record("PropertyManager terms: extrude end conditions renamed", want <= texts and "Dimension" not in texts and "To first" not in texts,
            sorted(t for t in texts if t)[:40])
     record("PropertyManager terms: Depth instead of Length", "Depth" in texts, "Depth" in texts)
+    from freeworks import shell
+    c = shell._S.get("corner")
+    record("confirmation corner: shown while a PropertyManager is open", c is not None and c.isVisible()
+           and c.x() > shell._S["corner"].mdi.width() // 2, c and (c.isVisible(), c.x()))
+    if c is not None:
+        c.accept()
+        for _ in range(10):
+            QtWidgets.QApplication.processEvents()
+        record("confirmation corner: check mark accepts the PropertyManager", not Gui.Control.activeDialog(), bool(Gui.Control.activeDialog()))
     t = dict(pmskin.TITLES)
     t.update(pmskin.HOLE)
     record("PropertyManager terms: Hole Wizard table", pmskin._map("Depth type:", t) == "End Condition:" and pmskin._map("Dimension", t) == "Blind"
