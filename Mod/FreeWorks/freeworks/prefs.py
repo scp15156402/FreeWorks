@@ -6,7 +6,7 @@ import FreeCAD as App
 
 from . import THEME_DIR, log, params
 
-PREFS_VERSION = 9
+PREFS_VERSION = 10
 
 
 def c(hexstr, a=255):
@@ -20,6 +20,8 @@ def P(path):
 
 
 SETTINGS = {
+    # SOLIDWORKS auto-inserts centre marks on holes in drawing views
+    "Mod/TechDraw/Decorations": {"ShowCenterMarks": ("b", True), "PrintCenterMarks": ("b", True)},
     # ---------------------------------------------------- 3D view / navigation
     "View": {
         "NavigationStyle": ("s", "Gui::SolidWorksNavigationStyle"),

@@ -63,6 +63,9 @@ def _source(page):
     return None
 
 
+_filled = {}
+
+
 def fill_title_block(page):
     """MATERIAL / WEIGHT / DWG NO. from the part on the sheet. Returns True if something changed."""
     t = getattr(page, "Template", None)
@@ -76,6 +79,13 @@ def fill_title_block(page):
     want = {}
     bodies = materials._bodies_in(src) or [src]
     mats = sorted({materials.material_of(b)[0] for b in bodies})
+    try:
+        key = (src.Document.Name, src.Name, tuple(mats), src.Shape.hashCode(), tuple(sorted(et.items())))
+    except Exception:
+        key = None
+    ck = (page.Document.Name, page.Name)
+    if key is not None and _filled.get(ck) == key:
+        return False                                  # nothing changed since the last fill
     if "material" in et:
         want["material"] = mats[0] if len(mats) == 1 else "<multiple>"
     if "weight" in et:
@@ -95,8 +105,9 @@ def fill_title_block(page):
     if changed:
         et.update(changed)
         t.EditableTexts = et
-        return True
-    return False
+    if key is not None:
+        _filled[ck] = key[:4] + (tuple(sorted(et.items())),)
+    return bool(changed)
 
 
 def sweep(doc):
@@ -292,3 +303,178 @@ def cmd_model_view():
     page.Document.openTransaction("Model View")
     model_view(page, src, o)
     page.Document.commitTransaction()
+
+
+# ------------------------------------------------------------------ annotations (P20)
+def _view_axes(v):
+    d = App.Vector(v.Direction)
+    d.normalize()
+    x = App.Vector(v.XDirection)
+    if x.Length < 1e-9:
+        x = App.Vector(1, 0, 0)
+    x.normalize()
+    y = d.cross(x)
+    return d, x, y
+
+
+def _view_edges(v):
+    out = []
+    i = 0
+    while True:
+        try:
+            e = v.getEdgeBySelection("Edge%d" % i)
+        except Exception:
+            break
+        if e is None:
+            break
+        out.append(("Edge%d" % i, e))
+        i += 1
+        if i > 5000:
+            break
+    return out
+
+
+def _sketch_dims(body):
+    """[(kind, value mm, 3D direction or None, sketch)] for driving dimensions of the body's sketches."""
+    out = []
+    for o in body.Group if hasattr(body, "Group") else []:
+        if not o.isDerivedFrom("Sketcher::SketchObject"):
+            continue
+        plc = o.getGlobalPlacement()
+        rot = plc.Rotation
+        for c in o.Constraints:
+            if not c.Driving or c.Type not in ("Distance", "DistanceX", "DistanceY", "Radius", "Diameter"):
+                continue
+            val = float(c.Value)
+            if c.Type in ("Radius", "Diameter"):
+                out.append((c.Type, val, None, o))
+                continue
+            if c.Type == "DistanceX":
+                d3 = rot.multVec(App.Vector(1, 0, 0))
+            elif c.Type == "DistanceY":
+                d3 = rot.multVec(App.Vector(0, 1, 0))
+            elif c.Second == -2000:                                 # length of one line
+                g = o.Geometry[c.First] if 0 <= c.First < len(o.Geometry) else None
+                d3 = rot.multVec(g.EndPoint - g.StartPoint) if g is not None and hasattr(g, "StartPoint") else None
+            else:                                                   # point to point
+                try:
+                    d3 = rot.multVec(o.getPoint(c.Second, c.SecondPos) - o.getPoint(c.First, c.FirstPos))
+                except Exception:
+                    d3 = None
+            out.append((c.Type, abs(val), d3, o))
+    return out
+
+
+def model_items(view):
+    """SOLIDWORKS Insert Model Items (dimensions from the sketches) for one drawing view.
+    Each sketch dimension whose sketch is parallel to the view becomes a drawing dimension on a
+    view edge of the same length and direction (circles: same radius). Returns the dimensions made."""
+    src = (getattr(view, "Source", None) or [None])[0]
+    if src is None:
+        return []
+    page = view.findParentPage() if hasattr(view, "findParentPage") else None
+    if page is None:
+        pages = [p for p in view.InList if p.isDerivedFrom("TechDraw::DrawPage")]
+        page = pages[0] if pages else None
+    from . import materials
+    bodies = materials._bodies_in(src) or [src]
+    d, vx, vy = _view_axes(view)
+    sc = float(view.getScale()) if hasattr(view, "getScale") else float(view.Scale)
+    edges = _view_edges(view)
+    used = set()
+    made = []
+    doc = view.Document
+    tol = 1e-3 * max(1.0, sc)
+    for body in bodies:
+        for kind, val, d3, sk in _sketch_dims(body):
+            n = sk.getGlobalPlacement().Rotation.multVec(App.Vector(0, 0, 1))
+            if abs(abs(n.dot(d)) - 1.0) > 1e-6:
+                continue                                   # sketch not parallel to this view
+            target, typ = None, None
+            if kind in ("Radius", "Diameter"):
+                r = val if kind == "Radius" else val / 2.0
+                for name, e in edges:
+                    c = getattr(e, "Curve", None)
+                    if name not in used and c is not None and hasattr(c, "Radius") and abs(c.Radius - r * sc) < tol:
+                        target, typ = name, kind
+                        break
+            elif d3 is not None:
+                horiz = abs(d3.dot(vx)) > abs(d3.dot(vy))
+                for name, e in edges:
+                    import Part
+                    if name in used or len(e.Vertexes) != 2 or not isinstance(e.Curve, (Part.Line, Part.LineSegment)):
+                        continue
+                    p, q = e.Vertexes[0].Point, e.Vertexes[1].Point
+                    dx, dy = abs(q.x - p.x), abs(q.y - p.y)
+                    if horiz and dy < tol and abs(dx - val * sc) < tol:
+                        target, typ = name, "DistanceX"
+                    elif not horiz and dx < tol and abs(dy - val * sc) < tol:
+                        target, typ = name, "DistanceY"
+                    if target:
+                        break
+            if target is None:
+                continue
+            used.add(target)
+            dim = doc.addObject("TechDraw::DrawViewDimension", "Dimension")
+            dim.Type = typ
+            dim.References2D = [(view, target)]
+            try:
+                dim.MeasureType = "Projected"
+            except Exception:
+                pass
+            if page is not None:
+                page.addView(dim)
+            made.append(dim)
+    doc.recompute()
+    return made
+
+
+def set_display_style(views, style):
+    """SOLIDWORKS view Display Style: 'hlr' Hidden Lines Removed, 'hlv' Hidden Lines Visible,
+    'tangent' toggles tangent edges visible."""
+    for v in views:
+        if style == "hlr":
+            v.HardHidden = False
+            v.SmoothHidden = False
+        elif style == "hlv":
+            v.HardHidden = True
+        elif style == "tangent_on":
+            v.SmoothVisible = True
+        elif style == "tangent_off":
+            v.SmoothVisible = False
+    if views:
+        views[0].Document.recompute()
+
+
+def _selected_views():
+    import FreeCADGui as Gui
+    vs = [o for o in Gui.Selection.getSelection() if o.isDerivedFrom("TechDraw::DrawViewPart")]
+    if vs:
+        return vs
+    p = page_of()
+    return [o for o in (p.Views if p else []) if o.isDerivedFrom("TechDraw::DrawViewPart")]
+
+
+def cmd_model_items():
+    vs = _selected_views()
+    if not vs:
+        return
+    doc = vs[0].Document
+    doc.openTransaction("Model Items")
+    n = sum(len(model_items(v)) for v in vs)
+    doc.commitTransaction()
+    try:
+        import FreeCADGui as Gui
+        Gui.getMainWindow().statusBar().showMessage("Model Items: %d dimension(s) inserted" % n, 5000)
+    except Exception:
+        pass
+
+
+def cmd_display_style(style):
+    def go():
+        vs = _selected_views()
+        if vs:
+            vs[0].Document.openTransaction("Display Style")
+            set_display_style(vs, style)
+            vs[0].Document.commitTransaction()
+    return go

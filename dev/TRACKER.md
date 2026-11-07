@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P20 – Drawing annotations (model items, centre marks, hole callout, BOM)
+**Next part:** P30 – FeatureManager tree SOLIDWORKS structure + rollback bar
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -49,8 +49,8 @@ then P23, P25, P28 → P34.
 | P17 | Assembly | Move / Rotate Component PM (By Delta XYZ, rotate About Entity / X / Y / Z) with Collision Detection (stop at first contact, bisection to 0.001 mm/deg, colliding component reported + selected), Free Drag hand-off; Replace Components with mated-entity re-attachment by geometry signature; Make Subassembly Rigid/Flexible (AssemblyLink.Rigid); v1.2.0 released. Exploded view stays FreeCAD's panel | ✅ |
 | P18 | Drawing | 11 sheet formats (tools/make_templates.py: ISO A0–A4 + A4 portrait, ANSI A–E) with zone borders, projection symbol and a SW-organised title block (tolerances, NAME/SIGNATURE/DATE grid, MATERIAL, WEIGHT, TITLE, DWG NO., REV, SCALE, SHEET, size); TechDraw defaults; ISO = first angle, ANSI = third angle; MATERIAL/WEIGHT/DWG NO./TITLE filled from the part | ✅ |
 | P19 | Drawing | Standard 3 View (Front/Top/Right laid out per projection at a standard scale; scripted TechDraw projection groups mis-place in 1.1.4 so three views are used) and Model View (part chooser + named orientations); projected/section/detail/break/crop stay FreeCAD's tools with SW names; released 1.4.0 | ✅ |
-| P20 | Drawing | Annotations: model items, smart dimension, centre marks/lines, hole callout, notes with properties, balloons/auto balloon, BOM, revision table | ⬜ |
-| P21 | Drawing | Display styles, tangent edges, line fonts, v1.3 release | ⬜ |
+| P20 | Drawing | Model Items (sketch dimensions of sketches parallel to the view → DistanceX/DistanceY/Radius/Diameter drawing dimensions on matching view edges), centre marks on holes by default, Annotation tab order; hole callout, auto balloon, revision table: not done (no TechDraw basis) | ✅ |
+| P21 | Drawing | View display styles: Hidden Lines Removed / Visible, tangent edges visible / removed (View Layout tab); title-block fill cached; released 1.4.1. Shaded drawing views: not in TechDraw | ✅ |
 | P22 | Part | SOLIDWORKS terms inside FreeCAD's feature panels (pmskin.py, display-only relabel while a panel is open, 400 ms timer only then): Boss-Extrude/Cut-Extrude titles, Directions, End Condition (Blind, Through All, Up To Next, Up To Surface, Offset From Surface, Up To Body, Mid Plane), Depth, Draft angle, Reverse Direction; Revolve, Chamfer (Angle Distance / Distance Distance), Shell, Draft, patterns; green ✓ / red ✗ OK/Cancel; Options toggle. Not available in FreeCAD: From offset, Thin Feature, Selected Contours | ✅ |
 | P23 | Part | Revolve, Fillet (constant/variable/face/full round), Chamfer types, Shell, Draft PMs | ⬜ |
 | P24 | Part | Hole Wizard terms in FreeCAD's Hole panel (Hole Type, End Condition Blind/Through All, Fit Close/Normal/Loose, Hole diameter/depth, Counterbore/Countersink, Custom Sizing); released 1.3.0. Separate Type/Positions tabs: not done | ✅ |
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P20–P21 | Model Items, centre marks, display styles; released 1.4.1. |
 | 2026-11-07 | P18–P19 | Sheet formats, title block fill, Standard 3 View, Model View; **v1.4.0 released**. |
 | 2026-11-07 | P22, P24 | SOLIDWORKS terms in feature panels (Extrude, Revolve, Hole Wizard ...); **v1.3.0 released**. |
 | 2026-11-07 | P27 | Configurations + design tables; released 1.2.2. |

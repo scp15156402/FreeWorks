@@ -1082,6 +1082,46 @@ def t_drawings():
            and et.get("drawing_number") == "Bracket", {k: et.get(k) for k in ("material", "weight", "drawing_number")})
 
 
+@step(2500)
+def t_model_items():
+    from freeworks import drawing
+    import Part, Sketcher
+    part = App.getDocument(STATE["dw_part"])
+    b2 = part.addObject("PartDesign::Body", "Body2")
+    sk = b2.newObject("Sketcher::SketchObject", "Sketch")
+    sk.AttachmentSupport = [(b2.Origin.OriginFeatures[3], "")]
+    sk.MapMode = "FlatFace"
+    pts = [App.Vector(0, 0, 0), App.Vector(81, 0, 0), App.Vector(81, 57, 0), App.Vector(0, 57, 0)]
+    for i in range(4):
+        sk.addGeometry(Part.LineSegment(pts[i], pts[(i + 1) % 4]))
+    sk.addGeometry(Part.Circle(App.Vector(40, 28, 0), App.Vector(0, 0, 1), 10))
+    sk.addConstraint(Sketcher.Constraint("DistanceX", 0, 1, 0, 2, 81))
+    sk.addConstraint(Sketcher.Constraint("DistanceY", 1, 1, 1, 2, 57))
+    sk.addConstraint(Sketcher.Constraint("Radius", 4, 10))
+    pad = b2.newObject("PartDesign::Pad", "Pad")
+    pad.Profile = sk
+    pad.Length = 43
+    part.recompute()
+    dw = App.getDocument(STATE["dw_doc"])
+    page = drawing.page_of(dw)
+    v = drawing.model_view(page, b2, "Top", 0.25, 0.3)
+    dw.recompute()
+    STATE["mi_view"] = v.Name
+
+
+@step(1500)
+def t_model_items_check():
+    from freeworks import drawing
+    dw = App.getDocument(STATE["dw_doc"])
+    v = dw.getObject(STATE["mi_view"])
+    dims = drawing.model_items(v)
+    types = sorted(d.Type for d in dims)
+    record("drawings: Model Items inserts the sketch dimensions", types == ["DistanceX", "DistanceY", "Radius"], types)
+    drawing.set_display_style([v], "hlv")
+    record("drawings: display style Hidden Lines Visible", v.HardHidden is True, v.HardHidden)
+    record("drawings: centre marks on by default", App.ParamGet("User parameter:BaseApp/Preferences/Mod/TechDraw/Decorations").GetBool("ShowCenterMarks", False))
+
+
 @step(500)
 def t_drawings_close():
     for k in ("dw_doc", "dw_part"):

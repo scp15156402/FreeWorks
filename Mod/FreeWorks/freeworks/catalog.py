@@ -180,6 +180,11 @@ add("fastener_bom", "Fastener BOM", ["Fasteners_BOM"], "bom", "Lists the fastene
 add("new_sheet", "Drawing Sheet", "TechDraw_PageDefault", "new_drawing", "Inserts a new drawing sheet with the default sheet format.", ["page", "sheet"])
 add("sheet_format", "Sheet Format...", "TechDraw_PageTemplate", "new_drawing", "Inserts a drawing sheet from a sheet format / template.", ["template", "title block"])
 add("model_view", "Model View", "FW_ModelView", "model_view", "Inserts a named view (Front, Top, Right, Isometric ...) of an open part or assembly.", ["view", "base view", "isometric view"])
+add("model_items", "Model Items", "FW_ModelItems", "smart_dimension", "Inserts the part's sketch dimensions into the selected drawing views (all views if none selected).", ["insert model items", "import dimensions", "dimensions from model"])
+add("dv_hlr", "Hidden Lines Removed", "FW_ViewHLR", "display_hlr", "Drawing view display style: hidden lines removed.", ["hlr"])
+add("dv_hlv", "Hidden Lines Visible", "FW_ViewHLV", "display_wireframe", "Drawing view display style: hidden lines visible (dashed).", ["hlv", "hidden lines"])
+add("dv_tangent", "Tangent Edges Visible", "FW_ViewTangentOn", "display_style", "Shows tangent edges in the selected drawing views.", ["tangent edges"])
+add("dv_tangent_off", "Tangent Edges Removed", "FW_ViewTangentOff", "display_hlr", "Removes tangent edges in the selected drawing views.", ["tangent edges"])
 add("std3view", "Standard 3 View", "FW_Standard3View", "standard_3view", "Front, Top and Right views of a part, in the sheet's projection (ISO: first angle, ANSI: third angle).", ["projection group", "three view"])
 add("projected_view", "Projected View", "TechDraw_ProjectionGroup", "projected_view", "Inserts a projected view from an existing view.", ["projection"])
 add("section_dview", "Section View", "TechDraw_SectionView", "section_drawing_view", "Adds a section view by cutting the parent view with a section line.", ["section"])
@@ -352,10 +357,11 @@ TABS = {
         ("View Layout", [
             ("L", "std3view"), ("L", "model_view"), ("L", "projected_view"), ("|",),
             ("L", "section_dview"), ("L", "detail_view"), ("S", ["aligned_section", "broken_view", "crop_view"]), ("|",),
-            ("L", "new_sheet"), ("L", "sheet_format"),
+            ("L", "new_sheet"), ("L", "sheet_format"), ("|",),
+            ("S", ["dv_hlr", "dv_hlv", "dv_tangent"]),
         ]),
         ("Annotation", [
-            ("L", "d_smart_dim", ["d_smart_dim", "d_hdim", "d_vdim", "hole_fit"]), ("L", "note"), ("L", "balloon"), ("|",),
+            ("L", "d_smart_dim", ["d_smart_dim", "d_hdim", "d_vdim", "hole_fit"]), ("L", "model_items"), ("L", "note"), ("L", "balloon"), ("|",),
             ("S", ["center_mark", "centerline_d", "centerline_2l"]), ("S", ["surface_finish", "weld_symbol", "leader"]), ("|",),
             ("L", "hatch"), ("L", "d_bom"), ("L", "table"),
         ]),

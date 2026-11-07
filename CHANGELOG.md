@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.4.1 - 2026-11-07
+- **Model Items** (Annotation tab): inserts the part's sketch dimensions into the selected drawing
+  views (all views if none is selected) - horizontal/vertical distances and radii/diameters,
+  placed on the view edges they describe.
+- Centre marks on holes are shown by default in drawing views, as in SOLIDWORKS.
+- **Display Style** for drawing views (View Layout tab): Hidden Lines Removed, Hidden Lines
+  Visible, Tangent Edges Visible / Removed.
+
 ## v1.4.0 - 2026-11-07
 Drawings.
 - **Sheet formats:** ISO A0 - A4 (and A4 portrait) and ANSI A - E, with zone borders, the
