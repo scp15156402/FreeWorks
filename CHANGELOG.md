@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0 - 2026-11-07
+Milestone release: everything from 1.0.1 to 1.0.5 plus the research that drives v1.2+.
+- One-line install, update, rollback and uninstall for Windows (see README).
+- "Let's get it up to date" protocol and tools for Claude / developers (`CLAUDE.md`, `dev/`).
+- Stability: guarded UI code, freeze watchdog, safe mode, crash recovery, stress-tested.
+- Research documents: `docs/CSWA_CSWP_SCOPE.md` (what a CSWA/CSWP user needs),
+  `docs/GAP_ANALYSIS.md` (what FreeCAD 1.1.4 does and does not do), `docs/COMMUNITY.md`
+  (which community add-ons FreeWorks uses). Roadmap: v1.2 materials, Mass Properties and
+  SOLIDWORKS-style mates; v1.3 equations and configurations; v1.4 drawings.
+
 ## v1.0.5 - 2026-11-07
 Safe mode, recovery and long-session smoothness.
 - **Safe mode**: start FreeWorks with Shift held, the "FreeWorks (Safe Mode)" Start-menu shortcut or

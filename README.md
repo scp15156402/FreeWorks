@@ -150,8 +150,18 @@ FreeWorks changes what you see and how you work. It doesn't change FreeCAD's geo
   - **Re-apply FreeWorks look & settings**
 - **View → User Interface → Show FreeCAD Toolbars** brings back FreeCAD's own toolbars and menus, if you need a FreeCAD workbench FreeWorks doesn't cover. Tools → *FreeCAD Workbenches* lists them all.
 - **Help → FreeWorks Command Map** shows every SolidWorks name, the FreeCAD command behind it, and whether it is approximate.
+- **Safe mode:** hold **Shift** while starting FreeWorks, or use the *FreeWorks (Safe Mode)* shortcut. You get plain FreeCAD menus and toolbars, and your files are untouched. If FreeWorks didn't finish starting last time, it starts in safe mode by itself and explains why.
+- **Tools → Reset FreeWorks Settings** puts FreeWorks' settings back to their defaults. Your projects aren't touched.
+- **View → Large Model Mode** makes big models faster to display: coarser display, no anti-aliasing, no view animations. FreeWorks suggests it for documents with 600+ objects.
+- **Help → FreeWorks Diagnostics** lists freezes, slow actions and caught errors, ready to paste into a bug report. The log is `FreeWorks.log` (Help → Open Log Folder).
 - Messages and errors: View → User Interface → Report View.
 - If FreeWorks fails to start, the reason is in `D:\FreeWorks\launcher-error.txt` or the Report View.
+
+## Roadmap
+
+FreeWorks aims to cover everything a CSWA/CSWP-certified SolidWorks user does.
+- [What that scope is](docs/CSWA_CSWP_SCOPE.md), [what FreeCAD can and can't do today](docs/GAP_ANALYSIS.md), and [which community add-ons FreeWorks uses](docs/COMMUNITY.md).
+- Next: **v1.2** SolidWorks materials and Mass Properties, plus SolidWorks-style mates. **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
 
 ## Credits and licences
 

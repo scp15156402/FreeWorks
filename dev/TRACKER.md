@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P10 – Community projects survey
+**Next part:** P12 – Materials + Mass Properties exactly like SOLIDWORKS
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -39,8 +39,8 @@ then P23, P25, P28 → P34.
 | P7 | Stability | Stress test suite (`dev/run_tests.sh --stress`: 30 sketch edits, 300 tab switches, 200 shortcuts, 200 context menus, 25 gestures, 3×12 documents; leak/plateau/stall/slow checks). Findings fixed: MSAA 4x memory growth → line smoothing default (MSAA opt-in), styles scoped to FreeWorks widgets, faster dock healing, status bar restyle only on change; released 1.0.5 with P6 | ✅ |
 | P8 | Research | CSWA + CSWP exam scope (official topic lists, sample exams) → docs/CSWA_CSWP_SCOPE.md (≈70 requirement IDs R-DOC/SK/PF/CF/AS/DR) | ✅ |
 | P9 | Research | Gap analysis CSWA/CSWP vs FreeCAD 1.1.4 + FreeWorks → docs/GAP_ANALYSIS.md; backlog re-prioritised (equations + configurations moved to v1.3, drawings to v1.4) | ✅ |
-| P10 | Research | Community projects survey (assembly add-ons, TechDraw extensions, SW-like macros/UI projects, materials libraries, BOM tools) → docs/COMMUNITY.md, reuse decisions | ⬜ |
-| P11 | Release | v1.1 release: version bump, changelog, zip, push, GitHub release | ⬜ |
+| P10 | Research | Community projects survey → docs/COMMUNITY.md: keep built-in Assembly; Ribbon/PieMenu/Assembly4/A2plus/Vars not used; own SW-named material cards; BOM WB revisit in P20 | ✅ |
+| P11 | Release | v1.1.0 released (stable branch): install/update/rollback, AI entry point, stability work, research docs | ✅ |
 | P12 | Assembly | Materials + Mass Properties exactly like SW (material library names, output coordinate system, units, report) – CSWA critical | ⬜ |
 | P13 | Assembly | Mate PropertyManager UI (Mate Selections, Standard/Advanced/Mechanical, alignment, flip, pop-up mate toolbar) | ⬜ |
 | P14 | Assembly | Standard mates → FreeCAD joints mapping + auto-suggest from selection; edit existing mates | ⬜ |
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P10–P11 | Community survey + reuse decisions; FreeWorks 1.1.0 released. |
 | 2026-11-07 | P9 | Gap analysis from the FreeCAD 1.1.4 command list, joint types and material library; backlog re-ordered. |
 | 2026-11-07 | P8 | CSWA/CSWP scope from official Dassault pages + sample exams; requirement IDs for gap analysis. |
 | 2026-11-07 | P7 | Stress suite (69 checks with --stress); MSAA memory finding; scoped styles; released 1.0.5. |
