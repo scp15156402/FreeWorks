@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P9 – Gap analysis vs FreeCAD 1.1
+**Next part:** P10 – Community projects survey
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -19,10 +19,13 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | Version | Theme | Parts |
 |---|---|---|
 | v1.1 | Install/update, AI entry point, stability, research | P1–P11 |
-| v1.2 | Assemblies & mates (SOLIDWORKS workflows) | P12–P17 |
-| v1.3 | Drawings | P18–P21 |
-| v1.4 | Part PropertyManagers, sketching, equations, configurations, materials | P22–P29 |
-| v1.5 | GUI/UX polish: FeatureManager, PropertyManager look, confirmation corner, context toolbar | P30–P34 |
+| v1.2 | Materials + Mass Properties, assemblies & mates (SOLIDWORKS workflows) | P12–P17 |
+| v1.3 | CSWP segments 1–2: equations, configurations + design tables, Extrude PM, Hole Wizard PM | P26, P27, P22, P24 |
+| v1.4 | Drawings | P18–P21 |
+| v1.5 | Remaining part PMs, sketching, GUI/UX polish | P23, P25, P28–P34 |
+
+Order of work after P11 (from docs/GAP_ANALYSIS.md): P12 → P17, then P26, P27, P22, P24, then P18 → P21,
+then P23, P25, P28 → P34.
 
 ## Parts
 | # | Track | Part | Status |
@@ -35,7 +38,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | P6 | Stability | Safe mode (--safe, Shift at launch, Start-menu shortcut), crash sentinel → automatic safe start + notice, Reset FreeWorks Settings, Large Model Mode (+ suggestion for big documents); tests for all | ✅ |
 | P7 | Stability | Stress test suite (`dev/run_tests.sh --stress`: 30 sketch edits, 300 tab switches, 200 shortcuts, 200 context menus, 25 gestures, 3×12 documents; leak/plateau/stall/slow checks). Findings fixed: MSAA 4x memory growth → line smoothing default (MSAA opt-in), styles scoped to FreeWorks widgets, faster dock healing, status bar restyle only on change; released 1.0.5 with P6 | ✅ |
 | P8 | Research | CSWA + CSWP exam scope (official topic lists, sample exams) → docs/CSWA_CSWP_SCOPE.md (≈70 requirement IDs R-DOC/SK/PF/CF/AS/DR) | ✅ |
-| P9 | Research | Gap analysis CSWA/CSWP vs FreeCAD 1.1 + FreeWorks → prioritized backlog (may reorder P12+) | ⬜ |
+| P9 | Research | Gap analysis CSWA/CSWP vs FreeCAD 1.1.4 + FreeWorks → docs/GAP_ANALYSIS.md; backlog re-prioritised (equations + configurations moved to v1.3, drawings to v1.4) | ✅ |
 | P10 | Research | Community projects survey (assembly add-ons, TechDraw extensions, SW-like macros/UI projects, materials libraries, BOM tools) → docs/COMMUNITY.md, reuse decisions | ⬜ |
 | P11 | Release | v1.1 release: version bump, changelog, zip, push, GitHub release | ⬜ |
 | P12 | Assembly | Materials + Mass Properties exactly like SW (material library names, output coordinate system, units, report) – CSWA critical | ⬜ |
@@ -71,6 +74,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P9 | Gap analysis from the FreeCAD 1.1.4 command list, joint types and material library; backlog re-ordered. |
 | 2026-11-07 | P8 | CSWA/CSWP scope from official Dassault pages + sample exams; requirement IDs for gap analysis. |
 | 2026-11-07 | P7 | Stress suite (69 checks with --stress); MSAA memory finding; scoped styles; released 1.0.5. |
 | 2026-11-07 | P5 | Stability audit and fixes, watchdog, diagnostics; suite 44/44; released 1.0.4. |
