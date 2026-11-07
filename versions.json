@@ -1,0 +1,29 @@
+{
+  "_comment": "Single source of truth for what FreeWorks installs. Installer, updater and dev tools read this file. Change versions here only (see dev/UPDATE_PROTOCOL.md).",
+  "freeworks": "1.1.0-dev",
+  "channel": "stable",
+  "freecad": {
+    "version": "1.1.4",
+    "tag": "1.1.4",
+    "windows_archive": "FreeCAD_1.1.4-Windows-x86_64-py311.7z",
+    "windows_installer": "FreeCAD_1.1.4-Windows-x86_64-py311-installer.exe",
+    "linux_appimage": "FreeCAD_1.1.4-Linux-x86_64-py311.AppImage",
+    "sha256": {
+      "windows_archive": null,
+      "windows_installer": null
+    },
+    "release_url": "https://github.com/FreeCAD/FreeCAD/releases/tag/1.1.4"
+  },
+  "addons": [
+    {"name": "SheetMetal", "repo": "shaise/FreeCAD_SheetMetal", "ref": "master", "workbench": "SMWorkbench", "purpose": "Sheet Metal tab"},
+    {"name": "fasteners", "repo": "shaise/FreeCAD_FastenersWB", "ref": "master", "workbench": "FastenersWorkbench", "purpose": "Toolbox / standard hardware"},
+    {"name": "Curves", "repo": "tomate44/CurvesWB", "ref": "main", "workbench": "CurvesWorkbench", "purpose": "Zebra, curvature, draft analysis, advanced surfaces"}
+  ],
+  "optional_addons": [
+    {"name": "Render", "repo": "FreeCAD/FreeCAD-render", "ref": "master", "workbench": "RenderWorkbench", "purpose": "Photo-realistic rendering (needs external renderer)"}
+  ],
+  "solidworks_reference": {
+    "baseline": "SOLIDWORKS 2025/2026 default UI (light theme, CommandManager)",
+    "notes": "docs/SOLIDWORKS_REFERENCE.md"
+  }
+}
