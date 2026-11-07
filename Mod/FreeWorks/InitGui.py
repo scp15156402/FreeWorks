@@ -67,6 +67,8 @@ try:
         _ov.SetString("Widgets", _ov.GetString("Widgets", "").replace("Tasks,", "").replace("Tasks", ""))
     prefs.apply()
     naming.sync_icon_theme()
+    from freeworks import materials
+    materials.register()             # SOLIDWORKS-named material library
 except StopIteration:
     App.Console.PrintMessage("FreeWorks: SAFE MODE - FreeWorks interface not loaded\n")
 except Exception as e:

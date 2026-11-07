@@ -254,7 +254,7 @@ add("ds_points", "Points", "FW_DisplayPoints", "display_wireframe", "Displays ve
 add("hide_show", "Hide/Show Items", "FW_HideShowItems", "hide_show", "Toggles visibility of planes, axes, origins and sketches.", ["view planes", "view origins", "view sketches"])
 add("toggle_vis", "Hide/Show", "Std_ToggleVisibility", "hide_show", "Hides or shows the selected items.", ["visibility"])
 add("appearance", "Edit Appearance", "Std_SetAppearance", "appearance", "Edits color, material and optical properties.", ["color", "colour", "material"])
-add("material", "Edit Material", "Std_SetMaterial", "appearance", "Assigns a material (density) to the part.", ["material", "density"])
+add("material", "Edit Material", "FW_EditMaterial", "appearance", "Assigns a material (SOLIDWORKS names: AISI 1020, 6061 Alloy, ...) or a custom density to the part or selected bodies.", ["material", "density", "steel", "aluminum", "aluminium"])
 add("scene", "Apply Scene", "FW_SceneMenu", "scene", "Changes the background scene.", ["background"])
 add("perspective", "Perspective", "Std_PerspectiveCamera", "perspective", "Displays a perspective view.", [])
 add("orthographic", "Orthographic", "Std_OrthographicCamera", "view_orientation", "Displays an orthographic view.", [])

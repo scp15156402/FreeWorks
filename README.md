@@ -113,7 +113,8 @@ Documents\FreeWorks\   your projects and macros (never touched by updates/uninst
 | Ctrl+N / Ctrl+Y | New document / Redo |
 
 **Evaluate**
-- **Mass Properties**: mass, volume, surface area, centre of mass, principal axes and moments, laid out like SolidWorks' report. Density comes from the assigned material, with 1000 kg/m³ when none is set, the same default as SolidWorks.
+- **Mass Properties** (Evaluate tab): mass, volume, surface area, centre of mass, principal axes and moments, and moments of inertia at the centre of mass and at the output coordinate system, laid out like SolidWorks' report. You can report relative to any coordinate system, in MMGS, CGS, MKS or IPS, with your choice of decimal places, and include or leave out hidden bodies. It works for parts, assemblies (sub-assemblies included, each component with its own material) and selections.
+- **Edit Material** (right-click a body): a material library with SolidWorks names and densities (AISI 1020, Alloy Steel, 6061 Alloy, 1060 Alloy, Copper, Brass, ABS and more), or a custom density taken from the drawing. With no material assigned, the density is 1000 kg/m³, the same default as SolidWorks.
 - **Section Properties**.
 - **Interference Detection**: lists the clashes and highlights the interference volume in red.
 - **Bounding Box**, **Check**.
@@ -161,7 +162,7 @@ FreeWorks changes what you see and how you work. It doesn't change FreeCAD's geo
 
 FreeWorks aims to cover everything a CSWA/CSWP-certified SolidWorks user does.
 - [What that scope is](docs/CSWA_CSWP_SCOPE.md), [what FreeCAD can and can't do today](docs/GAP_ANALYSIS.md), and [which community add-ons FreeWorks uses](docs/COMMUNITY.md).
-- Next: **v1.2** SolidWorks materials and Mass Properties, plus SolidWorks-style mates. **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
+- Next: **v1.2** SolidWorks-style mates and assembly tools (materials and Mass Properties are done). **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
 
 ## Credits and licences
 

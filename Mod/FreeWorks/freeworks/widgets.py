@@ -329,7 +329,7 @@ class ReportDialog(QtWidgets.QDialog):
     def recalc(self):
         from . import commands
         from . import watchdog
-        {"Mass Properties": commands.mass_properties, "Section Properties": commands.section_properties,
+        {"Section Properties": commands.section_properties,
          "Bounding Box": commands.bounding_box, "FreeWorks Diagnostics": watchdog.show}.get(self.title, lambda: None)()
 
     def copy(self):

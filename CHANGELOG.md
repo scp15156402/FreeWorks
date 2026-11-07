@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.1 - 2026-11-07
+CSWA essentials: materials and Mass Properties.
+- **Edit Material** (right-click a body, or Tools/Evaluate): a library with SOLIDWORKS material
+  names and densities - AISI 1020, Alloy Steel, Plain Carbon Steel, AISI 304, 6061 Alloy, 1060 Alloy,
+  Copper, Brass, ABS and more (36 cards) - plus FreeCAD's own materials and a **custom density**
+  for "Density = 0.0079 g/mm^3" style questions. The body takes the material's colour.
+- **Mass Properties** dialog rebuilt: report relative to any coordinate system, MMGS / CGS / MKS /
+  IPS, decimal places, include hidden bodies/components, selected items, principal axes, moments at
+  the centre of mass and at the output coordinate system (positive tensor notation), Copy to
+  Clipboard.
+- Assemblies: every component counts once with its own material, sub-assembly placements included,
+  hidden components optional. Mixed materials work.
+
 ## v1.1.0 - 2026-11-07
 Milestone release: everything from 1.0.1 to 1.0.5 plus the research that drives v1.2+.
 - One-line install, update, rollback and uninstall for Windows (see README).

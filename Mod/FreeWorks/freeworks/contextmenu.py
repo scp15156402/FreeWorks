@@ -50,10 +50,12 @@ def items(recipient):
             top += ["edit_sketch", "extrude", "extrude_cut", "revolve", "|", "normal_to", "toggle_vis"]
         elif o.isDerivedFrom("PartDesign::Plane") or o.TypeId == "App::Plane":
             top += ["sketch", "normal_to", "|", "plane", "toggle_vis"]
+        elif o.isDerivedFrom("PartDesign::Body"):
+            top += ["material", "mass_props", "|", "toggle_vis", "appearance", "zoom_sel"]
         elif o.isDerivedFrom("PartDesign::Feature") or o.isDerivedFrom("Part::Feature"):
             top += ["edit_feature", "edit_sketch", "|", "suppress", "rollback", "roll_end", "|", "toggle_vis", "appearance", "zoom_sel"]
         elif o.TypeId.startswith("Assembly") or o.TypeId == "App::Link":
-            top += ["mate", "move_component", "fix_component", "|", "toggle_vis", "appearance", "zoom_sel"]
+            top += ["mate", "move_component", "fix_component", "|", "toggle_vis", "appearance", "material", "zoom_sel"]
         else:
             top += ["toggle_vis", "appearance", "zoom_sel"]
     else:

@@ -245,14 +245,14 @@ def t_feature_names():
 
 @step(300)
 def t_mass_properties():
-    from freeworks import commands, widgets
+    from freeworks import commands, evaluate
     Gui.Selection.clearSelection()
     Gui.Selection.addSelection(STATE["body"])
     commands.mass_properties()
-    d = widgets.ReportDialog._open.get("Mass Properties")
+    d = evaluate.MassPropertiesDialog._inst
     txt = d.text.toPlainText() if d else ""
     record("evaluate: mass properties report", "Mass = 48.00 grams" in txt and "Volume = 48000.00" in txt,
-           txt.splitlines()[4:8] if txt else "no dialog")
+           txt.splitlines()[3:9] if txt else "no dialog")
     if d:
         d.close()
     Gui.Selection.clearSelection()
@@ -361,6 +361,155 @@ def t_close_all():
     for n in list(App.listDocuments()):
         App.closeDocument(n)
 
+
+
+# --------------------------------------------------------------------------- materials + mass properties (P12)
+def _box_body(doc, name, size, base=(0, 0, 0)):
+    b = doc.addObject("PartDesign::Body", name)
+    bx = b.newObject("PartDesign::AdditiveBox", name + "Box")
+    bx.Length, bx.Width, bx.Height = size
+    b.Placement.Base = App.Vector(*base)
+    return b
+
+
+def _near(a, b, tol=0.01):
+    return abs(a - b) <= tol * max(1.0, abs(b)) * 0.01 + 1e-6
+
+
+@step(600)
+def t_materials():
+    from freeworks import materials, massprops
+    names = {c["name"]: c for c in materials.cards()}
+    need = ["AISI 1020", "Alloy Steel", "6061 Alloy", "1060 Alloy", "Copper", "Brass", "ABS", "Plain Carbon Steel"]
+    record("materials: SOLIDWORKS-named cards", all(n in names for n in need) and names["AISI 1020"]["density"] == 7900,
+           [n for n in need if n not in names])
+    try:
+        m = materials.get(names["AISI 1020"]["uuid"])
+        ok = m.Name == "AISI 1020" and getattr(m, "LibraryName", "") == "FreeWorks"
+    except Exception as e:
+        ok, m = False, e
+    record("materials: library registered with FreeCAD", ok, getattr(m, "LibraryName", m))
+    doc = App.newDocument("FWMass")
+    STATE["mass_doc"] = doc.Name
+    b = _box_body(doc, "Body", (10, 20, 30), (100, 0, 0))
+    doc.recompute()
+    materials.apply([b], names["AISI 1020"]["uuid"])
+    record("materials: assign to body", materials.material_of(b) == ("AISI 1020", 7900.0) and b.ShapeMaterial.Name == "AISI 1020",
+           materials.material_of(b))
+    Gui.Selection.clearSelection()
+    res = massprops.compute(massprops.collect(use_selection=False))
+    m = 6000 * 0.0079
+    T = res["T"]
+    ok = (_near(res["mass"], m) and all(_near(a, e) for a, e in zip(res["com"], (105, 10, 15)))
+          and _near(T[0][0], m * (400 + 900) / 12) and _near(T[1][1], m * (100 + 900) / 12)
+          and _near(T[2][2], m * (100 + 400) / 12) and abs(T[0][1]) < 1e-6)
+    record("mass props: box mass, CoM, inertia (analytic)", ok, (round(res["mass"], 3), [round(x, 3) for x in res["com"]],
+           [round(T[i][i], 2) for i in range(3)]))
+    cs = b.newObject("PartDesign::CoordinateSystem", "CS")
+    try:
+        cs.MapMode = "Deactivated"
+    except Exception:
+        pass
+    cs.Placement = App.Placement(App.Vector(0, 0, 0), App.Rotation(App.Vector(0, 0, 1), 90))   # in the body: global (100,0,0)
+    doc.recompute()
+    labels = dict(massprops.coordinate_systems())
+    txt = massprops.report(res, "FWMass", cs.Label, labels.get(cs.Label), "MMGS", 2) if cs.Label in labels else ""
+    want = ["Mass = 47.40 grams", "X = 10.00", "Y = -5.00", "Z = 15.00", "Ixx = 15800.00", "Ixy = -2370.00", "Density = 0.0079 grams per cubic millimeter"]
+    record("mass props: output coordinate system (moved + rotated)", all(w in txt for w in want),
+           [w for w in want if w not in txt] or list(labels))
+    txt2 = massprops.report(res, "FWMass", units="MKS", decimals=4)
+    record("mass props: unit systems", "Mass = 0.0474 kilograms" in txt2, txt2.splitlines()[5:7])
+    b2 = _box_body(doc, "Body2", (10, 10, 10), (0, 0, 100))
+    doc.recompute()
+    materials.apply_custom([b2], "Drawing density", 2700)
+    res2 = massprops.compute(massprops.collect(use_selection=False))
+    m2 = 1000 * 0.0027
+    cz = (m * 15 + m2 * 105) / (m + m2)
+    record("mass props: two bodies, different densities", _near(res2["mass"], m + m2) and _near(res2["com"][2], cz)
+           and res2["density"] is None, (round(res2["mass"], 3), round(res2["com"][2], 3)))
+    Gui.Selection.addSelection(doc.Name, "Body2", "Body2Box.Face1")
+    res3 = massprops.compute(massprops.collect())
+    record("mass props: selection = only the selected body", res3 and _near(res3["mass"], m2), res3 and res3["mass"])
+    Gui.Selection.clearSelection()
+    materials.remove([b2])
+    record("materials: remove -> not specified (1000 kg/m^3)", materials.material_of(b2)[1] == 1000.0, materials.material_of(b2))
+
+
+@step(800)
+def t_mass_assembly():
+    from freeworks import materials, massprops
+    doc = App.getDocument(STATE["mass_doc"])
+    for n in [o.Name for o in doc.Objects]:
+        try:
+            doc.removeObject(n)
+        except Exception:
+            pass
+    b = _box_body(doc, "Pin", (10, 10, 10))
+    doc.recompute()
+    materials.apply([b], materials.card_by_name("1060 Alloy")["uuid"])
+    b.Visibility = False
+    asm = doc.addObject("Assembly::AssemblyObject", "Assembly")
+    l1 = asm.newObject("App::Link", "L1")
+    l1.LinkedObject = b
+    l2 = asm.newObject("App::Link", "L2")
+    l2.LinkedObject = b
+    l2.Placement.Base = App.Vector(50, 0, 0)
+    sub = asm.newObject("App::Part", "Sub")
+    sub.Placement.Base = App.Vector(0, 0, 100)
+    l3 = sub.newObject("App::Link", "L3")
+    l3.LinkedObject = b
+    doc.recompute()
+    Gui.Selection.clearSelection()
+    res = massprops.compute(massprops.collect(use_selection=False))
+    record("mass props: assembly = components only (no double count)", res and _near(res["mass"], 8.1),
+           res and [c[:2] for c in res["components"]])
+    ok = res and _near(res["com"][0], (5 + 55 + 5) / 3.0) and _near(res["com"][2], (5 + 5 + 105) / 3.0)
+    record("mass props: assembly CoM incl. sub-assembly placement", ok, res and [round(x, 3) for x in res["com"]])
+    l2.Visibility = False
+    try:
+        if l2.ViewObject:
+            l2.ViewObject.Visibility = False
+    except Exception:
+        pass
+    r_vis = massprops.compute(massprops.collect(hidden=False, use_selection=False))
+    record("mass props: exclude hidden components", r_vis and _near(r_vis["mass"], 5.4), r_vis and r_vis["mass"])
+    Gui.Selection.addSelection(doc.Name, "Assembly", "L2.")
+    r_sel = massprops.compute(massprops.collect())
+    record("mass props: selected component", r_sel and _near(r_sel["mass"], 2.7) and _near(r_sel["com"][0], 55),
+           r_sel and (r_sel["mass"], r_sel["com"]))
+    Gui.Selection.clearSelection()
+
+
+@step(800)
+def t_evaluate_dialogs():
+    from freeworks import evaluate, commands
+    doc = App.getDocument(STATE["mass_doc"])
+    d = evaluate.MassPropertiesDialog.open()
+    txt = d.text.toPlainText()
+    record("mass props dialog: report + coordinate systems", "Mass = 8.10 grams" in txt and d.cs.count() >= 1,
+           txt.splitlines()[:6])
+    d.units.setCurrentText("CGS")
+    record("mass props dialog: units switch", "grams per cubic centimeter" in d.text.toPlainText(), d.text.toPlainText().splitlines()[3:4])
+    d.units.setCurrentText("MMGS")
+    d.close()
+    App.closeDocument(doc.Name)
+    doc = App.newDocument("FWMat")
+    b = _box_body(doc, "Body", (10, 10, 10))
+    doc.recompute()
+    Gui.Selection.clearSelection()
+    commands.run_key("material")
+    QtWidgets.QApplication.processEvents()
+    md = evaluate.MaterialDialog._inst
+    ok = False
+    if md:
+        it = md.tree.findItems("6061 Alloy", QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive)
+        if it:
+            md.tree.setCurrentItem(it[0])
+            md.apply()
+            ok = b.ShapeMaterial.Name == "6061 Alloy" and "6061 Alloy" in md.target_lbl.text()
+        md.close()
+    record("material dialog: pick and apply", ok, b.ShapeMaterial.Name)
+    App.closeDocument(doc.Name)
 
 @step(800)
 def t_no_errors():

@@ -13,8 +13,8 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 | ID | FreeCAD 1.1.4 | FreeWorks today | Gap | Plan |
 |---|---|---|---|---|
 | R-DOC-1 Units MMGS/IPS, decimals | 🟡 unit schemas (mm/kg/s, MKS, inch…) + global decimals; no per-document "MMGS" | ⬜ | SW unit-system names, per-document decimals in Document Properties | P33 (P12 shows unit choice in Mass Properties) |
-| R-DOC-2 Material by SW name | 🟡 material system + `Std_SetMaterial`; library has *Aluminum-6061-T6*, *Steel-C10*… but **no AISI 1020, 1060 Alloy, Alloy Steel, Copper, Brass, ABS** | ⬜ (density default fixed in 1.0.3) | SW-named library with SW densities; *Edit Material* on the Material node | **P12** own library (.FCMat files) |
-| R-DOC-3 Mass Properties dialog | 🟡 shape volume/CoM/inertia via API, no dialog | 🟡 FW report: mass g, volume, area, CoM, principal axes, inertia | **output coordinate system**, assembly CoM across links/placements, override mass, SW layout | **P12** |
+| R-DOC-2 Material by SW name | 🟡 material system + `Std_SetMaterial`; library has *Aluminum-6061-T6*, *Steel-C10*… but **no AISI 1020, 1060 Alloy, Alloy Steel, Copper, Brass, ABS** | ✅ 1.1.1: FreeWorks library + Edit Material | SW-named library with SW densities; *Edit Material* on the Material node | **P12** own library (.FCMat files) |
+| R-DOC-3 Mass Properties dialog | 🟡 shape volume/CoM/inertia via API, no dialog | ✅ 1.1.1 (override mass not yet) | **output coordinate system**, assembly CoM across links/placements, override mass, SW layout | **P12** |
 | R-DOC-4 Measure | ✅ `Std_Measure` (unified measure, 1.0+) | 🟡 mapped (M) | SW Measure panel look, XYZ / centre-to-centre options | P31 polish |
 | R-DOC-5 Coordinate system | ✅ `PartDesign_CoordinateSystem` + core datums (1.1) | 🟡 mapped | usable as *Report relative to* target | P12 |
 | R-DOC-6 3D section view | ✅ `Std_ToggleClipPlane`, `Part_SectionCut` | 🟡 mapped | SW Section View PM (plane picker, offset) | P31 |
@@ -67,7 +67,7 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 | R-AS-9 Interference detection | ❌ native command | ✅ FW_Interference (pairwise volumes) | SW panel look; coincident-as-interference option | P17 |
 | R-AS-10 Assembly features | ❌ (cuts must be made in parts) | ⬜ | assembly cut = own feature applying a cut to selected components (feature scope) | later (v1.6) |
 | R-AS-11 In-context / external refs | 🟡 edit part in place, cross-document links, SubShapeBinder | 🟡 | `->` markers, lock/break references | P30 |
-| R-AS-12 Assembly mass props | 🟡 API only | 🟡 FW report sums visible solids | include link placements, sub-assemblies, CS output | **P12** |
+| R-AS-12 Assembly mass props | 🟡 API only | ✅ 1.1.1 | include link placements, sub-assemblies, CS output | **P12** |
 | R-AS-13 Suppression states | 🟡 visibility, `Suppressed` property, no lightweight | 🟡 | SW wording | P16 |
 | R-AS-14 Exploded view & BOM | ✅ `Assembly_CreateView` (exploded), `Assembly_CreateBom` | 🟡 mapped | Explode PM wording, BOM in drawing | P17, P20 |
 

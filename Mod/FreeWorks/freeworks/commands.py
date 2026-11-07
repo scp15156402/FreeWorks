@@ -409,63 +409,20 @@ def _solids_from_selection():
 
 
 def _density(obj):
-    """kg/m^3. SolidWorks uses 1000 kg/m^3 when no material is assigned; FreeCAD's
-    placeholder material "Default" (density 1 kg/m^3) counts as 'no material'."""
-    for o in (obj, getattr(obj, "Tip", None)):
-        try:
-            m = o.ShapeMaterial
-            if not m or m.Name in ("", "Default"):
-                continue
-            d = m.PhysicalProperties.get("Density") if hasattr(m, "PhysicalProperties") else None
-            if d:
-                return App.Units.Quantity(d).getValueAs("kg/m^3").Value, m.Name
-        except Exception:
-            pass
-    return 1000.0, "<not specified>"
+    """kg/m^3 and material name (see materials.material_of)."""
+    from . import materials
+    name, rho = materials.material_of(obj)
+    return rho, name
 
 
 def mass_properties():
-    items = _solids_from_selection()
-    if not items:
-        msg("No solid bodies found. Select a body or open a part.")
-        return
-    lines = []
-    tot_m = 0.0
-    tot_c = App.Vector()
-    for obj, shp in items:
-        rho, mat = _density(obj)
-        k = rho * 1e-9 * 1000.0  # kg/m^3 -> g/mm^3
-        V = shp.Volume
-        A = shp.Area
-        m = V * k
-        cm = shp.CenterOfMass if hasattr(shp, "CenterOfMass") else shp.Solids[0].CenterOfMass
-        tot_m += m
-        tot_c += cm * m
-        M = shp.MatrixOfInertia
-        pp = shp.Solids[0].PrincipalProperties if len(shp.Solids) == 1 else None
-        lines += ["Mass properties of %s" % obj.Label,
-                  "     Material: %s" % mat,
-                  "     Density = %.2f kg/m^3%s" % (rho, " (default)" if mat == "<not specified>" else ""),
-                  "", "Mass = %.2f grams" % m, "", "Volume = %.2f cubic millimeters" % V,
-                  "", "Surface area = %.2f square millimeters" % A, "",
-                  "Center of mass: ( millimeters )", "     X = %.2f" % cm.x, "     Y = %.2f" % cm.y, "     Z = %.2f" % cm.z, ""]
-        if pp:
-            mom = pp["Moments"]
-            ax = [pp["FirstAxisOfInertia"], pp["SecondAxisOfInertia"], pp["ThirdAxisOfInertia"]]
-            lines += ["Principal axes of inertia and principal moments of inertia: ( grams * square millimeters )",
-                      "Taken at the center of mass."]
-            for n, a, mo in zip(("Ix", "Iy", "Iz"), ax, mom):
-                lines.append("     %s = (%.3f, %.3f, %.3f)     P%s = %.2f" % (n, a.x, a.y, a.z, n[1], mo * k))
-            lines.append("")
-        lines += ["Moments of inertia: ( grams * square millimeters )", "Taken at the center of mass and aligned with the output coordinate system.",
-                  "     Lxx = %.2f   Lxy = %.2f   Lxz = %.2f" % (M.A11 * k, M.A12 * k, M.A13 * k),
-                  "     Lyx = %.2f   Lyy = %.2f   Lyz = %.2f" % (M.A21 * k, M.A22 * k, M.A23 * k),
-                  "     Lzx = %.2f   Lzy = %.2f   Lzz = %.2f" % (M.A31 * k, M.A32 * k, M.A33 * k), "", "-" * 60, ""]
-    if len(items) > 1 and tot_m > 0:
-        c = tot_c * (1.0 / tot_m)
-        lines += ["Total mass = %.2f grams" % tot_m, "Combined center of mass = (%.2f, %.2f, %.2f) mm" % (c.x, c.y, c.z)]
-    from . import widgets
-    widgets.ReportDialog.show_text("Mass Properties", "\n".join(lines), "mass_properties")
+    from . import evaluate
+    evaluate.MassPropertiesDialog.open()
+
+
+def edit_material():
+    from . import evaluate
+    evaluate.MaterialDialog.open()
 
 
 def section_properties():
@@ -608,6 +565,7 @@ def register():
         ("relations", add_relation, "FW_AddRelation", "sketch"),
         ("mate", mate_menu, "FW_Mate", "doc"),
         ("mass_props", mass_properties, "FW_MassProperties", "doc"),
+        ("material", edit_material, "FW_EditMaterial", "doc"),
         ("section_props", section_properties, "FW_SectionProperties", "doc"),
         ("interference", interference, "FW_Interference", "doc"),
         ("bbox", bounding_box, "FW_BoundingBox", "doc"),
