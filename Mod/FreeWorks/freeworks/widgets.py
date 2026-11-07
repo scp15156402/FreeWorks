@@ -495,6 +495,7 @@ class OptionsDialog(QtWidgets.QDialog):
         ("FitOnStandardView", "Zoom to fit when changing to a standard view", False),
         ("ShowWelcome", "Show the Welcome dialog at startup", True),
         ("CommandManagerText", "Show command text in the CommandManager", True),
+        ("CheckForUpdates", "Check GitHub for FreeWorks updates (once a day)", True),
     ]
 
     @classmethod

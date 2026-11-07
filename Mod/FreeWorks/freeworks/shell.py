@@ -324,6 +324,10 @@ def build_menubar(bar):
     a.triggered.connect(show_command_map)
     a = m.addAction("FreeWorks Keyboard Shortcuts")
     a.triggered.connect(show_shortcut_map)
+    a = m.addAction("Check for FreeWorks Updates...")
+    a.triggered.connect(lambda: __import__("freeworks.updater", fromlist=["check"]).check(manual=True))
+    a = m.addAction("FreeWorks on GitHub")
+    a.triggered.connect(lambda: QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/scp15156402/FreeWorks")))
     m.addSeparator()
     for c in ("Std_OnlineHelp", "Std_FreeCADUserHub", "Std_FreeCADForum", "|", "Std_About"):
         m.addSeparator() if c == "|" else _cmd_act(m, c)

@@ -225,8 +225,9 @@ if (-not $NoShortcuts) {
 # ---------------------------------------------------------------- uninstaller
 Copy-Item -Force (Join-Path $Here "uninstall.ps1") $InstallDir -ErrorAction SilentlyContinue
 Copy-Item -Force (Join-Path $Here "README.md") $InstallDir -ErrorAction SilentlyContinue
+Copy-Item -Force (Join-Path $Here "Update.cmd") $InstallDir -ErrorAction SilentlyContinue
 
 Step "FreeWorks is installed"
 Write-Host "    Start it from the Desktop shortcut or $launcher" -ForegroundColor White
-Write-Host "    To update FreeWorks later: run Install.cmd again (your settings are kept)." -ForegroundColor Gray
+Write-Host "    Updates: FreeWorks checks GitHub daily, or run $InstallDir\Update.cmd (your settings are kept)." -ForegroundColor Gray
 Write-Host ""

@@ -34,6 +34,8 @@ def on_activated():
         gestures.hook_views()
         _close_start_page()
         win.statusBar().showMessage("FreeWorks ready (%.1f s)" % (time.time() - t0), 4000)
+        from . import updater
+        QtCore.QTimer.singleShot(15000, updater.check)
         log("startup %.2fs" % (time.time() - t0))
         if params().GetBool("ShowWelcome", True) and not App.listDocuments() and not os.environ.get("FREEWORKS_NO_WELCOME"):
             from .widgets import NewDocumentDialog

@@ -8,3 +8,4 @@ First release, for FreeCAD 1.1.4.
 - Mass Properties, Section Properties, Interference Detection, Bounding Box reports.
 - SolidWorks look: theme tokens, sketch colours, selection colours, lighting, anti-aliasing, tessellation.
 - Windows installer to D:\FreeWorks with SheetMetal, Fasteners and Curves add-ons and FreeWorks branding.
+- One-line install from GitHub (get.ps1), daily update check with one-click update, Update.cmd fetches the latest release.
