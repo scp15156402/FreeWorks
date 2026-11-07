@@ -160,13 +160,17 @@ class GestureWheel(QtWidgets.QWidget):
         super().__init__(mw())
         self.setAttribute(Qt.WA_TransparentForMouseEvents)
         self.setAttribute(Qt.WA_NoSystemBackground)
-        self.keys = keys
-        self.sel = -1
         s = 2 * (self.R_OUT + 52)
         self.resize(int(s * 1.6), s)
+        self.restart(keys, center)
+
+    def restart(self, keys, center):
+        """Reuse the wheel for the next gesture (built once: no widget creation inside the mouse filter)."""
+        self.keys = keys
+        self.sel = -1
         self.center = center
         lp = mw().mapFromGlobal(center)
-        self.move(lp.x() - self.width() // 2, lp.y() - s // 2)
+        self.move(lp.x() - self.width() // 2, lp.y() - self.height() // 2)
         self.raise_()
         self.icons = [icon(catalog.C[k]["icon"] or catalog.first_existing(catalog.C[k]) or "") if k else None for k in keys]
 

@@ -272,7 +272,7 @@ add("perspective", "Perspective", "Std_PerspectiveCamera", "perspective", "Displ
 add("orthographic", "Orthographic", "Std_OrthographicCamera", "view_orientation", "Displays an orthographic view.", [])
 add("rebuild", "Rebuild", "FW_Rebuild", "rebuild", "Rebuilds the model (Ctrl+B).", ["recompute", "refresh", "regenerate"])
 add("force_rebuild", "Force Rebuild", "FW_ForceRebuild", "force_rebuild", "Rebuilds all features of the model (Ctrl+Q).", ["recompute all"])
-add("options", "Options", "Std_DlgPreferences", "options", "Changes system options and document properties.", ["preferences", "settings", "system options"])
+add("options", "Options...", "FW_SystemOptions", "options", "System Options and Document Properties (drafting standard, units, material).", ["preferences", "settings", "document properties", "units", "system options"])
 add("fw_options", "FreeWorks Options", "FW_Options", "freeworks", "FreeWorks interface options.", ["freeworks settings"])
 add("customize", "Customize...", "Std_DlgCustomize", "options", "Customizes toolbars, shortcuts and macros.", ["keyboard", "shortcuts"])
 add("search", "Search Commands", "FW_SearchCommands", "search", "Finds a command by its SolidWorks name (W).", ["find command"])

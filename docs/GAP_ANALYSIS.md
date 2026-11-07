@@ -12,7 +12,7 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 ## 1. Document set-up and evaluation — CSWA critical (every question ends in a mass or CoM)
 | ID | FreeCAD 1.1.4 | FreeWorks today | Gap | Plan |
 |---|---|---|---|---|
-| R-DOC-1 Units MMGS/IPS, decimals | 🟡 unit schemas (mm/kg/s, MKS, inch…) + global decimals; no per-document "MMGS" | ⬜ | SW unit-system names, per-document decimals in Document Properties | P33 (P12 shows unit choice in Mass Properties) |
+| R-DOC-1 Units MMGS/IPS, decimals | 🟡 unit schemas (mm/kg/s, MKS, inch…) + global decimals; per-document UnitSystem (1.1) | ✅ 1.5.1 Document Properties (MMGS/CGS/MKS/IPS) | SW unit-system names, per-document decimals in Document Properties | P33 (P12 shows unit choice in Mass Properties) |
 | R-DOC-2 Material by SW name | 🟡 material system + `Std_SetMaterial`; library has *Aluminum-6061-T6*, *Steel-C10*… but **no AISI 1020, 1060 Alloy, Alloy Steel, Copper, Brass, ABS** | ✅ 1.1.1: FreeWorks library + Edit Material | SW-named library with SW densities; *Edit Material* on the Material node | **P12** own library (.FCMat files) |
 | R-DOC-3 Mass Properties dialog | 🟡 shape volume/CoM/inertia via API, no dialog | ✅ 1.1.1 (override mass not yet) | **output coordinate system**, assembly CoM across links/placements, override mass, SW layout | **P12** |
 | R-DOC-4 Measure | ✅ `Std_Measure` (unified measure, 1.0+) | 🟡 mapped (M) | SW Measure panel look, XYZ / centre-to-centre options | P31 polish |
@@ -25,7 +25,7 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 |---|---|---|---|---|
 | R-SK-1 Entities | ✅ all incl. slots, polygon, splines; text only in 1.2+ | ✅ mapped with SW names, L/R/C keys | midpoint line, perimeter-circle wording; sketch text | P28 (text appears automatically with FreeCAD 1.2) |
 | R-SK-2 Tools | ✅ offset, external geometry/projection (= Convert), trim, extend, split, mirror, arrays, move/rotate/scale | ✅ mapped | Offset PM options (chain, bi-directional, cap ends) | P29 |
-| R-SK-3 Relations | ✅ all SW relations except *pierce*/*merge* as names (coincident covers merge) | 🟡 FW_AddRelation + mapped | Add Relations PM, auto-relations display, Display/Delete Relations PM | P28 |
+| R-SK-3 Relations | ✅ all SW relations except *pierce*/*merge* as names (coincident covers merge) | 🟡 Add Relation menu; ✅ 1.5.1 Display/Delete Relations | Add Relations PM, auto-relations display, Display/Delete Relations PM | P28 |
 | R-SK-4 Smart Dimension | ✅ `Sketcher_Dimension` contextual; expressions in input | 🟡 mapped (D) | SW Modify box (spin, rebuild, ✓), driven toggle wording | P28 |
 | R-SK-5 Fully defined state | ✅ colours + solver messages | 🟡 colours set SW-like, status bar text | "(-)" prefix on under-defined sketches in tree | P30 |
 | R-SK-6 Linked dims & equations | ✅ expressions, `Std_VarSet` (global variables), spreadsheets | ✅ 1.2.1 Equations dialog, SW syntax | **Equations dialog** (global variables, equations, functions) over VarSet/expressions | **P26** |

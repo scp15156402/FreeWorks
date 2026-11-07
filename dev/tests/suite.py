@@ -1189,6 +1189,30 @@ def t_relations_check():
     Gui.ActiveDocument.resetEdit()
     App.closeDocument(doc.Name)
 
+
+@step(800)
+def t_document_properties():
+    from freeworks import optionsdlg, drawing, massprops
+    doc = App.newDocument("FWOpt")
+    d = optionsdlg.OptionsDialog.open("document")
+    d.units.setCurrentIndex(3)
+    d.dec.setValue(3)
+    d.std.setCurrentText("ANSI")
+    d.ok()
+    ok = optionsdlg.doc_units(doc) == "IPS" and doc.UnitSystem.startswith("Imperial decimal") and massprops.settings()[:2] == ("IPS", 3)
+    record("document properties: IPS units stored in the document", ok, (doc.UnitSystem, massprops.settings()))
+    record("document properties: ANSI drafting standard -> ANSI sheet, third angle",
+           App.ParamGet(drawing.TD_FILES).GetString("TemplateFile", "").endswith(drawing.DEFAULT_ANSI)
+           and App.ParamGet(optionsdlg.TD_GENERAL).GetInt("ProjectionAngle", 0) == 1)
+    d = optionsdlg.OptionsDialog.open("document")
+    d.units.setCurrentIndex(0)
+    d.dec.setValue(2)
+    d.std.setCurrentText("ISO")
+    d.ok()
+    record("document properties: back to MMGS / ISO", optionsdlg.doc_units(doc) == "MMGS" and massprops.settings()[:2] == ("MMGS", 2),
+           doc.UnitSystem)
+    App.closeDocument(doc.Name)
+
 @step(800)
 def t_no_errors():
     import freeworks

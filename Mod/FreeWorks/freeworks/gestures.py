@@ -64,8 +64,7 @@ class _Gesture(QtCore.QObject):
             if t == QtCore.QEvent.MouseButtonRelease and ev.button() == Qt.RightButton:
                 if self.wheel is not None:
                     key = self.wheel.selected_key()
-                    self.wheel.close()
-                    self.wheel.deleteLater()
+                    self.wheel.hide()                # kept for the next gesture
                     self.reset()
                     if key:
                         from . import commands
@@ -82,12 +81,26 @@ class _Gesture(QtCore.QObject):
         return False
 
     def open_wheel(self):
-        from .widgets import GestureWheel
         ctx = context.current()
         keys = catalog.GESTURES.get(ctx) or catalog.GESTURES["part"]
         keys = [k if k in catalog.C and catalog.first_existing(catalog.C[k]) else None for k in keys]
-        self.wheel = GestureWheel(keys, self.down)
-        self.wheel.show()
+        w = self.cached_wheel()
+        w.restart(keys, self.down)
+        self.wheel = w
+        w.show()
+
+    def cached_wheel(self):
+        from .widgets import GestureWheel
+        w = getattr(self, "_wheel", None)
+        try:
+            if w is not None:
+                w.isVisible()                      # raises if the C++ widget is gone
+        except RuntimeError:
+            w = None
+        if w is None:
+            w = self._wheel = GestureWheel([], QtGui.QCursor.pos())
+            w.hide()
+        return w
 
     def replay(self, w, loc, gpos):
         """Plain right-click: give FreeCAD the click it would have received."""
@@ -113,6 +126,7 @@ def hook_views():
     global _g
     if _g is None:
         _g = _Gesture()
+        QtCore.QTimer.singleShot(1500, _g.cached_wheel)     # build the wheel in idle time, once
     for w in view_widgets():
         try:
             if not w.property("fw_gesture"):

@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.5.1 - 2026-11-07
+- **Display/Delete Relations** (sketch): every relation and dimension of the sketch with
+  SOLIDWORKS names, the entities it uses and its value; filter by selected entities, relations,
+  dimensions or driven dimensions; delete the selected ones or all. Shows whether the sketch is
+  Fully, Under or Over Defined. (Replaces the old "Delete All Relations" button.)
+- **Tools > Options** now opens System Options / **Document Properties**: drafting standard
+  (ISO / ANSI - sheet format and projection angle), units (MMGS, CGS, MKS, IPS - saved with the
+  document) and decimals, Edit Material. FreeCAD's full preferences are one click away.
+- Mouse gestures: the gesture wheel is prepared once in the background, so the first gesture never
+  stutters.
+
 ## v1.5.0 - 2026-11-07
 GUI polish.
 - **Confirmation corner:** a green check and a red cross in the top-right of the graphics area
