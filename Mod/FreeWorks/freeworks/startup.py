@@ -5,11 +5,12 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtWidgets
 
-from . import log, params, warn
+from . import log, params, warn, safe_slow
 
 _state = {"done": False}
 
 
+@safe_slow
 def on_activated():
     if _state["done"]:
         from . import shell
@@ -39,7 +40,11 @@ def on_activated():
         from . import updater
         QtCore.QTimer.singleShot(1200, updater.show_whats_new)
         QtCore.QTimer.singleShot(15000, updater.check)
+        from . import STATS, watchdog
+        STATS["startup_s"] = round(time.time() - t0, 2)
         log("startup %.2fs" % (time.time() - t0))
+        watchdog.start()
+        QtCore.QTimer.singleShot(800, lambda: shell._S["cm"].prebuild())
         if params().GetBool("ShowWelcome", True) and not App.listDocuments() and not os.environ.get("FREEWORKS_NO_WELCOME"):
             from .widgets import NewDocumentDialog
             QtCore.QTimer.singleShot(300, lambda: NewDocumentDialog.ask(welcome=True))

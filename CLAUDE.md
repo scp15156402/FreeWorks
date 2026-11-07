@@ -53,12 +53,16 @@ release.
 
 ## Rules that keep FreeWorks stable and fast
 
-- **Never crash FreeCAD.** Every callback FreeWorks registers (timers, signals,
-  observers, event filters, commands) is wrapped (`@safe` or try/except) and logs
-  instead of raising.
-- **Never add lag.** No application-wide Qt event filters, no work on every mouse
-  move outside the gesture filter on 3D viewports, timers ≤ 4 Hz and cheap,
-  network only in background threads.
+- **Never crash FreeCAD.** Every class that receives Qt/FreeCAD callbacks is decorated
+  `@harden` (guards every method, `eventFilter` returns False on error); free functions
+  used as callbacks get `@safe`, or `@safe_slow` when they legitimately take long (modal
+  dialogs, user-invoked commands, startup). The suite fails if a UI class is unguarded.
+- **Never add lag.** No application-wide Qt event filters and no filter on the main window;
+  no work on every mouse move outside the gesture filter on 3D viewports; timers ≤ 4 Hz and
+  cheap; document observers only while a tool needs them; network only in background
+  threads; never re-enter FreeCAD from inside an event filter (defer with `QTimer.singleShot(0)`).
+  `@safe` logs any callback > 60 ms; the watchdog (`watchdog.py`) logs UI stalls ≥ 500 ms;
+  the suite fails on slow callbacks. Help → FreeWorks Diagnostics shows both.
 - FreeCAD knowledge that was verified in practice lives in `dev/DEV_NOTES.md`
   (e.g. icon override via `<UserData>/icons`, Tasks dock starts as an overlay,
   QOpenGLWidget viewport class names). Read it before touching those areas.

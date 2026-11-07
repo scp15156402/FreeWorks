@@ -5,7 +5,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
-from . import catalog, context, icon_path, log, safe, params
+from . import catalog, context, icon_path, log, safe, safe_slow, params
 
 _registered = False
 
@@ -27,6 +27,7 @@ def run(name, *args):
         return False
 
 
+@safe_slow
 def run_key(key):
     """Run a catalog entry by key."""
     e = catalog.C.get(key)

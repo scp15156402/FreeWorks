@@ -4,7 +4,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
-from . import catalog, context, params, safe
+from . import catalog, context, params, safe, harden
 
 Qt = QtCore.Qt
 THRESHOLD = 12
@@ -26,6 +26,7 @@ def view_widgets():
     return out
 
 
+@harden
 class _Gesture(QtCore.QObject):
     def __init__(self):
         super().__init__()
@@ -72,7 +73,9 @@ class _Gesture(QtCore.QObject):
                 else:
                     w, loc, g = self.widget, self.local, self.down
                     self.reset()
-                    self.replay(w, loc, g)
+                    # after this filter returns: a context menu opened here could close the
+                    # document (and delete this view) while we are still inside its event
+                    QtCore.QTimer.singleShot(0, lambda: self.replay(w, loc, g))
                 return True
         except Exception:
             self.reset()

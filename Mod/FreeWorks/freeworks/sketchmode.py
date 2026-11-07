@@ -3,7 +3,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore
 
-from . import context, log
+from . import context, log, harden
 
 _center = {"on": False, "sketch": None, "start": 0}
 
@@ -13,6 +13,7 @@ def start_centerline():
     if sk is None:
         return
     _center.update(on=True, sketch=sk.Name, start=sk.GeometryCount)
+    _attach()
     from . import commands
     commands.run("Sketcher_CreateLine")
     commands.msg("Centerline: lines you draw now are construction lines (Esc to finish)", 5000)
@@ -20,11 +21,12 @@ def start_centerline():
 
 def cancel():
     _center["on"] = False
+    _detach()
 
 
 def on_command(key):
-    if key != "centerline":
-        _center["on"] = False
+    if key != "centerline" and _center["on"]:
+        cancel()
 
 
 def _convert():
@@ -32,7 +34,7 @@ def _convert():
         return
     sk = context.edited_sketch()
     if sk is None or sk.Name != _center["sketch"]:
-        _center["on"] = False
+        cancel()
         return
     n0 = _center["start"]
     n = sk.GeometryCount
@@ -47,6 +49,7 @@ def _convert():
         sk.recompute()
 
 
+@harden
 class _Obs:
     def slotChangedObject(self, obj, prop):
         if _center["on"] and prop == "Geometry" and obj.Name == _center["sketch"]:
@@ -56,11 +59,27 @@ class _Obs:
 _obs = None
 
 
-def install():
+def _attach():
+    """The observer sees every property change of every object, so it is registered only
+    while the Centerline tool runs (never during normal modelling / big rebuilds)."""
     global _obs
     if _obs is None:
         _obs = _Obs()
         App.addDocumentObserver(_obs)
+
+
+def _detach():
+    global _obs
+    if _obs is not None:
+        try:
+            App.removeDocumentObserver(_obs)
+        except Exception:
+            pass
+        _obs = None
+
+
+def install():
+    pass   # nothing global to install any more (kept for API compatibility)
 
 
 def status():

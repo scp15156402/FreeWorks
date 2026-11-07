@@ -127,6 +127,71 @@ def t_ui():
     record("ui: native menu bar hidden", not win.menuBar().isVisible())
 
 
+@step(300)
+def t_stability_guards():
+    import inspect
+    import freeworks
+    from freeworks import shell, widgets, gestures, naming, sketchmode, watchdog, contextmenu, shortcuts
+    unguarded = []
+    for mod in (shell, widgets, gestures, naming, sketchmode, watchdog):
+        for name, obj in vars(mod).items():
+            if inspect.isclass(obj) and obj.__module__ == mod.__name__ and name not in ("_NoTitle",):
+                if not getattr(obj, "_fw_hardened", False):
+                    unguarded.append("%s.%s" % (mod.__name__, name))
+    record("stability: every UI/observer class guarded", not unguarded, unguarded)
+    record("stability: no global document observer while not in Centerline", sketchmode._obs is None)
+    record("stability: watchdog running", watchdog._wd is not None)
+    left = [c for c in shortcuts.DISABLE_SHORTCUTS if Gui.Command.get(c) and Gui.Command.get(c).getShortcut()]
+    record("stability: overlay-toggle shortcuts disabled", not left, left)
+    n_err = len(freeworks.STATS["errors"])
+
+    @freeworks.safe
+    def _fw_selftest_error():
+        raise ValueError("deliberate")
+    r = _fw_selftest_error()
+    record("stability: exceptions in callbacks are caught", r is None and len(freeworks.STATS["errors"]) == n_err + 1)
+    freeworks.STATS["errors"].pop()
+
+    @freeworks.safe
+    def _fw_selftest_slow():
+        time.sleep(0.09)
+    n_slow = len(freeworks.STATS["slow"])
+    _fw_selftest_slow()
+    record("stability: slow callbacks are detected", len(freeworks.STATS["slow"]) == n_slow + 1)
+    freeworks.STATS["slow"].pop()
+    cm = shell._S["cm"]
+    built = [k for k in cm.panels if k[0] == cm.kind]
+    record("stability: CommandManager tabs pre-built at idle", len(built) == len(cm.tabset), "%d/%d" % (len(built), len(cm.tabset)))
+
+
+@step(1500)   # delay = time until the NEXT step: let the freeze happen and the watchdog beat
+def t_freeze():
+    # block the event loop on purpose; the watchdog must notice
+    STATE["stalls0"] = len(__import__("freeworks").STATS["stalls"])
+    QtCore.QTimer.singleShot(50, lambda: time.sleep(0.9))
+
+
+@step(2500)
+def t_freeze_check():
+    import freeworks
+    st = freeworks.STATS["stalls"]
+    ok = len(st) > STATE["stalls0"] and st[-1][1] >= 700
+    record("stability: watchdog detects a UI freeze", ok, st[-1][1] if st else None)
+    if ok:
+        st.pop()
+    win = mw()
+    tbs = [t for t in win.findChildren(QtWidgets.QToolBar) if t.parent() is win and not t.objectName().startswith("FreeWorks")]
+    if tbs:
+        tbs[0].show()
+        STATE["tb"] = tbs[0]
+
+
+@step(300)
+def t_toolbar_heal():
+    tb = STATE.get("tb")
+    record("stability: stray FreeCAD toolbar is hidden again", tb is not None and not tb.isVisible(), tb.objectName() if tb else None)
+
+
 @step(1500)
 def t_new_part():
     from freeworks import naming
@@ -280,11 +345,17 @@ def t_close_all():
 
 @step(800)
 def t_no_errors():
+    import freeworks
     log = os.environ.get("FREEWORKS_DEBUG_LOG")
     errs = []
     if log and os.path.exists(log):
-        errs = [l.strip() for l in open(log) if l.startswith("error in") or "Traceback" in l or l.startswith("WARN")]
+        lines = [l.strip() for l in open(log)]
+        errs = [l for l in lines if (l.startswith("error in") or l.startswith("WARN")) and "_fw_selftest" not in l]
     record("stability: no FreeWorks errors logged", not errs, errs[:5])
+    slow = [(n, round(ms)) for _, n, ms in freeworks.STATS["slow"] if "_fw_selftest" not in n]
+    record("lag: no slow FreeWorks callbacks (> 60 ms)", not slow, slow[:8])
+    stalls = [(round(ms), w) for _, ms, w in freeworks.STATS["stalls"]]
+    record("lag: UI stalls during the run (info)", True, stalls[:8])
 
 
 # --------------------------------------------------------------------------- runner

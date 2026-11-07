@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.0.4 - 2026-11-07
+Stability and smoothness.
+- Every FreeWorks UI class and callback is guarded: an error inside FreeWorks is logged, never passed
+  on to FreeCAD.
+- Removed two background costs: the sketch helper no longer listens to every change in every document
+  (only while the Centerline tool runs), and FreeWorks no longer filters every main-window event.
+- Right-click is replayed after FreeWorks' event handling returns, so closing a document from the
+  context menu is safe.
+- FreeCAD's Ctrl+Arrow overlay shortcuts are disabled; FeatureManager/PropertyManager layout and hidden
+  toolbars heal themselves within 2 seconds if something changes them.
+- CommandManager tabs are built in idle time after startup, so the first tab switch never stutters.
+- New UI-freeze watchdog and slow-callback detector; **Help → FreeWorks Diagnostics** shows freezes,
+  slow callbacks and caught errors, ready to copy into a bug report. Log: UserData\FreeWorks.log.
+- Test suite: 44 checks, including deliberate errors/freezes and "no slow callbacks".
+
 ## v1.0.3 - 2026-11-07
 - **Fix: Mass Properties** used FreeCAD's placeholder "Default" material (1 kg/m³) and reported masses
   1000× too low. Unassigned material now means 1000 kg/m³, exactly like SOLIDWORKS.

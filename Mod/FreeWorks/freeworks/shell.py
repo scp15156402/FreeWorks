@@ -6,7 +6,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
-from . import catalog, context, icon, log, params, safe, warn
+from . import catalog, context, icon, log, params, safe, safe_slow, harden, warn
 from . import commands
 
 Qt = QtCore.Qt
@@ -332,6 +332,10 @@ def build_menubar(bar):
     rb = m.addAction("Roll Back to Previous Version...")
     rb.triggered.connect(updater.rollback)
     m.aboutToShow.connect(lambda rb=rb: rb.setEnabled(bool(updater.previous_version())))
+    a = m.addAction("FreeWorks Diagnostics")
+    a.triggered.connect(lambda: __import__("freeworks.watchdog", fromlist=["show"]).show())
+    a = m.addAction("Open FreeWorks Log Folder")
+    a.triggered.connect(lambda: QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(App.getUserAppDataDir())))
     a = m.addAction("FreeWorks on GitHub")
     a.triggered.connect(lambda: QtGui.QDesktopServices.openUrl(QtCore.QUrl("https://github.com/scp15156402/FreeWorks")))
     m.addSeparator()
@@ -391,6 +395,7 @@ def _show_dock(name, on):
 
 
 # ============================================================ top bar
+@harden
 class TopBar(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -544,6 +549,7 @@ def focus_search(mode="commands"):
 
 
 # ======================================================== CommandManager
+@harden
 class CommandManager(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -703,6 +709,19 @@ class CommandManager(QtWidgets.QWidget):
         self.stack.setCurrentWidget(self.panels[pk][0])
         self.update_states()
 
+    def prebuild(self, i=0):
+        """Build the remaining tabs of the current environment in idle time, one per
+        timer tick, so the first click on a tab never stutters."""
+        if not self.tabset or i >= len(self.tabset):
+            return
+        name, spec = self.tabset[i]
+        pk = (self.kind, name)
+        if pk not in self.panels:
+            w, btns = self.build_panel(name, spec)
+            self.panels[pk] = (w, btns)
+            self.stack.addWidget(w)
+        QtCore.QTimer.singleShot(40, lambda: self.prebuild(i + 1))
+
     def rebuild(self):
         for w, _ in self.panels.values():
             self.stack.removeWidget(w)
@@ -724,6 +743,7 @@ class CommandManager(QtWidgets.QWidget):
 
 
 # ============================================================ heads-up bar
+@harden
 class HeadsUp(QtWidgets.QFrame):
     ITEMS = ["zoom_fit", "zoom_area", "prev_view", "section_view", "|", "view_orient", "display", "hide_show", "appearance", "scene"]
 
@@ -793,6 +813,7 @@ class HeadsUp(QtWidgets.QFrame):
             self.raise_()
 
 
+@harden
 class FilterBar(QtWidgets.QFrame):
     def __init__(self, mdi):
         super().__init__(mdi)
@@ -855,20 +876,18 @@ def toggle_filter_toolbar(on=None):
 _OURS = ("FreeWorks",)
 
 
+@harden
 class _ToolbarGuard(QtCore.QObject):
     """Keeps FreeCAD's own toolbars hidden (the CommandManager replaces them)."""
 
+    """Installed on FreeCAD's toolbars only (they receive few events). New toolbars are
+    picked up by hide_native_toolbars(), which runs on workbench/context changes and
+    every 2 s from the controller - no filter on the busy main window."""
+
     def eventFilter(self, o, e):
-        t = e.type()
-        if t == QtCore.QEvent.Show and isinstance(o, QtWidgets.QToolBar):
-            if not params().GetBool("ShowNativeToolbars", False) and not o.objectName().startswith(_OURS):
-                QtCore.QTimer.singleShot(0, o.hide)
-        elif t == QtCore.QEvent.ChildAdded and o is mw():
-            ch = e.child()
-            if isinstance(ch, QtWidgets.QToolBar):
-                ch.installEventFilter(self)
-                if not params().GetBool("ShowNativeToolbars", False):
-                    QtCore.QTimer.singleShot(0, ch.hide)
+        if e.type() == QtCore.QEvent.Show and not params().GetBool("ShowNativeToolbars", False) \
+                and not o.objectName().startswith(_OURS):
+            QtCore.QTimer.singleShot(0, o.hide)
         return False
 
 
@@ -878,9 +897,9 @@ def hide_native_toolbars(force_show=False):
     for tb in win.findChildren(QtWidgets.QToolBar):
         if tb.objectName().startswith(_OURS) or tb.parent() is not win:
             continue
-        if g:
-            tb.removeEventFilter(g)
+        if g and not tb.property("fw_guarded"):
             tb.installEventFilter(g)
+            tb.setProperty("fw_guarded", True)
         if force_show:
             tb.show()
         elif not params().GetBool("ShowNativeToolbars", False):
@@ -889,6 +908,7 @@ def hide_native_toolbars(force_show=False):
 
 
 # ============================================================== status bar
+@harden
 class Status:
     def __init__(self):
         sb = mw().statusBar()
@@ -933,6 +953,7 @@ class Status:
 
 
 # ============================================================== controller
+@harden
 class Controller(QtCore.QObject):
     def __init__(self):
         super().__init__()
@@ -951,6 +972,9 @@ class Controller(QtCore.QObject):
 
     @safe
     def tick(self):
+        self.n = getattr(self, "n", 0) + 1
+        if self.n % 8 == 0:              # every 2 s: self-heal layout (cheap)
+            self.heal()
         c = context.current()
         if c != self.ctx:
             self.ctx = c
@@ -977,6 +1001,19 @@ class Controller(QtCore.QObject):
                 t = doc.Label + (" *" if doc.isTouched() or _modified(doc) else "")
             if tb.title.text() != (t or "FreeWorks"):
                 tb.title.setText(t or "FreeWorks")
+
+    def heal(self):
+        win = mw()
+        t = _dock("Tasks")
+        if t is not None and t.parent() is not win:
+            self.fix_docks()              # e.g. an overlay toggle moved the PropertyManager
+        if not params().GetBool("ShowNativeToolbars", False):
+            for tb in win.findChildren(QtWidgets.QToolBar):
+                if tb.parent() is win and tb.isVisible() and not tb.objectName().startswith(_OURS):
+                    hide_native_toolbars()
+                    break
+            if win.menuBar().isVisible():
+                win.menuBar().hide()
 
     def fix_docks(self):
         win = mw()
@@ -1081,7 +1118,6 @@ def install():
     if "FreeWorksTop" not in (win.styleSheet() or ""):
         win.setStyleSheet((win.styleSheet() or "") + STYLE)
     _S["guard"] = _ToolbarGuard()
-    win.installEventFilter(_S["guard"])
     dock = QtWidgets.QDockWidget("FreeWorks", win)
     dock.setObjectName("FreeWorksCommandDock")
     dock.setFeatures(QtWidgets.QDockWidget.NoDockWidgetFeatures)

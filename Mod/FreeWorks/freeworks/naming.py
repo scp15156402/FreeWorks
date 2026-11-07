@@ -7,7 +7,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore
 
-from . import catalog, icon_path, ICON_DIR, log, params, safe
+from . import catalog, icon_path, ICON_DIR, log, params, safe, safe_slow, harden
 
 # FreeCAD type -> SolidWorks base name used in the tree
 FEATURE_NAMES = {
@@ -84,6 +84,7 @@ def _relabel(o):
     o.Label = _next_label(o.Document, base)
 
 
+@harden
 class _DocObserver:
     def slotCreatedObject(self, obj):
         if not params().GetBool("AutoRenameFeatures", True):
@@ -167,7 +168,7 @@ def ensure_workbench(kind):
     shell.load_environment(kind)
 
 
-@safe
+@safe_slow
 def new_document(kind="part"):
     _counter[kind] += 1
     name = "%s%d" % (BASENAMES[kind], _counter[kind])

@@ -46,6 +46,12 @@ KEYMAP = {
     "Ctrl+Shift+F": {"*": "zoom_fit"},
 }
 
+# FreeCAD commands whose shortcuts are always removed: they would rearrange the
+# SOLIDWORKS-style layout (overlay docks) or clash with SOLIDWORKS habits.
+DISABLE_SHORTCUTS = ("Std_DockOverlayToggleLeft", "Std_DockOverlayToggleRight", "Std_DockOverlayToggleTop",
+                     "Std_DockOverlayToggleBottom", "Std_DockOverlayMouseTransparent", "Std_DockOverlayToggle",
+                     "Std_DockOverlayAll", "Std_DockOverlayTransparentAll", "Std_DockOverlayToggleTransparent")
+
 CTX_NAMES = {"*": "Everywhere", "sketch": "Sketch", "part": "Part", "assembly": "Assembly", "drawing": "Drawing"}
 
 _shortcuts = []
@@ -159,7 +165,7 @@ def resolve_conflicts():
         if not sc:
             continue
         first = _norm(sc.split(",")[0].strip())
-        if first in ours or _norm(sc) in ours:
+        if first in ours or _norm(sc) in ours or name in DISABLE_SHORTCUTS:
             try:
                 c.setShortcut("")
                 _cleared[name] = sc

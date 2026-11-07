@@ -1,7 +1,7 @@
 """SolidWorks-style right-click menus, built from the current selection."""
 import FreeCADGui as Gui
 
-from . import catalog, context
+from . import catalog, context, harden, safe
 
 
 LAST = []          # labels FreeWorks added to the menu being built
@@ -66,6 +66,7 @@ def _txt(a):
     return a.text().replace("&", "").strip()
 
 
+@safe
 def reorganize(menu=None):
     """SolidWorks order: FreeWorks commands first, the common FreeCAD items
     next, everything else under 'More'."""
@@ -107,12 +108,14 @@ def reorganize(menu=None):
     menu.adjustSize()
 
 
+@harden
 class TreeHook:
     """Applies the same ordering to the FeatureManager tree's right-click menu."""
 
     def __init__(self):
         from PySide import QtCore
 
+        @harden
         class F(QtCore.QObject):
             def eventFilter(self, o, e):
                 if e.type() == QtCore.QEvent.ContextMenu:

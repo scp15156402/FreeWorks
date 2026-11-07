@@ -6,7 +6,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
-from . import catalog, context, icon, params, safe
+from . import catalog, context, icon, params, safe, harden
 
 Qt = QtCore.Qt
 
@@ -54,6 +54,7 @@ def popup_commands(keys, title=None, only_active=False, pos=None):
 
 
 # --------------------------------------------------------------- base popup
+@harden
 class _Popup(QtWidgets.QFrame):
     def __init__(self, parent=None):
         super().__init__(parent or mw(), Qt.Popup | Qt.FramelessWindowHint)
@@ -91,6 +92,7 @@ def _tool_button(key, size=24, text=True, parent=None, on_click=None):
 
 
 # ------------------------------------------------------------ view selector
+@harden
 class ViewSelector(_Popup):
     """Spacebar 'Orientation' dialog."""
 
@@ -126,6 +128,7 @@ class ViewSelector(_Popup):
 
 
 # ---------------------------------------------------------- shortcut bar (S)
+@harden
 class ShortcutBar(_Popup):
     @classmethod
     def show_for(cls, ctx):
@@ -145,6 +148,7 @@ class ShortcutBar(_Popup):
 
 
 # --------------------------------------------------------- gesture wheel
+@harden
 class GestureWheel(QtWidgets.QWidget):
     R_IN, R_OUT = 26, 92
 
@@ -213,6 +217,7 @@ class GestureWheel(QtWidgets.QWidget):
 
 
 # --------------------------------------------------------- magnifier (G)
+@harden
 class Magnifier(QtWidgets.QWidget):
     _inst = None
     SIZE, ZOOM = 240, 2.5
@@ -284,6 +289,7 @@ class Magnifier(QtWidgets.QWidget):
 
 
 # ------------------------------------------------------------ report dialog
+@harden
 class ReportDialog(QtWidgets.QDialog):
     _open = {}
 
@@ -320,8 +326,9 @@ class ReportDialog(QtWidgets.QDialog):
 
     def recalc(self):
         from . import commands
+        from . import watchdog
         {"Mass Properties": commands.mass_properties, "Section Properties": commands.section_properties,
-         "Bounding Box": commands.bounding_box}.get(self.title, lambda: None)()
+         "Bounding Box": commands.bounding_box, "FreeWorks Diagnostics": watchdog.show}.get(self.title, lambda: None)()
 
     def copy(self):
         QtWidgets.QApplication.clipboard().setText(self.text.toPlainText())
@@ -331,6 +338,7 @@ class ReportDialog(QtWidgets.QDialog):
         super().closeEvent(e)
 
 
+@harden
 class InterferenceDialog(QtWidgets.QDialog):
     _inst = None
 
@@ -404,6 +412,7 @@ class InterferenceDialog(QtWidgets.QDialog):
 
 
 # ------------------------------------------------------- new document dialog
+@harden
 class NewDocumentDialog(QtWidgets.QDialog):
     """SolidWorks-style 'New Document' / Welcome dialog."""
 
@@ -493,6 +502,7 @@ class NewDocumentDialog(QtWidgets.QDialog):
 
 
 # ---------------------------------------------------------- options dialog
+@harden
 class OptionsDialog(QtWidgets.QDialog):
     BOOLS = [
         ("Gestures", "Mouse gestures (right-drag in the graphics area)", True),
