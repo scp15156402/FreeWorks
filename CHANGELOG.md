@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.3 - 2026-11-07
+More mates in the Mate PropertyManager.
+- **Advanced Mates:** Width (pick two groove faces, then two tab faces - the tab is centred),
+  Limit Distance and Limit Angle (applied to the Concentric / Hinge mate between the same two
+  components; FreeCAD enforces limits while you drag).
+- **Mechanical Mates:** Hinge, Gear (ratio taken from the two diameters, flip reverses the
+  direction), Rack Pinion (pinion pitch diameter) and Screw (distance per revolution), all inside
+  the Mate PropertyManager.
+- Selected mate type is highlighted; new icons.
+- Not available with FreeCAD 1.1 joints: Symmetric, Profile Center, Path, Linear Coupler, Cam, Slot,
+  Universal Joint. The Width mate is computed from the current face positions, so re-create it
+  if the groove or tab width changes.
+
 ## v1.1.2 - 2026-11-07
 SOLIDWORKS-style mating.
 - **Mate** (Assembly tab) now opens a **Mate PropertyManager**: pick two faces, edges or vertices

@@ -17,7 +17,15 @@ from .style import STYLE
 Qt = QtCore.Qt
 ICON = {"coincident": "mate_coincident", "parallel": "mate_parallel", "perpendicular": "mate_perpendicular",
         "tangent": "mate_tangent", "concentric": "mate_concentric", "lock": "mate_lock",
-        "distance": "mate_distance", "angle": "mate_angle", "hinge": "mate_hinge"}
+        "distance": "mate_distance", "angle": "mate_angle", "hinge": "mate_hinge", "gear": "mate_gear",
+        "rack_pinion": "mate_rack", "screw": "mate_screw", "width": "mate_width",
+        "limit_distance": "mate_limit_distance", "limit_angle": "mate_limit_angle"}
+LIMITS = ("limit_distance", "limit_angle")
+PM_STYLE = """
+QGroupBox QToolButton { padding: 2px 4px; border: 1px solid transparent; border-radius: 3px; }
+QGroupBox QToolButton:hover { border-color: #9DB7E0; background: #EEF4FD; }
+QGroupBox QToolButton:checked { border-color: #2F7BE5; background: #D6E6FC; }
+"""
 _PANEL = {"p": None}
 
 
@@ -116,7 +124,7 @@ class MateToolbar(QtWidgets.QFrame):
             b.setChecked(t == current)
         self.value.blockSignals(True)
         self.value.setVisible(show_value)
-        self.value.setSuffix(" deg" if current == "angle" else " mm")
+        self.value.setSuffix(mates.VALUE.get(current, ("", " mm", 0))[1])
         self.value.setValue(value)
         self.value.blockSignals(False)
 
@@ -141,7 +149,10 @@ class MatePanel:
         self.joint = None
         self.mate = None
         self.busy = False
+        self._value_for = None
         self.added = []
+        self.width_mode = False
+        self.type_btns = {}
         self.form = self._build()
         self.toolbar = MateToolbar(self)
         self.obs = _Observer(self)
@@ -171,7 +182,6 @@ class MatePanel:
 
         g = QtWidgets.QGroupBox("Standard Mates")
         grid = QtWidgets.QGridLayout(g)
-        self.type_btns = {}
         group = QtWidgets.QButtonGroup(w)
         group.setExclusive(True)
         for i, t in enumerate(mates.STANDARD):
@@ -186,6 +196,9 @@ class MatePanel:
             grid.addWidget(b, i // 2, i % 2)
             self.type_btns[t] = b
         row = len(mates.STANDARD) // 2
+        self.value_lbl = QtWidgets.QLabel()
+        grid.addWidget(self.value_lbl, row, 0, 1, 2)
+        row += 1
         self.value = QtWidgets.QDoubleSpinBox()
         self.value.setRange(0, 1e6)
         self.value.setDecimals(2)
@@ -197,24 +210,28 @@ class MatePanel:
         grid.addWidget(self.flip_dim, row, 1)
         lay.addWidget(g)
 
+        g = QtWidgets.QGroupBox("Advanced Mates")
+        grid = QtWidgets.QGridLayout(g)
+        for i, t in enumerate(mates.ADVANCED):
+            b = self._type_button(t, group)
+            grid.addWidget(b, 0, i)
+        self.lim_lbl = QtWidgets.QLabel("Min / Max:")
+        self.vmin = QtWidgets.QDoubleSpinBox()
+        self.vmax = QtWidgets.QDoubleSpinBox()
+        for sp in (self.vmin, self.vmax):
+            sp.setRange(-1e6, 1e6)
+            sp.setDecimals(2)
+            sp.setKeyboardTracking(False)
+            sp.valueChanged.connect(lambda *_: self.limits_changed())
+        grid.addWidget(self.lim_lbl, 1, 0)
+        grid.addWidget(self.vmin, 1, 1)
+        grid.addWidget(self.vmax, 1, 2)
+        lay.addWidget(g)
+
         g = QtWidgets.QGroupBox("Mechanical Mates")
-        ml = QtWidgets.QHBoxLayout(g)
-        b = QtWidgets.QToolButton()
-        b.setText("Hinge")
-        b.setIcon(icon(ICON["hinge"]))
-        b.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        b.setCheckable(True)
-        b.clicked.connect(lambda: self.set_type("hinge"))
-        group.addButton(b)
-        self.type_btns["hinge"] = b
-        ml.addWidget(b)
-        for key, label in (("mate_gear", "Gear"), ("mate_rack", "Rack Pinion"), ("mate_screw", "Screw")):
-            bb = QtWidgets.QToolButton()
-            bb.setText(label)
-            bb.setToolTip(label + " - opens FreeCAD's joint panel for this mechanical mate")
-            bb.clicked.connect(lambda _=False, k=key: self.mechanical(k))
-            ml.addWidget(bb)
-        ml.addStretch(1)
+        grid = QtWidgets.QGridLayout(g)
+        for i, t in enumerate(mates.MECHANICAL):
+            grid.addWidget(self._type_button(t, group), i // 2, i % 2)
         lay.addWidget(g)
 
         g = QtWidgets.QGroupBox("Mate alignment")
@@ -251,19 +268,57 @@ class MatePanel:
         btns.addWidget(self.b_add)
         lay.addLayout(btns)
         lay.addStretch(1)
-        w.setStyleSheet(STYLE)
+        w.setStyleSheet(STYLE + PM_STYLE)
         return w
+
+    def _type_button(self, t, group):
+        b = QtWidgets.QToolButton()
+        b.setText({"rack_pinion": "Rack Pinion", "limit_distance": "Limit Distance", "limit_angle": "Limit Angle"}.get(t, mates.LABEL[t]))
+        b.setIcon(icon(ICON[t]))
+        b.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        b.setCheckable(True)
+        b.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        b.clicked.connect(lambda _=False, t=t: self.set_type(t))
+        group.addButton(b)
+        self.type_btns[t] = b
+        return b
+
+    def allowed_now(self):
+        if self.width_mode:
+            return ["width"]
+        k = [mates.kind(r) for r in self.refs]
+        if len(k) != 2:
+            return ["width"]
+        out = mates.allowed(*k)
+        c1, c2 = mates.component(self.refs[0]), mates.component(self.refs[1])
+        for t in LIMITS:
+            if mates.motion_joint(self.asm, c1, c2, mates.LIMIT_JOINTS[t]) is not None:
+                out.append(t)
+        if "plane" in k and k[0] == k[1]:
+            out.append("width")
+        return out
 
     def sync(self):
         k = [mates.kind(r) for r in self.refs]
-        allowed = mates.allowed(*k) if len(k) == 2 else []
+        allowed = self.allowed_now()
         for t, b in self.type_btns.items():
             b.setEnabled(t in allowed)
             b.setChecked(t == self.mate)
-        show = self.mate in ("distance", "angle")
+        show = self.mate in mates.VALUE
         self.value.setVisible(show)
+        self.value_lbl.setVisible(show)
+        if show:
+            lbl, suffix, _ = mates.VALUE[self.mate]
+            self.value_lbl.setText(lbl + ":")
+            self.value.setSuffix(suffix)
         self.flip_dim.setVisible(self.mate == "distance")
-        self.value.setSuffix(" deg" if self.mate == "angle" else " mm")
+        lim = self.mate in LIMITS
+        for w in (self.lim_lbl, self.vmin, self.vmax):
+            w.setVisible(lim)
+        if lim:
+            suf = " deg" if self.mate == "limit_angle" else " mm"
+            self.vmin.setSuffix(suf)
+            self.vmax.setSuffix(suf)
         can_flip = self.mate in mates.FLIPPABLE and self.joint is not None
         self.b_align.setEnabled(can_flip)
         self.b_anti.setEnabled(can_flip)
@@ -272,22 +327,44 @@ class MatePanel:
         for r, kk in zip(self.refs, k):
             el = r[1][0].split(".")[-1] if r[1] and r[1][0] else ""
             self.sel.addItem("%s@%s  (%s)" % (el or "Origin", r[0].Label, kk))
-        if len(self.refs) < 2:
+        if self.width_mode and len(self.refs) < 4:
+            self.hint.setText(("Width selections: pick the two faces of the groove (%d/2)." % len(self.refs)) if len(self.refs) < 2
+                              else "Tab selections: pick the two faces of the tab (%d/2)." % (len(self.refs) - 2))
+        elif len(self.refs) < 2:
             self.hint.setText("Select %s face, edge or vertex." % ("a" if not self.refs else "a second"))
         else:
             self.hint.setText("%s mate. Change the type, then OK to add it." % mates.LABEL.get(self.mate, ""))
         if self.joint is not None:
             self.toolbar.sync(allowed, self.mate, self.value.value(), show)
+        self.b_align.setEnabled(can_flip)
 
     # ---------------------------------------------------------------- selection
     def add_selection(self, root, sub, pos):
         if self.busy or root is None:
             return
-        if len(self.refs) >= 2:
-            self.commit()                       # third pick: keep the current mate, start the next
+        need = 4 if self.width_mode else 2
+        if len(self.refs) >= need:
+            self.commit()                       # one pick too many: keep the current mate, start the next
         ref = mates.make_ref(self.asm, root, sub, pos)
         if ref is None:
             self.hint.setText("That isn't part of a component of this assembly.")
+            return
+        if self.width_mode:
+            n = len(self.refs)
+            if n == 1 and mates.component(self.refs[0]) != mates.component(ref):
+                self.hint.setText("Both groove faces must be on the same component.")
+                return
+            if n >= 2 and mates.component(ref) == mates.component(self.refs[0]):
+                self.hint.setText("Tab faces must be on the other component.")
+                return
+            if n == 3 and mates.component(self.refs[2]) != mates.component(ref):
+                self.hint.setText("Both tab faces must be on the same component.")
+                return
+            self.refs.append(ref)
+            if len(self.refs) == 4:
+                self.apply("width")
+                self.toolbar.show_near_cursor()
+            self.sync()
             return
         if self.refs and mates.component(self.refs[0]) == mates.component(ref):
             self.hint.setText("Pick the second entity on a different component.")
@@ -309,15 +386,18 @@ class MatePanel:
                 self.joint = None
             self.mate = mate
             self.doc.openTransaction("Mate")
-            if mate == "distance" and self.value.value() == 0:
+            if mate in mates.VALUE and (mate != self._value_for or self.value.value() == 0):
                 self.value.blockSignals(True)
-                self.value.setValue(10.0)
+                self.value.setValue(mates.default_value(mate, self.refs))
                 self.value.blockSignals(False)
-            if mate == "angle" and self.value.value() == 0:
-                self.value.blockSignals(True)
-                self.value.setValue(90.0)
-                self.value.blockSignals(False)
-            self.joint = mates.create(self.asm, mate, [list(r) for r in self.refs], self.value.value(), self.flip_dim.isChecked())
+                self._value_for = mate
+            if mate in LIMITS and self.vmin.value() == self.vmax.value() == 0:
+                for sp, v in ((self.vmin, 0.0), (self.vmax, 90.0 if mate == "limit_angle" else 10.0)):
+                    sp.blockSignals(True)
+                    sp.setValue(v)
+                    sp.blockSignals(False)
+            self.joint = mates.create(self.asm, mate, [list(r) for r in self.refs], self.value.value(), self.flip_dim.isChecked(),
+                                      self.vmin.value(), self.vmax.value())
             self.b_anti.setChecked(True)
         except Exception as e:
             log("mate %s: %s" % (mate, e))
@@ -333,14 +413,33 @@ class MatePanel:
         self.sync()
 
     def set_type(self, mate):
+        if mate == "width" and not self.width_mode:
+            if self.joint is not None:
+                self.doc.abortTransaction()
+                self.joint = None
+            keep = self.refs if len(self.refs) == 2 and mates.component(self.refs[0]) == mates.component(self.refs[1]) else []
+            self.width_mode = True
+            self.mate = "width"
+            self.refs = list(keep)
+            self.sync()
+            return
+        if mate != "width" and self.width_mode:
+            self.width_mode = False
+            self.refs = []
+            self.mate = None
+            self.sync()
+            return
         if len(self.refs) == 2 and mate != self.mate:
             self.apply(mate)
 
+    def limits_changed(self):
+        if self.joint is not None and self.mate in LIMITS:
+            self.apply(self.mate)
+
     def value_changed(self, v):
-        if self.joint is not None and self.mate in ("distance", "angle"):
+        if self.joint is not None and self.mate in mates.VALUE:
             mates.set_value(self.asm, self.joint, self.mate, v, self.flip_dim.isChecked())
-        self.toolbar.sync(mates.allowed(*[mates.kind(r) for r in self.refs]) if len(self.refs) == 2 else [],
-                          self.mate, v, self.mate in ("distance", "angle"))
+        self.toolbar.sync(self.allowed_now(), self.mate, v, self.mate in mates.VALUE)
 
     def value_changed_from_toolbar(self, v):
         self.value.setValue(v)
@@ -359,11 +458,13 @@ class MatePanel:
             return False
         self.doc.commitTransaction()
         self.added.append(self.joint)
-        it = QtWidgets.QListWidgetItem(icon(ICON.get(self.mate, "mate")), self.joint.Label)
+        text = self.joint.Label if self.mate not in LIMITS else "%s on %s" % (mates.LABEL[self.mate], self.joint.Label)
+        it = QtWidgets.QListWidgetItem(icon(ICON.get(self.mate, "mate")), text)
         self.list.addItem(it)
         self.joint = None
         self.mate = None
         self.refs = []
+        self.width_mode = False
         self.toolbar.hide()
         Gui.Selection.clearSelection()
         self.sync()
@@ -376,16 +477,10 @@ class MatePanel:
         self.joint = None
         self.mate = None
         self.refs = []
+        self.width_mode = False
         self.toolbar.hide()
         Gui.Selection.clearSelection()
         self.sync()
-
-    def mechanical(self, key):
-        self.discard()
-        self._cleanup()
-        Gui.Control.closeDialog()
-        from . import commands
-        QtCore.QTimer.singleShot(0, lambda: commands.run_key(key))
 
     # ---------------------------------------------------------------- task dialog API
     def getStandardButtons(self):

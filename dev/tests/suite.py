@@ -513,6 +513,10 @@ def t_evaluate_dialogs():
 
 
 # --------------------------------------------------------------------------- mates (P13/P14)
+def _v(q):
+    return float(getattr(q, "Value", q))
+
+
 def _bbl(o):
     import Part
     b = Part.getShape(o).BoundBox
@@ -571,8 +575,8 @@ def t_mates():
     p.add_selection(asm, "LB.BF.Face5", (65, 5, 30))
     record("mate PM: two planar faces -> Coincident, faces touch", p.mate == "coincident" and _bbl(L["B"])[2] == 10.0,
            (p.mate, _bbl(L["B"])))
-    p.value.setValue(15.0)
     p.set_type("distance")
+    p.value.setValue(15.0)
     record("mate PM: change to Distance 15", p.mate == "distance" and _bbl(L["B"])[2] == 25.0, (p.mate, _bbl(L["B"])))
     before = _bbl(L["B"])
     p.flip()
@@ -605,6 +609,120 @@ def t_mates():
     record("mate PM: OK closes, mates kept", not Gui.Control.activeDialog() and matepm._PANEL["p"] is None and
            [mates.mate_of(o) for o in UtilsAssembly.getJointGroup(asm).Group if hasattr(o, "JointType")] == ["distance", "concentric"],
            [o.Label for o in UtilsAssembly.getJointGroup(asm).Group])
+    App.closeDocument(doc.Name)
+
+
+@step(1200)
+def t_mates_advanced():
+    from freeworks import mates, matepm
+    import JointObject, UtilsAssembly
+    doc = App.newDocument("FWMates2")
+
+    def body(name, feats):
+        b = doc.addObject("PartDesign::Body", name)
+        for kind, dims, base in feats:
+            f = b.newObject("PartDesign::" + kind, name + kind)
+            if "Box" in kind:
+                f.Length, f.Width, f.Height = dims
+            else:
+                f.Radius, f.Height = dims
+            f.Placement.Base = App.Vector(*base)
+        b.Visibility = False
+        return b
+    G = body("G", [("AdditiveBox", (40, 20, 20), (0, 0, 0)), ("SubtractiveBox", (10, 20, 10), (15, 0, 10))])
+    T = body("T", [("AdditiveBox", (6, 10, 10), (0, 0, 0))])
+    C1 = body("C1", [("AdditiveCylinder", (10, 10), (0, 0, 0))])
+    C2 = body("C2", [("AdditiveCylinder", (5, 10), (0, 0, 0))])
+    R = body("R", [("AdditiveBox", (60, 8, 8), (0, 0, 0))])
+    H1 = body("H1", [("AdditiveBox", (20, 20, 4), (0, 0, 0))])
+    H2 = body("H2", [("AdditiveBox", (20, 20, 4), (0, 0, 0))])
+    doc.recompute()
+    asm = doc.addObject("Assembly::AssemblyObject", "Assembly")
+    asm.Type = "Assembly"
+    pos = {"G": (0, 0, 0), "T": (50, 5, 12), "C1": (0, 60, 0), "C2": (40, 60, 0), "R": (0, 100, 0), "H1": (0, 140, 0), "H2": (40, 140, 0)}
+    L = {}
+    for b in (G, T, C1, C2, R, H1, H2):
+        l = asm.newObject("App::Link", "L" + b.Name)
+        l.LinkedObject = b
+        l.Placement.Base = App.Vector(*pos[b.Name])
+        L[b.Name] = l
+    doc.recompute()
+    gj = UtilsAssembly.getJointGroup(asm).newObject("App::FeaturePython", "GroundedJoint")
+    JointObject.GroundedJoint(gj, L["G"])
+    JointObject.ViewProviderGroundedJoint(gj.ViewObject)
+    doc.recompute()
+
+    def face(body, nx, x):
+        tip = body.Tip
+        for i, f in enumerate(tip.Shape.Faces, 1):
+            n = f.normalAt(0, 0)
+            if abs(n.x - nx) < 1e-6 and abs(f.CenterOfMass.x - x) < 1e-6:
+                return "%s.Face%d" % (tip.Name, i), f.CenterOfMass
+        return None, None
+    Gui.Selection.clearSelection()
+    matepm.start()
+    p = matepm._PANEL["p"]
+    g1, gp1 = face(G, 1, 15)
+    g2, gp2 = face(G, -1, 25)
+    t1, tp1 = face(T, -1, 0)
+    t2, tp2 = face(T, 1, 6)
+    p.set_type("width")
+    for sub, pt, ln in ((g1, gp1, "LG"), (g2, gp2, "LG"), (t1, tp1 + L["T"].Placement.Base, "LT"), (t2, tp2 + L["T"].Placement.Base, "LT")):
+        p.add_selection(asm, "%s.%s" % (ln, sub), pt)
+    bbT = _bbl(L["T"])
+    record("width mate: tab centred in the groove", p.mate == "width" and abs((bbT[0] + bbT[3]) / 2 - 20) < 0.05 and abs(bbT[0] - 17) < 0.05,
+           (p.mate, bbT, p.hint.text()))
+    p.commit()
+    p.add_selection(asm, "LC1.C1AdditiveCylinder.Face1", (10, 65, 5))
+    p.add_selection(asm, "LC2.C2AdditiveCylinder.Face1", (45, 60, 5))
+    p.set_type("gear")
+    j = p.joint
+    record("gear mate: Gears joint with radii from geometry", j is not None and j.JointType == "Gears" and abs(_v(j.Distance) - 10) < 1e-6
+           and abs(_v(j.Distance2) - 5) < 1e-6 and abs(p.value.value() - 0.5) < 1e-6, j and (j.JointType, _v(j.Distance), _v(j.Distance2)))
+    p.flip()
+    record("gear mate: flip = reverse direction", j is not None and j.JointType == "Belt", j and j.JointType)
+    p.discard()
+    p.add_selection(asm, "LR.RAdditiveBox.Edge1", (30, 100, 0))
+    p.add_selection(asm, "LC2.C2AdditiveCylinder.Face1", (45, 60, 5))
+    p.set_type("rack_pinion")
+    j = p.joint
+    record("rack pinion mate: pitch diameter from the pinion", j is not None and j.JointType == "RackPinion" and abs(_v(j.Distance) - 5) < 1e-6
+           and j.Reference1[0].Name == "LR", j and (j.JointType, _v(j.Distance)))
+    p.discard()
+    p.add_selection(asm, "LC1.C1AdditiveCylinder.Face1", (10, 65, 5))
+    p.add_selection(asm, "LC2.C2AdditiveCylinder.Face1", (45, 60, 5))
+    p.set_type("concentric")
+    p.commit()
+    p.add_selection(asm, "LC1.C1AdditiveCylinder.Face2", (0, 60, 10))
+    p.add_selection(asm, "LC2.C2AdditiveCylinder.Face3", (40, 60, 0))
+    record("limit distance: offered once a Concentric mate exists", "limit_distance" in p.allowed_now(), p.allowed_now())
+    p.vmin.setValue(2)
+    p.vmax.setValue(12)
+    p.set_type("limit_distance")
+    j = p.joint
+    ok = j is not None and j.JointType == "Cylindrical" and j.EnableLengthMin and j.EnableLengthMax and abs((_v(j.LengthMax) - _v(j.LengthMin)) - 10) < 1e-6
+    record("limit distance: limits set on the Concentric joint", ok, j and (_v(j.LengthMin), _v(j.LengthMax)))
+    p.commit()
+    record("limit distance: listed as LimitDistance on Concentric1", p.list.item(p.list.count() - 1).text().startswith("LimitDistance on Concentric1"),
+           p.list.item(p.list.count() - 1).text())
+    p.add_selection(asm, "LH1.H1AdditiveBox.Face6", (10, 150, 4))
+    p.add_selection(asm, "LH2.H2AdditiveBox.Face5", (50, 150, 0))
+    p.set_type("hinge")
+    p.commit()
+    s1, c1 = face(H1, 1, 20)
+    s2, c2 = face(H2, 1, 20)
+    p.add_selection(asm, "LH1." + s1, c1 + L["H1"].Placement.Base)
+    p.add_selection(asm, "LH2." + s2, c2 + L["H2"].Placement.Base)
+    p.vmin.setValue(0)
+    p.vmax.setValue(90)
+    p.set_type("limit_angle")
+    j = p.joint
+    record("limit angle: limits set on the Hinge joint", j is not None and j.JointType == "Revolute" and j.EnableAngleMin
+           and abs((_v(j.AngleMax) - _v(j.AngleMin)) - 90) < 1e-6, j and (j.JointType, _v(j.AngleMin), _v(j.AngleMax)))
+    p.commit()
+    p.accept()
+    Gui.Control.closeDialog()
+    QtWidgets.QApplication.processEvents()
     App.closeDocument(doc.Name)
 
 @step(800)

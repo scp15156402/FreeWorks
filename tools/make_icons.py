@@ -450,6 +450,20 @@ I["mate_angle"] = svg(line((3, 20), (21, 20), INK, 2.0) + line((3, 20), (17, 5),
 I["mate_hinge"] = svg(box(0, 0, 0, 10, 3, 8, GRY, ox=7, oy=15) + box(0, 0, 0, 10, 3, 8, AMB, ox=14, oy=17) + line((12, 3), (12, 21), MG, 1.4, dash="2,1.4"))
 I["mate_align"] = svg(arrow((6, 20), (6, 4), MG, 1.6, 3) + arrow((18, 20), (18, 4), MG, 1.6, 3))
 I["mate_antialign"] = svg(arrow((6, 20), (6, 4), MG, 1.6, 3) + arrow((18, 4), (18, 20), RED, 1.6, 3))
+I["mate_gear"] = svg(path("M12,3 l1.5,2.2 2.6,-0.6 0.4,2.6 2.6,0.5 -0.6,2.6 2.2,1.5 -2.2,1.5 0.6,2.6 -2.6,0.5 -0.4,2.6 -2.6,-0.6 -1.5,2.2 -1.5,-2.2 -2.6,0.6 -0.4,-2.6 -2.6,-0.5 0.6,-2.6 -2.2,-1.5 2.2,-1.5 -0.6,-2.6 2.6,-0.5 0.4,-2.6 2.6,0.6z",
+                          fill="#F2B53C", stroke="#7A4B06", w=0.7) + circ((12, 12), 2.6, "#FFFFFF", "#7A4B06", 0.7))
+I["mate_rack"] = svg('<rect x="2" y="17" width="20" height="4" fill="#C4CAD3" stroke="#4A515C" stroke-width="0.6"/>'
+                     + "".join('<rect x="%d" y="15" width="2" height="2" fill="#9AA2AE" stroke="#4A515C" stroke-width="0.4"/>' % x for x in (3, 7, 11, 15, 19))
+                     + circ((12, 9), 5.5, "#F2B53C", "#7A4B06", 0.8) + circ((12, 9), 1.6, "#FFFFFF", "#7A4B06", 0.6))
+I["mate_screw"] = svg('<rect x="9" y="2" width="6" height="20" rx="1" fill="#C4CAD3" stroke="#4A515C" stroke-width="0.7"/>'
+                      + "".join(line((8.5, y), (15.5, y - 2.5), "#4A515C", 0.9) for y in (6, 10, 14, 18, 22)))
+I["mate_width"] = svg('<path d="M2,6 L8,6 L8,18 L16,18 L16,6 L22,6 L22,21 L2,21 Z" fill="#C4CAD3" stroke="#4A515C" stroke-width="0.7"/>'
+                      + '<rect x="10" y="3" width="4" height="13" fill="#F2B53C" stroke="#7A4B06" stroke-width="0.7"/>'
+                      + line((12, 1.5), (12, 23), "#2E7D32", 1.0, dash="2,1.2"))
+I["mate_limit_distance"] = svg(line((4, 3), (4, 21), INK, 2.0) + line((20, 3), (20, 21), "#C97A10", 2.0) + arrow((12, 9), (5.5, 9), "#2E7D32", 1.2, 2.4)
+                               + arrow((12, 9), (18.5, 9), "#2E7D32", 1.2, 2.4) + line((8, 15), (16, 15), RED, 1.3) + line((8, 13), (8, 17), RED, 1.3) + line((16, 13), (16, 17), RED, 1.3))
+I["mate_limit_angle"] = svg(line((3, 20), (21, 20), INK, 2.0) + line((3, 20), (17, 5), "#C97A10", 2.0) + path("M12,20 A9,9 0 0 0 9.5,13.5", stroke="#2E7D32", w=1.2)
+                            + path("M17,20 A14,14 0 0 0 13,10", stroke=RED, w=1.2))
 I["ok"] = svg(path("M4,12.5 L10,18.5 L20.5,6", stroke="#2EA043", w=3.2))
 I["cancel"] = svg(line((5, 5), (19, 19), RED, 3.0) + line((19, 5), (5, 19), RED, 3.0))
 

@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P15 – Advanced (limit, width, symmetric) and mechanical mates
+**Next part:** P16 – Assembly FeatureManager (Mates folder, (f)/(-), instance names, Insert Components PM, edit mates)
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -44,7 +44,7 @@ then P23, P25, P28 → P34.
 | P12 | Assembly | Materials + Mass Properties exactly like SW: 36-card SW-named library registered with FreeCAD's material system, Edit Material dialog (+ custom density), Mass Properties dialog (output CS, MMGS/CGS/MKS/IPS, decimals, hidden, selection, assemblies with per-component materials and sub-assembly placements); 16 new tests; released 1.1.1 | ✅ |
 | P13 | Assembly | Mate PropertyManager (task panel): Mate Selections, Standard + Mechanical mates, distance/angle with flip, Mate alignment, Mates list, Add Mate; pop-up mate toolbar at the cursor; each mate its own undo step | ✅ |
 | P14 | Assembly | Mate engine (mates.py): selection → FreeCAD reference, entity kinds, allowed + suggested mate, SW mate → joint mapping (coincident/tangent = Distance 0, concentric = Cylindrical, lock = Fixed with offset, hinge = Revolute), SW labels `Coincident1 (A,B)`; 11 tests. Editing existing mates moves to P16 | ✅ |
-| P15 | Assembly | Advanced (limit distance/angle, width, symmetric) and mechanical (gear, rack pinion, screw, hinge, slot) mates | ⬜ |
+| P15 | Assembly | Advanced: Width (centred, computed from current geometry), Limit Distance / Limit Angle (limits on the Concentric/Slot/Hinge joint, offset to SW face distance/angle; enforced while dragging); Mechanical: Hinge, Gear (ratio from radii, flip = reverse), Rack Pinion (pitch diameter), Screw (distance/revolution). Symmetric, Cam, Slot, Universal Joint, Path: not possible with FreeCAD 1.1 joints (documented). 8 tests; released 1.1.3 | ✅ |
 | P16 | Assembly | Assembly FeatureManager: Mates folder, (f)/(-) prefixes, instance names `Part<1>`, Insert Components PM, Fix/Float, move/rotate with DOF | ⬜ |
 | P17 | Assembly | Exploded view PM, collision detection, replace components, subassemblies, v1.2 release | ⬜ |
 | P18 | Drawing | Sheet formats ANSI A–E / ISO A4–A0 with SW-style title blocks; sheet properties (scale, 1st/3rd angle) | ⬜ |
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P15 | Advanced + mechanical mates in the Mate PM; released 1.1.3. |
 | 2026-11-07 | P13–P14 | Mate PropertyManager + mate engine on FreeCAD joints; pop-up mate toolbar; released 1.1.2. |
 | 2026-11-07 | P12 | Materials + Mass Properties engine/dialogs; analytic inertia tests; released 1.1.1. |
 | 2026-11-07 | P10–P11 | Community survey + reuse decisions; FreeWorks 1.1.0 released. |
