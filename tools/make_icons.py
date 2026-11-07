@@ -464,6 +464,8 @@ I["mate_limit_distance"] = svg(line((4, 3), (4, 21), INK, 2.0) + line((20, 3), (
                                + arrow((12, 9), (18.5, 9), "#2E7D32", 1.2, 2.4) + line((8, 15), (16, 15), RED, 1.3) + line((8, 13), (8, 17), RED, 1.3) + line((16, 13), (16, 17), RED, 1.3))
 I["mate_limit_angle"] = svg(line((3, 20), (21, 20), INK, 2.0) + line((3, 20), (17, 5), "#C97A10", 2.0) + path("M12,20 A9,9 0 0 0 9.5,13.5", stroke="#2E7D32", w=1.2)
                             + path("M17,20 A14,14 0 0 0 13,10", stroke=RED, w=1.2))
+I["equations"] = svg('<rect x="2.5" y="3.5" width="19" height="17" rx="1.5" fill="#FFFFFF" stroke="#4A515C" stroke-width="0.8"/>'
+                     + path("M15,7 L7,7 L11.5,12 L7,17 L15,17", stroke="#1F5FD1", w=1.7) + line((16.5, 10.5), (20, 10.5), "#C97A10", 1.2) + line((16.5, 13.5), (20, 13.5), "#C97A10", 1.2))
 I["ok"] = svg(path("M4,12.5 L10,18.5 L20.5,6", stroke="#2EA043", w=3.2))
 I["cancel"] = svg(line((5, 5), (19, 19), RED, 3.0) + line((19, 5), (5, 19), RED, 3.0))
 

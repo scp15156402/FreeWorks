@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.1 - 2026-11-07
+- **Equations** (Tools > Equations): Global Variables and Equations in SOLIDWORKS syntax -
+  `"D1@Sketch1" = "A" * 2`, `"D1@Boss-Extrude1" = "B" + 2`, `C = "B" + 20` - with "Evaluates to",
+  Add rows, Delete, Rebuild, and OK/Cancel as one undo step. Sketch dimensions are numbered D1, D2 ...
+  like SOLIDWORKS; feature dimensions D1/D2 map to the feature's values (Extrude depth, Revolve
+  angle, Fillet radius, Hole diameter/depth ...). Under the hood these are FreeCAD expressions and
+  a "Global Variables" variable set, so FreeCAD's own expression editor sees them too.
+
 ## v1.2.0 - 2026-11-07
 Assemblies the SOLIDWORKS way (v1.2 milestone: 1.1.1 - 1.1.4 plus the items below).
 - **Move Component / Rotate Component** PropertyManager: By Delta XYZ, or rotate about an edge,

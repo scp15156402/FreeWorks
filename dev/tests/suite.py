@@ -890,6 +890,62 @@ def t_move_replace():
     record("move component PM: pick component, By Delta XYZ, Apply", ok, txt)
     App.closeDocument(doc.Name)
 
+
+@step(1000)
+def t_equations():
+    from freeworks import equations as eq, equationsui
+    import Part, Sketcher
+    doc = App.newDocument("FWEq")
+    b = doc.addObject("PartDesign::Body", "Body")
+    sk = b.newObject("Sketcher::SketchObject", "Sketch")
+    sk.Label = "Sketch1"
+    pts = [App.Vector(0, 0, 0), App.Vector(40, 0, 0), App.Vector(40, 20, 0), App.Vector(0, 20, 0)]
+    for i in range(4):
+        sk.addGeometry(Part.LineSegment(pts[i], pts[(i + 1) % 4]))
+    for i in range(4):
+        sk.addConstraint(Sketcher.Constraint("Coincident", i, 2, (i + 1) % 4, 1))
+    sk.addConstraint(Sketcher.Constraint("Horizontal", 0))
+    sk.addConstraint(Sketcher.Constraint("Horizontal", 2))
+    sk.addConstraint(Sketcher.Constraint("Vertical", 1))
+    sk.addConstraint(Sketcher.Constraint("Vertical", 3))
+    sk.addConstraint(Sketcher.Constraint("Coincident", 0, 1, -1, 1))
+    sk.addConstraint(Sketcher.Constraint("DistanceX", 0, 1, 0, 2, 40))
+    sk.addConstraint(Sketcher.Constraint("DistanceY", 1, 1, 1, 2, 20))
+    pad = b.newObject("PartDesign::Pad", "Pad")
+    pad.Label = "Boss-Extrude1"
+    pad.Profile = sk
+    pad.Length = 10
+    doc.recompute()
+    eq.set_variable(doc, "A", "50")
+    eq.set_variable(doc, "B", '= "A" / 5')
+    eq.set_equation(doc, '"D1@Sketch1"', '"A"')
+    eq.set_equation(doc, '"D1@Boss-Extrude1"', '"B" + 2')
+    doc.recompute()
+    vol = b.Shape.Volume
+    record("equations: global variables drive sketch + feature", abs(vol - 50 * 20 * 12) < 1e-6, vol)
+    eq.set_variable(doc, "A", "60")
+    doc.recompute()
+    record("equations: change a global variable -> model updates", abs(b.Shape.Volume - 60 * 20 * 14) < 1e-6, b.Shape.Volume)
+    names = sorted(n for n, *_ in eq.equations(doc))
+    record("equations: SOLIDWORKS names", names == ["D1@Boss-Extrude1", "D1@Sketch1"], names)
+    shown = [eq.to_solidworks(ex) for _, _, _, ex, _ in eq.equations(doc)]
+    record("equations: shown in SOLIDWORKS syntax", sorted(shown) == ['"A"', '"B" + 2'], shown)
+    record("equations: dimension picker", "D2@Sketch1" in eq.dimension_names(doc) and "D1@Boss-Extrude1" in eq.dimension_names(doc),
+           eq.dimension_names(doc))
+    d = equationsui.EquationsDialog.open()
+    gv = d.g_vars
+    rows = [gv.child(i).text(0) for i in range(gv.childCount())]
+    ok = rows[:2] == ["A", "B"] and d.g_eq.childCount() == 3
+    add = d.g_eq.child(d.g_eq.childCount() - 1)
+    add.setText(0, '"D2@Sketch1"')
+    add.setText(1, '"A" / 4')
+    QtWidgets.QApplication.processEvents()
+    doc.recompute()
+    record("equations dialog: lists variables and equations", ok, (rows, d.g_eq.childCount()))
+    record("equations dialog: Add equation row drives the model", abs(b.Shape.Volume - 60 * 15 * 14) < 1e-6, (b.Shape.Volume, d.msg.text()))
+    d.ok()
+    App.closeDocument(doc.Name)
+
 @step(800)
 def t_no_errors():
     import freeworks

@@ -262,6 +262,8 @@ def build_menubar(bar):
     _sub(m, "Evaluate", ["measure", "mass_props", "section_props", "interference", "check", "bbox", "curvature", "zebra", "draft_analysis", "section_cut"], "measure")
     _sub(m, "Selection Filter", ["sel_filter", "filter_vertex", "filter_edge", "filter_face", "filter_clear"], "selection_filter")
     m.addSeparator()
+    _act(m, "equations")
+    m.addSeparator()
     mm = m.addMenu("Macro")
     for c in ("Std_DlgMacroExecute", "Std_DlgMacroRecord", "Std_OpenMacrosFolder"):
         _cmd_act(mm, c)

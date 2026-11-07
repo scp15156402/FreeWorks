@@ -160,6 +160,7 @@ add("mate_screw", "Screw", "Assembly_CreateJointScrew", "mate", "Screw mechanica
 add("mate_gear", "Gear", "Assembly_CreateJointGears", "mate", "Gear mechanical mate.", ["gears joint"])
 add("mate_belt", "Belt/Chain", "Assembly_CreateJointBelt", "mate", "Belt / chain mechanical mate.", ["belt"])
 add("mate", "Mate", "FW_Mate", "mate", "Positions two components relative to each other.", ["joint", "constraint", "mates"])
+add("equations", "Equations...", "FW_Equations", "equations", "Global variables and equations that drive dimensions (SOLIDWORKS syntax: \"D1@Sketch1\" = \"A\" * 2).", ["global variables", "parameters", "link values", "formula", "equation"])
 add("edit_mate", "Edit Mate", "FW_EditMate", "mate", "Edits the selected mate in the Mate PropertyManager.", ["edit joint", "change mate"])
 add("fix_component", "Fix", "Assembly_ToggleGrounded", "fix_component", "Fixes (grounds) the selected component.", ["ground", "grounded", "float"])
 add("move_component", "Move Component", "FW_MoveComponent", "move_component", "Moves a component by exact amounts (By Delta XYZ) with Collision Detection; Free Drag inside.", ["drag component", "collision detection", "translate component"])

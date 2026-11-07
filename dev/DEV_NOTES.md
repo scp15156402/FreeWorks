@@ -107,6 +107,14 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
   matching (kind, position, direction, radius) in `Part.getShape(link)` (same element order as
   the body's Tip shape), then `Proxy.setJointConnectors`.
 
+## Expressions / Equations (P26)
+- FreeCAD's expression parser reads a bare `A` (and `C`, `K`, `s`, ...) as a **unit** (ampere,
+  coulomb ...): `VarSet.A` fails to parse. FreeWorks stores global variables as `GV_<name>`.
+- Sketch constraint expressions are stored in ExpressionEngine as `.Constraints.D1` (leading dot);
+  `setExpression("Constraints.D1", ...)` works; constraints need a name (`renameConstraint`).
+- `setExpression(prop, None)` on a property without an expression raises; check
+  `prop in dict(obj.ExpressionEngine)` first.
+
 ## Sandbox constraint (Claude sessions)
 Running third-party add-on code may be blocked in Claude's sandbox; test FreeWorks' own code
 only, read add-on sources instead.

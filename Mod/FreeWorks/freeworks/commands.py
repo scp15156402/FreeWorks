@@ -583,6 +583,7 @@ def register():
         ("rotate_component", lambda: __import__("freeworks.movepm", fromlist=["start"]).start(True), "FW_RotateComponent", "doc"),
         ("replace_components", lambda: __import__("freeworks.replace", fromlist=["start"]).start(), "FW_ReplaceComponents", "doc"),
         ("sub_rigid", toggle_rigid, "FW_ToggleRigid", "doc"),
+        ("equations", lambda: __import__("freeworks.equationsui", fromlist=["EquationsDialog"]).EquationsDialog.open(), "FW_Equations", "doc"),
         ("mass_props", mass_properties, "FW_MassProperties", "doc"),
         ("material", edit_material, "FW_EditMaterial", "doc"),
         ("section_props", section_properties, "FW_SectionProperties", "doc"),

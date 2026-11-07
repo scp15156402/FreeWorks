@@ -28,7 +28,7 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 | R-SK-3 Relations | ✅ all SW relations except *pierce*/*merge* as names (coincident covers merge) | 🟡 FW_AddRelation + mapped | Add Relations PM, auto-relations display, Display/Delete Relations PM | P28 |
 | R-SK-4 Smart Dimension | ✅ `Sketcher_Dimension` contextual; expressions in input | 🟡 mapped (D) | SW Modify box (spin, rebuild, ✓), driven toggle wording | P28 |
 | R-SK-5 Fully defined state | ✅ colours + solver messages | 🟡 colours set SW-like, status bar text | "(-)" prefix on under-defined sketches in tree | P30 |
-| R-SK-6 Linked dims & equations | ✅ expressions, `Std_VarSet` (global variables), spreadsheets | ⬜ | **Equations dialog** (global variables, equations, functions) over VarSet/expressions | **P26** |
+| R-SK-6 Linked dims & equations | ✅ expressions, `Std_VarSet` (global variables), spreadsheets | ✅ 1.2.1 Equations dialog, SW syntax | **Equations dialog** (global variables, equations, functions) over VarSet/expressions | **P26** |
 
 ## 3. Part features
 | ID | FreeCAD | FreeWorks | Gap | Plan |
