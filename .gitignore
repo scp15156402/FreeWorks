@@ -6,3 +6,5 @@ _downloads/
 .DS_Store
 Thumbs.db
 dist/
+dev/.freecad/
+dev/tests/out/

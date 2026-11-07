@@ -13,9 +13,10 @@ naming and iconography consistent across the whole application.
 C = {}
 
 
-def add(key, label, cmd, icon=None, tip="", aliases=(), approx=False):
+def add(key, label, cmd, icon=None, tip="", aliases=(), approx=False, optional=False):
+    """optional=True: command only exists in newer FreeCAD versions or add-ons (hidden when missing)."""
     C[key] = dict(key=key, label=label, cmd=cmd if isinstance(cmd, (list, tuple)) else [cmd],
-                  icon=icon, tip=tip or label, aliases=list(aliases), approx=approx)
+                  icon=icon, tip=tip or label, aliases=list(aliases), approx=approx, optional=optional)
 
 
 # ------------------------------------------------------------------ Features
@@ -85,7 +86,7 @@ add("polygon", "Polygon", "Sketcher_CreateRegularPolygon", "polygon", "Sketches 
 add("skpoint", "Point", "Sketcher_CreatePoint", "sketch_point", "Sketches a point.", ["sketch point"])
 add("sk_fillet", "Sketch Fillet", "Sketcher_CreateFillet", "sketch_fillet", "Rounds the corner at the intersection of two sketch entities.", [])
 add("sk_chamfer", "Sketch Chamfer", "Sketcher_CreateChamfer", "sketch_chamfer", "Bevels the corner at the intersection of two sketch entities.", [])
-add("text", "Text", ["Sketcher_CreateText"], "sketch_text", "Sketches text.", [])
+add("text", "Text", ["Sketcher_CreateText"], "sketch_text", "Sketches text (FreeCAD 1.2 and later).", [], optional=True)
 add("trim", "Trim Entities", "Sketcher_Trimming", "trim", "Trims a sketch entity.", ["trimming", "power trim"])
 add("extend", "Extend Entities", "Sketcher_Extend", "extend", "Extends a sketch entity.", [])
 add("split_ent", "Split Entities", "Sketcher_Split", "split_entities", "Splits a sketch entity at a point.", [])

@@ -408,10 +408,13 @@ def _solids_from_selection():
 
 
 def _density(obj):
-    """kg/m^3; SolidWorks uses 1000 kg/m^3 when no material is assigned."""
+    """kg/m^3. SolidWorks uses 1000 kg/m^3 when no material is assigned; FreeCAD's
+    placeholder material "Default" (density 1 kg/m^3) counts as 'no material'."""
     for o in (obj, getattr(obj, "Tip", None)):
         try:
             m = o.ShapeMaterial
+            if not m or m.Name in ("", "Default"):
+                continue
             d = m.PhysicalProperties.get("Density") if hasattr(m, "PhysicalProperties") else None
             if d:
                 return App.Units.Quantity(d).getValueAs("kg/m^3").Value, m.Name
