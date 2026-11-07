@@ -26,6 +26,8 @@ Open **PowerShell** (Start menu → type *PowerShell*) and paste:
 
 **Uninstall** asks one question (`y`) and removes the program, its settings and its shortcuts. It is also listed in **Settings → Apps → FreeWorks**. Your projects are kept.
 
+**Roll back** to the version you had before the last update with Help → *Roll Back to Previous Version*. Your projects and settings are kept.
+
 **Updating from inside FreeWorks**
 - FreeWorks checks GitHub once a day and offers **Update now**.
 - You can also check manually under Help → *Check for FreeWorks Updates*.

@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.2 - 2026-11-07
+- **Rollback:** every update keeps the previous FreeWorks, add-ons and (if it changed) FreeCAD.
+  Help → *Roll Back to Previous Version*, or
+  `& ([scriptblock]::Create((irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1))) -Rollback`.
+  Projects and settings are kept; running the normal one-liner updates again. The update check
+  does not keep offering a version you rolled back from.
+- **What's New** dialog after each update (also in the Help menu); the update offer shows the release notes.
+- Add-ons are pinned to tested commits in versions.json (identical installs everywhere); if an add-on
+  download fails during an update, the installed copy is kept.
+
 ## v1.0.1 - 2026-11-07
 - **One line to install or update** (`irm …/get.ps1 | iex`) on any Windows 10/11 PC: picks D:\FreeWorks
   or %LOCALAPPDATA%\Programs\FreeWorks, updates in place when already installed, waits for FreeWorks to be

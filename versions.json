@@ -1,6 +1,6 @@
 {
-  "_comment": "Single source of truth for what FreeWorks installs. Installer, updater and dev tools read this file. Change versions here only (see dev/UPDATE_PROTOCOL.md).",
-  "freeworks": "1.0.1",
+  "_comment": "Single source of truth for what FreeWorks installs. Installer, updater and dev tools read this file. Add-ons are pinned to tested commits ('ref'); 'branch' is where dev/check_updates.py looks for newer ones. Change versions here only (see dev/UPDATE_PROTOCOL.md).",
+  "freeworks": "1.0.2",
   "channel": "stable",
   "freecad": {
     "version": "1.1.4",
@@ -15,12 +15,44 @@
     "release_url": "https://github.com/FreeCAD/FreeCAD/releases/tag/1.1.4"
   },
   "addons": [
-    {"name": "SheetMetal", "repo": "shaise/FreeCAD_SheetMetal", "ref": "master", "workbench": "SMWorkbench", "purpose": "Sheet Metal tab"},
-    {"name": "fasteners", "repo": "shaise/FreeCAD_FastenersWB", "ref": "master", "workbench": "FastenersWorkbench", "purpose": "Toolbox / standard hardware"},
-    {"name": "Curves", "repo": "tomate44/CurvesWB", "ref": "main", "workbench": "CurvesWorkbench", "purpose": "Zebra, curvature, draft analysis, advanced surfaces"}
+    {
+      "name": "SheetMetal",
+      "repo": "shaise/FreeCAD_SheetMetal",
+      "ref": "d6a60a9911e612cf7ecb593b869f658baca22cdd",
+      "workbench": "SMWorkbench",
+      "purpose": "Sheet Metal tab",
+      "branch": "master",
+      "pinned": "2026-11-07"
+    },
+    {
+      "name": "fasteners",
+      "repo": "shaise/FreeCAD_FastenersWB",
+      "ref": "fddd07af422b7d3a69098b32333711c5eeae184c",
+      "workbench": "FastenersWorkbench",
+      "purpose": "Toolbox / standard hardware",
+      "branch": "master",
+      "pinned": "2026-11-07"
+    },
+    {
+      "name": "Curves",
+      "repo": "tomate44/CurvesWB",
+      "ref": "c08e21ba16b8d6c6846cee3c9a6b1ea950987f36",
+      "workbench": "CurvesWorkbench",
+      "purpose": "Zebra, curvature, draft analysis, advanced surfaces",
+      "branch": "main",
+      "pinned": "2026-11-07"
+    }
   ],
   "optional_addons": [
-    {"name": "Render", "repo": "FreeCAD/FreeCAD-render", "ref": "master", "workbench": "RenderWorkbench", "purpose": "Photo-realistic rendering (needs external renderer)"}
+    {
+      "name": "Render",
+      "repo": "FreeCAD/FreeCAD-render",
+      "ref": "08be2fe94b8a998323c8a5443f7f0afd0d05bed5",
+      "workbench": "RenderWorkbench",
+      "purpose": "Photo-realistic rendering (needs external renderer)",
+      "branch": "master",
+      "pinned": "2026-11-07"
+    }
   ],
   "solidworks_reference": {
     "baseline": "SOLIDWORKS 2025/2026 default UI (light theme, CommandManager)",

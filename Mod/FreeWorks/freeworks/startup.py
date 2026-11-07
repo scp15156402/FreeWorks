@@ -37,6 +37,7 @@ def on_activated():
         _close_start_page()
         win.statusBar().showMessage("FreeWorks ready (%.1f s)" % (time.time() - t0), 4000)
         from . import updater
+        QtCore.QTimer.singleShot(1200, updater.show_whats_new)
         QtCore.QTimer.singleShot(15000, updater.check)
         log("startup %.2fs" % (time.time() - t0))
         if params().GetBool("ShowWelcome", True) and not App.listDocuments() and not os.environ.get("FREEWORKS_NO_WELCOME"):

@@ -8,6 +8,9 @@
   - Already installed  -> updates FreeWorks, its add-ons and (when needed) FreeCAD in place.
                           Settings are kept; projects (Documents\FreeWorks) are never touched.
 
+  Roll back to the version you had before the last update (projects are never touched):
+      & ([scriptblock]::Create((irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1))) -Rollback
+
   Uninstall (one line, one confirmation):
       irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 | iex
 
@@ -24,7 +27,8 @@ param(
     [switch]$NoShortcuts,
     [int]$WaitPid = 0,
     [switch]$Restart,
-    [string]$Channel = ""
+    [string]$Channel = "",
+    [switch]$Rollback
 )
 
 & {
@@ -77,6 +81,48 @@ param(
 
         # never update under a running FreeWorks (unsaved work must not be lost)
         if ($WaitPid -gt 0) { try { Wait-Process -Id $WaitPid -Timeout 180 -ErrorAction SilentlyContinue } catch {} }
+
+        if ($Rollback) {
+            if (-not $existing) { throw "FreeWorks is not installed." }
+            $prev = Join-Path $existing "_previous"
+            if (-not (Test-Path (Join-Path $prev "Mod\FreeWorks"))) { Say "  There is no previous version to roll back to." "Yellow"; return }
+            if (Running-In $existing) {
+                Say "  FreeWorks is open. Save your work and close it - the rollback continues automatically." "Yellow"
+                while (Running-In $existing) { Start-Sleep -Seconds 2 }
+            }
+            $reg = Get-ItemProperty $RegKey -ErrorAction SilentlyContinue
+            $cur = $reg.Version; $curFC = $reg.FreeCADVersion
+            $old = Get-Content (Join-Path $prev "version.txt") -TotalCount 1
+            Say "  Rolling back FreeWorks $cur -> $old"
+            $mod = Join-Path $existing "UserData\Mod"
+            $swap = Join-Path $existing "_swap"
+            if (Test-Path $swap) { Remove-Item -Recurse -Force $swap }
+            New-Item -ItemType Directory -Force -Path (Join-Path $swap "Mod") | Out-Null
+            foreach ($d in Get-ChildItem (Join-Path $prev "Mod") -Directory) {
+                $live = Join-Path $mod $d.Name
+                if (Test-Path $live) { Move-Item $live (Join-Path $swap ("Mod\" + $d.Name)) }
+                Move-Item $d.FullName $live
+            }
+            $newFC = $curFC
+            if (Test-Path (Join-Path $prev "FreeCAD\bin\freecad.exe")) {
+                Move-Item (Join-Path $existing "FreeCAD") (Join-Path $swap "FreeCAD")
+                Move-Item (Join-Path $prev "FreeCAD") (Join-Path $existing "FreeCAD")
+                $newFC = Get-Content (Join-Path $prev "freecad_version.txt") -TotalCount 1
+            }
+            Set-Content -Path (Join-Path $swap "version.txt") -Value $cur
+            Set-Content -Path (Join-Path $swap "freecad_version.txt") -Value $curFC
+            Remove-Item -Recurse -Force $prev
+            Rename-Item $swap "_previous"          # the newer version stays available for roll-forward
+            Set-ItemProperty -Path $RegKey -Name Version -Value $old
+            Set-ItemProperty -Path $RegKey -Name PreviousVersion -Value $cur
+            if ($newFC) { Set-ItemProperty -Path $RegKey -Name FreeCADVersion -Value $newFC }
+            Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\FreeWorks" -Name DisplayVersion -Value $old -ErrorAction SilentlyContinue
+            Set-Content -Path (Join-Path $existing "rolled_back_from.txt") -Value $cur
+            Remove-Item -Force (Join-Path $existing "UserData\icons\.freeworks") -ErrorAction SilentlyContinue
+            Say "  Rolled back to FreeWorks $old. Run the normal one-line command to update again." "Green"
+            if ($Restart) { $exe = Join-Path $existing "FreeWorks.exe"; if (Test-Path $exe) { Start-Process $exe } }
+            return
+        }
         if ($update -and (Running-In $dir)) {
             Say "  FreeWorks is open. Save your work and close it - the update continues automatically." "Yellow"
             while (Running-In $dir) { Start-Sleep -Seconds 2 }

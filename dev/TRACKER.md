@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P3 – Updates v2 remainder (rollback, release-notes dialog) + fixes from the first Windows run
+**Next part:** P4 – Dev/AI tooling: dev/check_updates.py, dev/fetch_freecad.sh, dev/run_tests.sh automated suite
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -29,7 +29,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 |---|---|---|---|
 | P1 | Docs/AI | Tracker, CLAUDE.md/AGENTS.md entry point, versions.json, UPDATE_PROTOCOL, new logo (icon, splash, branding, README) | ✅ |
 | P2 | Install | One-line install/update + one-line uninstall (owner request); installer v2: versions.json, SHA-256 (GitHub digest), resumable curl download, install.log, preflight, any-PC folder choice, FreeCAD side-by-side swap, Settings→Apps entry, projects in Documents\FreeWorks; released as v1.0.1 | ✅ |
-| P3 | Install | Updates v2 remainder: rollback to the previous version, add-on refs pinned to commits, release-notes dialog from CHANGELOG, fixes from the owner first Windows run | ⏳ |
+| P3 | Install | Rollback (keeps previous FreeWorks/add-ons/FreeCAD, swap back and forth, in-app + one-liner), What's New dialog + notes in update offer, add-ons pinned to commits; released 1.0.2. Windows field-test fixes move to a new part when feedback arrives | ✅ |
 | P4 | Dev/AI | `dev/check_updates.py` (latest FreeCAD/add-ons vs pins, report), `dev/fetch_freecad.sh`, `dev/run_tests.sh` automated suite (catalog command existence, startup, contexts, screenshots) | ⬜ |
 | P5 | Stability | Crash/lag audit of all FreeWorks code; global guard for Qt slots; event-loop latency watchdog (logs stalls); startup time budget | ⬜ |
 | P6 | Stability | Safe mode (`FreeWorks.exe --safe`, Shift at start), crash sentinel → auto safe start, "Reset FreeWorks settings"; large-model mode (lighter tessellation, manual rebuild) | ⬜ |
@@ -70,5 +70,6 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | Date (IST) | Part | Summary |
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
+| 2026-11-07 | P3 | Rollback, What's New, add-on commit pins, dev/tests/pscheck.py (PowerShell structure check); released 1.0.2 to stable. |
 | 2026-11-07 | P2 | One-line install/update/uninstall, installer v2, projects-folder guard, stable-branch releases (tags blocked for Claude sessions); released v1.0.1. |
 | 2026-11-07 | P1 | Tracker, CLAUDE.md/AGENTS.md, UPDATE_PROTOCOL, DEV_NOTES rewrite, versions.json; new logo → vector mark, .ico, splash, Welcome dialog, README (tools/make_branding.py). |

@@ -112,6 +112,18 @@ try {
         try { Download "https://www.7-zip.org/a/7zr.exe" (Join-Path $Dl "7zr.exe"); return (Join-Path $Dl "7zr.exe") } catch { return $null }
     }
 
+    # -------------------------------------------------------------- keep previous version (rollback)
+    $Prev = Join-Path $InstallDir "_previous"
+    if ($UpdateOnly) {
+        if (Test-Path $Prev) { Remove-Item -Recurse -Force $Prev }
+        New-Item -ItemType Directory -Force -Path (Join-Path $Prev "Mod") | Out-Null
+        $oldVer = (Get-ItemProperty $RegKey -ErrorAction SilentlyContinue).Version
+        if (-not $oldVer) { $oldVer = "unknown" }
+        Set-Content -Path (Join-Path $Prev "version.txt") -Value $oldVer
+        Set-Content -Path (Join-Path $Prev "freecad_version.txt") -Value $(if ($installedFC) { $installedFC } else { $FC.version })
+    }
+    Remove-Item -Force (Join-Path $InstallDir "rolled_back_from.txt") -ErrorAction SilentlyContinue
+
     # -------------------------------------------------------------- FreeCAD
     if (-not $needFreeCAD) {
         Step "FreeCAD $($FC.version) is installed - keeping it"
@@ -152,12 +164,12 @@ try {
             $p = Start-Process -FilePath $setup -ArgumentList "/S", "/D=$staging" -Wait -PassThru
             if (-not (Test-Path (Join-Path $staging "bin\freecad.exe"))) { throw "FreeCAD could not be installed (installer exit code $($p.ExitCode))" }
         }
-        # swap in the new FreeCAD; keep the previous one until the swap succeeded
-        $old = Join-Path $InstallDir "FreeCAD.old"
-        if (Test-Path $old) { Remove-Item -Recurse -Force $old }
-        if (Test-Path $App) { Rename-Item $App "FreeCAD.old" }
+        # swap in the new FreeCAD; on updates the old one is kept in _previous for rollback
+        if (Test-Path $App) {
+            if ($UpdateOnly) { Move-Item $App (Join-Path $Prev "FreeCAD") }
+            else { Remove-Item -Recurse -Force $App }
+        }
         Rename-Item $staging "FreeCAD"
-        if (Test-Path $old) { Remove-Item -Recurse -Force $old -ErrorAction SilentlyContinue }
         Remove-Item -Force $arc -ErrorAction SilentlyContinue
         Ok "FreeCAD $($FC.version) ready"
     }
@@ -172,7 +184,9 @@ try {
     # -------------------------------------------------------------- FreeWorks add-on
     Step "FreeWorks $Version"
     $fw = Join-Path $Mod "FreeWorks"
-    if (Test-Path $fw) { Remove-Item -Recurse -Force $fw }
+    if (Test-Path $fw) {
+        if ($UpdateOnly) { Move-Item $fw (Join-Path $Prev "Mod\FreeWorks") } else { Remove-Item -Recurse -Force $fw }
+    }
     Copy-Item -Recurse -Force (Join-Path $Here "Mod\FreeWorks") $fw
     $stamp = Join-Path $Data "icons\.freeworks"
     if (Test-Path $stamp) { Remove-Item -Force $stamp }
@@ -193,11 +207,15 @@ try {
                 Expand-Archive -Path $zip -DestinationPath $x -Force
                 $inner = Get-ChildItem -Path $x -Directory | Select-Object -First 1
                 $dest = Join-Path $Mod $a.name
-                if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
+                if (Test-Path $dest) {
+                    if ($UpdateOnly) { Move-Item $dest (Join-Path $Prev ("Mod\" + $a.name)) } else { Remove-Item -Recurse -Force $dest }
+                }
                 Move-Item $inner.FullName $dest
                 Remove-Item -Recurse -Force $x, $zip
                 Ok ("{0,-11} {1}" -f $a.name, $a.purpose)
-            } catch { Warn "$($a.name) could not be installed: $($_.Exception.Message) (FreeWorks works without it)" }
+            } catch {
+                Warn "$($a.name) could not be updated: $($_.Exception.Message) (keeping the installed copy)"
+            }
         }
     }
 
@@ -272,7 +290,7 @@ public static class FreeWorksLauncher {
     }
 
     # -------------------------------------------------------------- registration
-    foreach ($f in @("uninstall.ps1", "README.md", "versions.json")) {
+    foreach ($f in @("uninstall.ps1", "README.md", "versions.json", "CHANGELOG.md")) {
         Copy-Item -Force (Join-Path $Here $f) $InstallDir -ErrorAction SilentlyContinue
     }
     New-Item -Path $RegKey -Force | Out-Null
@@ -281,6 +299,9 @@ public static class FreeWorksLauncher {
     Set-ItemProperty -Path $RegKey -Name FreeCADVersion -Value $FC.version
     Set-ItemProperty -Path $RegKey -Name ProjectsDir -Value $projects
     Set-ItemProperty -Path $RegKey -Name UpdatedOn -Value (Get-Date -Format "yyyy-MM-dd HH:mm")
+    if ($UpdateOnly -and (Test-Path (Join-Path $Prev "version.txt"))) {
+        Set-ItemProperty -Path $RegKey -Name PreviousVersion -Value (Get-Content (Join-Path $Prev "version.txt") -TotalCount 1)
+    }
     New-Item -Path $UninstKey -Force | Out-Null
     $size = [int]((Get-ChildItem $InstallDir -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum / 1KB)
     $vals = @{
@@ -298,6 +319,7 @@ public static class FreeWorksLauncher {
     Info "Program:   $InstallDir"
     Info "Projects:  $projects   (never touched by updates or uninstall)"
     Info "Update:    run the same one-line command again, or Help > Check for FreeWorks Updates"
+    if ($UpdateOnly) { Info "Rollback:  Help > Roll Back to Previous Version (keeps your projects)" }
     Info "Uninstall: irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 | iex"
     Info "           (or Windows Settings > Apps > FreeWorks)"
 } catch {
