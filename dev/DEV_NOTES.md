@@ -66,6 +66,19 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
 - Fasteners key `FastenersWorkbench`; `Fasteners_Search`, `Fasteners_BOM`; per-part commands `FS<type>`.
 - Curves key `CurvesWorkbench`; `ZebraTool`, `Curves_SurfaceAnalysis`, `Curves_DraftAnalysis`.
 
+## Memory and widget growth (P7 stress findings, FreeCAD 1.1.4, Xvfb/llvmpipe)
+- Each sketch edit/exit leaves ~60 widgets behind **in plain FreeCAD too** (30 cycles: +1856 widgets).
+  Upstream behaviour; the stress suite measures FreeWorks leaks only after the sketch stage.
+- `View/AntiAliasing = 3` (MSAA 4x) grows RSS by ~8 MB per sketch edit (view buffers re-created);
+  `1` (line smoothing) behaves like plain FreeCAD. Default is now 1; MSAA is an Options checkbox
+  (`FreeWorks/HighQualityAA`). prefs.apply() keeps that choice and Large Model Mode across upgrades.
+- Creating/closing 12 documents: plain FreeCAD +444, +146, +44 MB over three rounds (caches and
+  allocator arenas, levels off). FreeWorks: +349, +151, +37. The suite checks the plateau (round 3).
+- A stylesheet on the main window re-polishes every FreeCAD widget on each change; FreeWorks styles
+  only its own widgets (`freeworks/style.py`).
+- `QObject.findChildren()` over the whole main window costs 60-100 ms with ~3000 widgets; search
+  direct children or known parents only.
+
 ## Sandbox constraint (Claude sessions)
 Running third-party add-on code may be blocked in Claude's sandbox; test FreeWorks' own code
 only, read add-on sources instead.

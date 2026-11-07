@@ -8,7 +8,7 @@ import FreeCADGui as Gui
 from . import log, params, safe_slow
 
 LARGE = {"MeshDeviation": 0.5, "MeshAngularDeflection": 28.5, "AntiAliasing": 0, "UseNavigationAnimations": False}
-NORMAL = {"MeshDeviation": 0.1, "MeshAngularDeflection": 12.0, "AntiAliasing": 3, "UseNavigationAnimations": True}
+NORMAL = {"MeshDeviation": 0.1, "MeshAngularDeflection": 12.0, "AntiAliasing": 1, "UseNavigationAnimations": True}
 SUGGEST_OBJECTS = 600          # suggest Large Model Mode above this many objects
 
 
@@ -24,7 +24,7 @@ def set_mode(on):
     view = App.ParamGet("User parameter:BaseApp/Preferences/View")
     part.SetFloat("MeshDeviation", v["MeshDeviation"])
     part.SetFloat("MeshAngularDeflection", v["MeshAngularDeflection"])
-    view.SetInt("AntiAliasing", v["AntiAliasing"])
+    view.SetInt("AntiAliasing", 0 if on else (3 if params().GetBool("HighQualityAA", False) else v["AntiAliasing"]))
     view.SetBool("UseNavigationAnimations", v["UseNavigationAnimations"])
     n = 0
     for name in App.listDocuments():

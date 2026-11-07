@@ -6,7 +6,7 @@ import FreeCAD as App
 
 from . import THEME_DIR, log, params
 
-PREFS_VERSION = 8
+PREFS_VERSION = 9
 
 
 def c(hexstr, a=255):
@@ -37,7 +37,8 @@ SETTINGS = {
         "ShowAxisCross": ("b", False),
         "ShowFPS": ("b", False),
         # rendering quality + speed
-        "AntiAliasing": ("i", 3),               # MSAA 4x
+        "AntiAliasing": ("i", 1),               # line smoothing (MSAA 4x is opt-in: it makes FreeCAD
+                                                # re-allocate buffers on every sketch edit = memory growth)
         "UseVBO": ("b", True),                  # vertex buffer objects (GPU)
         "RenderCache": ("i", 0),                # auto render cache
         "TransparentObjectRenderType": ("i", 0),
@@ -248,6 +249,15 @@ def apply(force=False):
         g = P(grp)
         for k, v in SKETCH_COLORS.items():
             g.SetUnsigned(k, c(v))
+    # user choices made in FreeWorks Options win over the defaults above
+    if fw.GetBool("HighQualityAA", False):
+        P("View").SetInt("AntiAliasing", 3)
+    if fw.GetBool("LargeModelMode", False):
+        from .perf import LARGE
+        P("View").SetInt("AntiAliasing", LARGE["AntiAliasing"])
+        P("View").SetBool("UseNavigationAnimations", LARGE["UseNavigationAnimations"])
+        P("Mod/Part").SetFloat("MeshDeviation", LARGE["MeshDeviation"])
+        P("Mod/Part").SetFloat("MeshAngularDeflection", LARGE["MeshAngularDeflection"])
     install_stylesheet()
     fw.SetInt("PrefsVersion", PREFS_VERSION)
     log("preferences applied")

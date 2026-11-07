@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.0.5 - 2026-11-07
+Safe mode, recovery and long-session smoothness.
+- **Safe mode**: start FreeWorks with Shift held, the "FreeWorks (Safe Mode)" Start-menu shortcut or
+  `FreeWorks.exe --safe` to get plain FreeCAD menus and toolbars with your files untouched.
+- If FreeWorks did not finish starting last time, it starts in safe mode automatically and explains
+  what happened, with one click to reset FreeWorks settings.
+- **Tools → Reset FreeWorks Settings** restores FreeWorks' defaults (projects are not touched).
+- **View → Large Model Mode** (SOLIDWORKS "Large Design Review" style): coarser display tessellation,
+  no anti-aliasing, no view animations. Suggested automatically for documents with 600+ objects.
+- Lower memory use in long sessions: line smoothing instead of 4x multisampling by default (each
+  sketch edit with multisampling kept ~8 MB). Multisampling is an option in FreeWorks Options.
+- FreeWorks styles only its own panels, so FreeCAD dialogs open faster; layout self-healing and the
+  status bar do less work.
+- New stress test (`dev/run_tests.sh --stress`): 69 checks incl. leak, memory plateau and freeze tests.
+
 ## v1.0.4 - 2026-11-07
 Stability and smoothness.
 - Every FreeWorks UI class and callback is guarded: an error inside FreeWorks is logged, never passed

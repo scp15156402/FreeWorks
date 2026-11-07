@@ -7,6 +7,7 @@ import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
 from . import catalog, context, icon, params, safe, harden
+from .style import STYLE
 
 Qt = QtCore.Qt
 
@@ -60,6 +61,7 @@ class _Popup(QtWidgets.QFrame):
         super().__init__(parent or mw(), Qt.Popup | Qt.FramelessWindowHint)
         self.setObjectName("FreeWorksPopupFrame")
         self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setStyleSheet(STYLE)
 
     def show_at(self, pos):
         self.adjustSize()
@@ -425,6 +427,7 @@ class NewDocumentDialog(QtWidgets.QDialog):
         super().__init__(mw())
         self.setWindowTitle("Welcome - FreeWorks" if welcome else "New FreeWorks Document")
         self.setObjectName("FreeWorksNewDialog")
+        self.setStyleSheet(STYLE)
         self.setMinimumWidth(620)
         lay = QtWidgets.QVBoxLayout(self)
         lay.setSpacing(12)
@@ -514,6 +517,7 @@ class OptionsDialog(QtWidgets.QDialog):
         ("ShowWelcome", "Show the Welcome dialog at startup", True),
         ("CommandManagerText", "Show command text in the CommandManager", True),
         ("CheckForUpdates", "Check GitHub for FreeWorks updates (once a day)", True),
+        ("HighQualityAA", "High-quality anti-aliasing (MSAA 4x; smoother silhouettes, more GPU memory; applies to new windows)", False),
     ]
 
     @classmethod
@@ -570,6 +574,9 @@ class OptionsDialog(QtWidgets.QDialog):
         for k, cb in self.boxes.items():
             p.SetBool(k, cb.isChecked())
         App.ParamGet("User parameter:BaseApp/Preferences/View").SetBool("InvertZoom", self.zoom.currentIndex() == 1)
+        from . import perf
+        if not perf.is_on():
+            App.ParamGet("User parameter:BaseApp/Preferences/View").SetInt("AntiAliasing", 3 if p.GetBool("HighQualityAA", False) else 1)
         p.SetInt("LargeIconSize", 24 if self.icon_size.currentIndex() == 0 else 32)
         from . import perf
         if self.large.isChecked() != perf.is_on():

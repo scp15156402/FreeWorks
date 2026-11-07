@@ -2,6 +2,7 @@
 # FreeWorks automated tests (Linux, headless). Exit code 0 = all passed.
 #   dev/run_tests.sh                 # FreeCAD pinned in versions.json (downloaded on first run)
 #   FREECAD_APPRUN=/path/AppRun dev/run_tests.sh
+#   dev/run_tests.sh --stress       # + stress test (≈2 min more)
 # Needs: python3, xvfb-run, curl. Output: dev/tests/out/ (results.json, report.md, screenshots)
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -41,20 +42,26 @@ cp "$ROOT/CHANGELOG.md" "$PROFILE/"
 export FREECAD_USER_HOME="$PROFILE" FREEWORKS_NO_WELCOME=1 FREEWORKS_DEBUG_LOG="$OUT/freeworks.log" FREEWORKS_TEST_OUT="$OUT" LANG=C.UTF-8
 timeout 300 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/suite.py" > "$OUT/freecad.out" 2>&1
 
+if [ "${1:-}" = "--stress" ]; then
+  echo "== stress test"
+  timeout 400 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/stress.py" > "$OUT/freecad_stress.out" 2>&1
+fi
+
 echo "== safe mode: requested (FREEWORKS_SAFE=1) and automatic (crash during last startup)"
 FREEWORKS_SAFE=1 FREEWORKS_SAFE_CASE=safe timeout 120 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/safe_suite.py" > "$OUT/freecad_safe.out" 2>&1
 echo '{"phase": "starting", "pid": 1, "time": 0, "version": "test"}' > "$PROFILE/FreeWorks.session"
 FREEWORKS_SAFE_CASE=crash timeout 120 xvfb-run -a -s "-screen 0 1700x1000x24" "$APPRUN" "$ROOT/dev/tests/safe_suite.py" > "$OUT/freecad_crash.out" 2>&1
 rm -rf "$PROFILE"
 
-python3 - "$OUT" <<'EOF' || FAIL=1
+python3 - "$OUT" "${1:-}" <<'EOF' || FAIL=1
 import json, sys, os
 out = sys.argv[1]
 p = os.path.join(out, "results.json")
 if not os.path.exists(p):
     print("suite did not finish - see", os.path.join(out, "freecad.out")); sys.exit(1)
 d = json.load(open(p))
-for extra in ("safe_safe.json", "safe_crash.json"):
+extras = ["safe_safe.json", "safe_crash.json"] + (["stress.json"] if len(sys.argv) > 2 and sys.argv[2] == "--stress" else [])
+for extra in extras:
     ep = os.path.join(out, extra)
     rs = json.load(open(ep)) if os.path.exists(ep) else [{"test": extra + " did not run", "ok": False, "detail": ""}]
     for r in rs:

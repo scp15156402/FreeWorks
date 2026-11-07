@@ -66,44 +66,7 @@ def after_workbench_change():
 
 
 # =============================================================== styling
-STYLE = """
-#FreeWorksTop { background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #FDFDFD, stop:1 #EEEFF1); border-bottom: 1px solid #D0D3D8; }
-#FreeWorksTop QMenuBar { background: transparent; border: none; font-size: 9pt; }
-#FreeWorksTop QMenuBar::item { padding: 3px 8px; background: transparent; }
-#FreeWorksTop QMenuBar::item:selected { background: #CCE4F7; border: 1px solid #99C9EF; }
-#FreeWorksTitle { color: #222; font-size: 10pt; }
-#FreeWorksLogo { border: none; padding: 1px 4px; }
-#FreeWorksQuick QToolButton { border: 1px solid transparent; border-radius: 2px; padding: 1px; }
-#FreeWorksQuick QToolButton:hover { background: #E5F1FB; border-color: #A9CDEF; }
-#FreeWorksSearch { border: 1px solid #B9BEC6; border-radius: 2px; padding: 2px 6px; background: #FFFFFF; min-width: 220px; }
-#FreeWorksSearch:focus { border-color: #2F7BE5; }
-#FreeWorksSearchMode { border: none; padding: 0 2px; }
-#FreeWorksCM { background: #F7F7F8; }
-#FreeWorksCMPanel { background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #FFFFFF, stop:1 #F1F2F4); border-bottom: 1px solid #C9CCD1; }
-#FreeWorksCMPanel QToolButton { border: 1px solid transparent; border-radius: 2px; padding: 1px 2px; color: #1B1B1B; font-size: 8pt; }
-#FreeWorksCMPanel QToolButton:hover { background: #E5F1FB; border-color: #A9CDEF; }
-#FreeWorksCMPanel QToolButton:pressed { background: #CCE4F7; border-color: #6FA8E3; }
-#FreeWorksCMPanel QToolButton:disabled { color: #9AA0A8; }
-#FreeWorksCMPanel QToolButton[popupMode="1"] { padding-right: 10px; }
-#FreeWorksCMSep { background: #D3D6DB; max-width: 1px; min-width: 1px; margin: 4px 3px; }
-#FreeWorksTabs { background: #EDEEF0; border: none; }
-#FreeWorksTabs::tab { background: transparent; border: 1px solid transparent; border-top: none; padding: 2px 12px 3px 12px; margin-right: 1px; color: #333; font-size: 8.5pt; }
-#FreeWorksTabs::tab:selected { background: #FFFFFF; border-color: #C9CCD1; color: #000; }
-#FreeWorksTabs::tab:hover:!selected { background: #E5F1FB; }
-#FreeWorksHeadsUp, #FreeWorksFilters { background: transparent; }
-#FreeWorksHeadsUp QToolButton, #FreeWorksFilters QToolButton { background: transparent; border: 1px solid transparent; border-radius: 3px; padding: 2px; }
-#FreeWorksHeadsUp QToolButton:hover, #FreeWorksFilters QToolButton:hover { background: rgba(229,241,251,200); border-color: #A9CDEF; }
-#FreeWorksHeadsUp QToolButton:checked, #FreeWorksFilters QToolButton:checked { background: rgba(204,228,247,230); border-color: #6FA8E3; }
-#FreeWorksFilters { background: rgba(250,250,251,235); border: 1px solid #C6C9CE; border-radius: 3px; }
-#FreeWorksPopupFrame { background: #FAFAFB; border: 1px solid #A7ADB6; }
-#FreeWorksPopupTitle { font-weight: bold; color: #333; padding: 2px; }
-#FreeWorksViewCell { background: #FFFFFF; border: 1px solid #C6C9CE; border-radius: 2px; padding: 4px; }
-#FreeWorksViewCell:hover { background: #E5F1FB; border-color: #6FA8E3; }
-#FreeWorksNewButton { border: 1px solid #C6C9CE; border-radius: 3px; background: #FFFFFF; font-size: 11pt; padding: 8px; }
-#FreeWorksNewButton:hover { background: #E5F1FB; border-color: #2F7BE5; }
-#FreeWorksStatusCtx { color: #333; padding: 0 10px; }
-#FreeWorksStatusUnits { color: #333; padding: 0 8px; border-left: 1px solid #C6C9CE; }
-"""
+from .style import STYLE
 
 TREE_STYLE = """
 QTreeView { background: #FFFFFF; border: none; show-decoration-selected: 0; }
@@ -931,6 +894,8 @@ class Status:
             a = um.addAction(name)
             a.triggered.connect(lambda _=False, s=schema, n=name.split(" ")[0]: self.set_units(s, n))
         self.units.setMenu(um)
+        for w in (self.ctx, self.units):
+            w.setStyleSheet(STYLE)
         sb.addPermanentWidget(self.sketch)
         sb.addPermanentWidget(self.ctx)
         sb.addPermanentWidget(self.units)
@@ -949,12 +914,18 @@ class Status:
         from . import sketchmode
         st = sketchmode.status() if ctx == "sketch" else None
         if st:
-            self.sketch.setText(st[0])
-            self.sketch.setStyleSheet("color:%s; font-weight:bold; padding:0 10px;" % st[1])
-            self.sketch.show()
-        else:
+            if self.sketch.text() != st[0]:
+                self.sketch.setText(st[0])
+            css = "color:%s; font-weight:bold; padding:0 10px;" % st[1]
+            if self.sketch.styleSheet() != css:
+                self.sketch.setStyleSheet(css)
+            if not self.sketch.isVisible():
+                self.sketch.show()
+        elif self.sketch.isVisible():
             self.sketch.hide()
-        self.ctx.setText(context.label(ctx))
+        t = context.label(ctx)
+        if self.ctx.text() != t:
+            self.ctx.setText(t)
 
 
 # ============================================================== controller
@@ -1037,7 +1008,7 @@ class Controller(QtCore.QObject):
                 win.addDockWidget(Qt.LeftDockWidgetArea, model)
             from . import contextmenu
             hook = _S.setdefault("treehook", contextmenu.TreeHook())
-            for tv in model.findChildren(QtWidgets.QTreeView):
+            for tv in ([] if self.docks_done else model.findChildren(QtWidgets.QTreeView)):
                 if tv.styleSheet() != TREE_STYLE:
                     tv.setStyleSheet(TREE_STYLE)
                 if tv.metaObject().className() == "Gui::TreeWidget":
@@ -1053,11 +1024,12 @@ class Controller(QtCore.QObject):
                 tasks.setParent(win)
                 win.addDockWidget(Qt.LeftDockWidgetArea, tasks)
                 tasks.show()
+                # hide FreeCAD's now-empty overlay panels (direct children of the main window only)
+                for ov in win.findChildren(QtWidgets.QTabWidget, options=Qt.FindDirectChildrenOnly):
+                    if ov.metaObject().className() == "Gui::OverlayTabWidget" and not ov.findChildren(QtWidgets.QDockWidget):
+                        ov.hide()
             if tasks.isFloating():
                 tasks.setFloating(False)
-            for ov in win.findChildren(QtWidgets.QWidget):
-                if ov.metaObject().className() == "Gui::OverlayTabWidget" and not ov.findChildren(QtWidgets.QDockWidget):
-                    ov.hide()
             ov = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
             if "Tasks" in ov.GetString("Widgets", ""):
                 ov.SetString("Widgets", "")
@@ -1125,10 +1097,8 @@ def install():
     if _S.get("dock"):
         return
     win = mw()
-    # our widgets are styled at main-window level (survives FreeCAD re-applying
-    # its application stylesheet when preferences change)
-    if "FreeWorksTop" not in (win.styleSheet() or ""):
-        win.setStyleSheet((win.styleSheet() or "") + STYLE)
+    # styles go on FreeWorks' own widgets only (survives FreeCAD re-applying its
+    # application stylesheet, and adds nothing to FreeCAD's own widgets)
     _S["guard"] = _ToolbarGuard()
     dock = QtWidgets.QDockWidget("FreeWorks", win)
     dock.setObjectName("FreeWorksCommandDock")
@@ -1144,6 +1114,7 @@ def install():
     _S["cm"] = CommandManager()
     v.addWidget(_S["cm"])
     _S["cm"].setVisible(params().GetBool("CommandManager", True))
+    body.setStyleSheet(STYLE)
     dock.setWidget(body)
     win.setCorner(Qt.TopLeftCorner, Qt.TopDockWidgetArea)
     win.setCorner(Qt.TopRightCorner, Qt.TopDockWidgetArea)
@@ -1152,6 +1123,8 @@ def install():
     mdi = context.mdi_area()
     _S["headsup"] = HeadsUp(mdi)
     _S["filters"] = FilterBar(mdi)
+    _S["headsup"].setStyleSheet(STYLE)
+    _S["filters"].setStyleSheet(STYLE)
     _S["status"] = Status()
     _S["controller"] = Controller()
     hide_native_toolbars()
