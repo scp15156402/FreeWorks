@@ -88,6 +88,48 @@ Top to bottom [K unless marked; owner runs **Simplified Interface** + dark theme
   sketch status, "Editing Part/Sketch …", **unit system** button (click → MMGS/IPS/… list and
   Edit Document Units), rebuild indicator, quick tips toggle. [K]
 
+## 1.3a CommandManager tab contents (default, non-simplified) [K — verify against a 2026 screenshot list]
+Order left→right; "▾" = flyout; **|** = separator.
+- **Features** (part): Extruded Boss/Base · Revolved Boss/Base · Swept Boss/Base · Lofted
+  Boss/Base · Boundary Boss/Base **|** Extruded Cut · Hole Wizard ▾ (Hole Wizard, Advanced Hole,
+  Thread, Stud Wizard) · Revolved Cut · Swept Cut · Lofted Cut · Boundary Cut **|** Fillet ▾
+  (Fillet, Chamfer) · Linear Pattern ▾ (Linear, Circular, Mirror, Curve Driven, Sketch Driven,
+  Table Driven, Fill, Variable) · Rib · Draft · Shell · Wrap · Intersect · Mirror **|** Reference
+  Geometry ▾ (Plane, Axis, Coordinate System, Point, Center of Mass, Bounding Box, Mate Reference) ·
+  Curves ▾ (Split Line, Projected, Composite, Through XYZ Points, Through Reference Points, Helix
+  and Spiral) · **Instant3D** (toggle).
+- **Sketch**: Sketch (enter/exit) · 3D Sketch ▾ **|** Smart Dimension ▾ · Line ▾ (Line,
+  Centerline, Midpoint Line) · Rectangle ▾ (5 types) · Slot ▾ (4 types) · Circle ▾ (Circle,
+  Perimeter Circle) · Arc ▾ (Centerpoint, Tangent, 3 Point) · Polygon · Spline ▾ (Spline, Style
+  Spline, Spline on Surface, Equation Driven Curve) · Ellipse ▾ (Ellipse, Partial Ellipse,
+  Parabola, Conic) · Sketch Fillet ▾ (Fillet, Chamfer) · Text · Plane · Point **|** Trim Entities ▾
+  (Trim, Extend) · Convert Entities ▾ (Convert, Intersection Curve, Silhouette Entities) · Offset
+  Entities ▾ (Offset, Offset on Surface) · Mirror Entities · Linear Sketch Pattern ▾ (Linear,
+  Circular) · Move Entities ▾ (Move, Copy, Rotate, Scale, Stretch) **|** Display/Delete Relations ▾
+  (Display/Delete, Add Relation, Fully Define Sketch?) · Repair Sketch · Quick Snaps ▾ · Rapid
+  Sketch · Instant2D · Shaded Sketch Contours.
+- **Evaluate**: Design Checker ▾ · Measure · Markup · Mass Properties · Section Properties ·
+  Sensor · Performance Evaluation · Check · Import Diagnostics · Deviation Analysis · Zebra
+  Stripes · Curvature · Draft Analysis · Undercut Analysis · Parting Line Analysis · Thickness
+  Analysis · Symmetry Check · Compare Documents · Check Active Document · Equations? · Costing ·
+  Sustainability. (Assemblies add Interference Detection, Clearance Verification, Hole Alignment,
+  AssemblyXpert.)
+- **Assembly**: Insert Components ▾ (Insert Components, New Part, New Assembly, Copy with Mates)
+  · Mate · Component Preview Window · Linear Component Pattern ▾ (Linear, Circular, Pattern
+  Driven, Sketch Driven, Curve Driven, Chain, Mirror Components) · Smart Fasteners · Move
+  Component ▾ (Move, Rotate) · Show Hidden Components **|** Assembly Features ▾ · Reference
+  Geometry ▾ · New Motion Study · Bill of Materials · Exploded View ▾ (Exploded View, Explode Line
+  Sketch) · Instant3D · Update Speedpak · Take Snapshot · Large Assembly Mode / Large Design Review.
+- **Drawing**: Model View · Projected View · Auxiliary View · Section View · Detail View · Broken-out
+  Section · Break · Crop View · Alternate Position View **|** Standard 3 View … ; **Annotation**:
+  Smart Dimension ▾ · Model Items · Spell Checker · Format Painter · Note · Linear Note Pattern ·
+  Balloon · Auto Balloon · Magnetic Line · Surface Finish · Weld Symbol · Hole Callout · Geometric
+  Tolerance · Datum Feature · Datum Target · Blocks · Center Mark · Centerline · Area Hatch/Fill ·
+  Revision Symbol / Cloud · Tables ▾.
+- Hovering a button shows a **large tooltip** (name, description, small picture; owner has large
+  tooltips on [O]); flyout arrows open on click; **the flyout button keeps the last used command
+  on its face** (Rectangle/Circle/Arc "default to the last used type"). [H for arcs/circles/rectangles]
+
 ## 1.4 Context toolbars  [H 2011–2023, B SOLIDWORKS blog 2009, Solid Solutions]
 
 - Appear **when items are selected in the graphics area or FeatureManager** and **on top of the
@@ -170,8 +212,14 @@ filters · **Enter** repeat last command · **Tab / Shift+Tab / Ctrl+Shift+Tab**
 show hidden components under the pointer · **Alt** (hover) hide faces? · **W** search commands
 · **H** help · **I** file search · **F9** toggle Manager Pane, **F10** toggle toolbars, **F11**
 full screen · Ctrl+C/V/X/Z/Y, Ctrl+N/O/S/P/W, Ctrl+Tab next document, Ctrl+F4 close.
+More defaults from shortcut lists [B scribd/GrabCAD lists, unverified individually]: **F3 Quick
+Snaps** (View > Quick Snaps), F7 spell checker, F8 Display Pane, Shift+F3 toggle note upper case,
+**Ctrl+F1 Task Pane**, **T Select over Geometry**, **C expand/collapse tree**, End = scroll tree
+to bottom, Shift+F10 shortcut menu.
 Owner overrides: C Circle, D Smart Dimension, E Extruded Boss/Base, F Fillet, M Measure, R
-Corner Rectangle, T Trim, S #33513, X #33094 [O].
+Corner Rectangle, T Trim, X #33094 (replaced Filter Faces; unidentified), and **S = command
+#33513, the same command as the default F3 → Quick Snaps** (so in the owner's SOLIDWORKS, S
+does not open the shortcut bar) [O + lists].
 
 ## 1.10 Heads-up View toolbar  [H 2012–2019 View toolbar, owner list O]
 Transparent toolbar at the top centre of every viewport: **Zoom to Fit · Zoom to Area ·

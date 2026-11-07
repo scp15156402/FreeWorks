@@ -77,6 +77,22 @@ Sketch; renamed in 2018 when it was extended to sketch *edit*) [H 2018 What's Ne
   angle increment). One-shot: pick a quick snap during a tool to apply it to the next pick.
   Some line orientations override quick snaps. [H line PM note]
 - Grid off in the owner's settings [O].
+- **Quick Snaps detail** [H 2012–2019, B Javelin 2017]: *instantaneous, single-operation* snaps
+  that **filter** what the next click can snap to (e.g. Center Point Snap → only arc/circle
+  centres are pickable). Toolbar buttons: **Point · Center Point · Midpoint · Quadrant ·
+  Intersection · Nearest · Tangent · Perpendicular · Parallel · H/V · H/V Point · Length · Grid ·
+  Angle**. Reached via Tools > Relations > Quick Snaps, right-click > **Quick Snaps** (flyout),
+  the Sketch tab flyout, the Quick Snaps toolbar, or **F3** (default key — **the owner re-bound
+  this command to S** [O]). Only active **with a sketch tool running** (greyed otherwise); with the
+  **click-click** method you can pick a quick snap between clicks (not with click-drag);
+  **double-click a quick snap to keep it** for several entities or until another is chosen.
+- **Waking up snaps**: with a sketch tool active, hover an entity → it changes colour, its snap
+  points appear on it, the pointer shows the inference glyph. Only the current entity shows
+  snaps when many exist. *Nearest* snap limits snapping to the pointer's vicinity. [H]
+- Sketch Snaps list (Options > Sketch > Relations/Snaps): End points and sketch points · Center
+  points · Mid-points · Quadrant points · Intersections · Nearest · Tangent · Perpendicular ·
+  Parallel · Horizontal/vertical lines · Horizontal/vertical to points · Length · Grid (Snap only
+  when grid is displayed) · Angle (**Snap angle**, set on that page). [H]
 
 ## 5.4 On-screen numeric input
 

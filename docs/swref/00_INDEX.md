@@ -33,26 +33,30 @@ What's New notes, and forum threads. Where sources disagree the newest SOLIDWORK
 
 | File | Area | Status |
 |---|---|---|
-| 01_ui_framework.md | CommandManager, menus, Manager Pane, PropertyManager anatomy, confirmation corner, heads-up toolbar, status bar, task pane, shortcut bar, context toolbars, breadcrumbs, gestures, Welcome/New, Customize, Simplified Interface | todo |
-| 02_view_navigation.md | mouse/keyboard view control, view orientation, view selector, zoom/pan/rotate rules, display styles, section view | todo |
-| 03_selection.md | pick rules, selection filters, box/lasso, Select Other, Ctrl/Shift, hidden edges, Select Tangency/Loop/Chain | todo |
-| 04_featuremanager.md | design tree, rollback, reorder, rename, folders, flyout, What's Wrong, parent/child | todo |
-| 05_sketch_environment.md | entering/exiting a sketch, sketch on face/plane, inference, automatic relations, numeric input, Smart Dimension, Modify box, Add/Display relations, sketch states, SketchXpert | todo |
-| 06_sketch_tools.md | every sketch entity and sketch tool PropertyManager | todo |
-| 07_boss_cut_features.md | Extrude, Revolve, Sweep, Loft, Boundary (boss and cut), thin, feature scope, selected contours | todo |
-| 08_applied_features.md | Fillet (all types, FilletXpert), Chamfer, Hole Wizard, Simple Hole, Shell, Draft, Rib, Dome, Thread, Wrap | todo |
-| 09_patterns_mirror.md | Linear, Circular, Curve-driven, Sketch-driven, Table-driven, Fill, Variable patterns, Mirror | todo |
-| 10_reference_geometry.md | Plane, Axis, Coordinate System, Point, Mate Reference, Center of Mass | todo |
-| 11_multibody_direct.md | Combine, Split, Move/Copy Body, Delete Body, Move/Delete/Offset Face, Intersect | todo |
-| 12_evaluate.md | Mass Properties, Measure, Section Properties, Interference/Clearance, Check, Equations | todo |
-| 13_configurations.md | ConfigurationManager, suppression, design tables, global variables, equations | todo |
-| 14_assembly.md | Insert Component, mates (standard/advanced/mechanical), SmartMates, Quick Mates, Move/Rotate Component, collision, interference, patterns, mirror, replace, subassemblies, in-context, exploded view | todo |
-| 15_drawings.md | sheets, view types, annotations, dimensions (CSWA drafting questions) | todo |
-| 16_options.md | System Options and Document Properties pages relevant to the owner | todo |
-| 17_files.md | New/Open/Save/Save As, templates, import/export, recent docs, Pack and Go | todo |
-| 18_visual_style.md | colours, highlight, preview colours, cursors, icons, fonts | todo |
-| 90_hidden_interactions.md | "tips and tricks" behaviour only found by using SOLIDWORKS: drags, double-clicks, keyboard, context menus | todo |
-| 91_release_changes.md | What's New 2019–2026 items that change behaviour | todo |
+| 01_ui_framework.md | PropertyManager anatomy, accept/cancel, RMB cue, window layout, CommandManager tab contents, context toolbars, shortcut menus, Select Other, breadcrumbs, shortcut bar, gestures, keyboard, heads-up toolbar | draft 1 |
+| 02_view_navigation.md | MMB rules, exact wheel-zoom behaviour, keyboard view control, Normal To rules, triad, orientation, transitions | draft 1 (well sourced) |
+| 03_selection.md | highlighting, box/cross/lasso colours, contextual selection, filters (incl. 2026), tree picks | draft 1 |
+| 04_featuremanager.md | default tree, prefixes/icons, interactions, rollback, options, naming | draft 1 |
+| 05_sketch_environment.md | entering/exiting, sketch on face, auto-rotate, inference & quick snaps, numeric input, Smart Dimension rules, Modify box, Dimension PM, relations PMs, Fully Define, SketchXpert, Check Sketch, sketch options | draft 1 |
+| 06_sketch_tools.md | two-state PMs for every entity and tool (Line, Rectangle, Circle, Arc, Slot, Polygon, Ellipse, Spline, Point, Text, Trim, Extend, Offset, Convert, Mirror, Fillet/Chamfer, Patterns, Move/Copy/Rotate/Scale/Stretch) | draft 1 (most PMs verified) |
+| 07_boss_cut_features.md | common sketch-finding behaviour, Extrude, Revolve, Sweep, Loft, Boundary, Rib | draft 1 (Extrude/Revolve/Sweep/Loft verified) |
+| 08_applied_features.md | Fillet (all types, FilletXpert), Chamfer, Hole Wizard (+ Advanced Hole), Shell, Draft, Thicken, Thread, Dome, Wrap | draft 1 (Fillet/Chamfer/Hole/Shell/Draft verified) |
+| 09_patterns_mirror.md | common pattern options, Linear, Circular, Mirror, Curve/Sketch/Table driven, Fill, Variable | draft 1 |
+| 10_reference_geometry.md | Plane, Axis, Coordinate System, Point, COM, Bounding Box, Mate Reference | draft 1 (Plane verified) |
+| 11_multibody_direct.md | bodies, Move/Copy Bodies, Combine/Intersect/Split/Delete Body, Move/Delete Face, Instant3D | draft 1 |
+| 12_evaluate.md | Mass Properties, Measure, Section View, Interference, other analyses | draft 1 (Mass Props/Measure verified) |
+| 13_configurations_equations.md | Equations dialog (4 views), Link Values, ConfigurationManager, Add Configuration, Modify Configurations, design tables | draft 1 (Equations verified) |
+| 14_assembly.md | Begin Assembly/Insert Components, Mate PM + pop-up, Quick Mates, SmartMates, Move/Rotate Component incl. collision/dynamics/clearance, triad, Replace, sub-assemblies, patterns, mirror, in-context, exploded views | draft 1 (Mate/Move verified) |
+| 15_drawings.md | new drawing, Model View PM, view types, Section View PM, annotations, sheets | draft 1 |
+| 16_18_options_files_visual.md | System Options / Document Properties pages, New/Open/Save, visual style and colours | draft 1 (mostly K) |
+| 90_hidden_interactions.md | Ctrl / Shift / Alt / Tab / RMB / double-click / drag behaviours, pointer cues | draft 1 (help "Time Saving Keyboard Shortcuts" + blogs) |
+| 91_release_changes.md | milestones 2008–2025, SOLIDWORKS 2026 SP0–SP5 behaviour changes | draft 1 |
+
+Remaining verification queue (items tagged [K]): Mirror PM; Axis and Coordinate System PMs;
+Begin Assembly / Insert Components PM; Replace Components; Exploded View; Spline/Ellipse/Text/
+Point PMs; per-selection context toolbar contents; System Options page lists; Section View PM
+(parts); Interference Detection PM; Add Configuration PM; Design Table PM; Sketch status colours
+for dangling/not solved/invalid; Instant3D ruler details.
 
 ## Research log
 - 2026-11-08: help.solidworks.com now serves a JavaScript shell (WebFetch sees "Loading JS…");
