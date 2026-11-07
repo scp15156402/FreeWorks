@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.2 - 2026-11-07
+SOLIDWORKS-style mating.
+- **Mate** (Assembly tab) now opens a **Mate PropertyManager**: pick two faces, edges or vertices
+  on two components and FreeWorks applies the right mate straight away - two planar faces
+  Coincident, two cylinders Concentric, a cylinder and a plane Tangent - with a **pop-up mate
+  toolbar** at the cursor to switch type, enter a distance or angle, flip the alignment, accept or
+  undo.
+- Standard mates: Coincident, Parallel, Perpendicular, Tangent, Concentric, Lock, Distance, Angle;
+  mechanical: Hinge, plus Gear / Rack Pinion / Screw through FreeCAD's joint panel.
+- Mate alignment (Aligned / Anti-Aligned), Flip dimension, a Mates list, and each mate is its own
+  undo step. Mates are named like SOLIDWORKS: `Coincident1 (Plate,Block)`.
+- New original icons for every mate type.
+
 ## v1.1.1 - 2026-11-07
 CSWA essentials: materials and Mass Properties.
 - **Edit Material** (right-click a body, or Tools/Evaluate): a library with SOLIDWORKS material

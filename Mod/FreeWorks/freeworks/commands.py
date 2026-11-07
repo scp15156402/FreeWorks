@@ -341,10 +341,9 @@ def add_relation():
 
 
 def mate_menu():
-    from . import widgets
-    keys = ["mate_fixed", "mate_revolute", "mate_concentric", "mate_distance", "mate_parallel", "mate_perpendicular",
-            "mate_angle", "mate_slider", "mate_ball", "mate_gear", "mate_rack", "mate_screw", "mate_belt"]
-    widgets.popup_commands(keys, "Mate", only_active=False)
+    """SOLIDWORKS Mate PropertyManager (FreeWorks). FreeCAD's joint tools stay in the Assembly tab."""
+    from . import matepm
+    matepm.start()
 
 
 def shortcut_bar():

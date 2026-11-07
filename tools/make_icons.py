@@ -433,6 +433,26 @@ I["clear_filters"] = svg(path("M3,4 L21,4 L14,12 L14,20 L10,18 L10,12 Z", fill="
 I["new_document"] = svg('<path d="M5,2.5 L14,2.5 L19,7.5 L19,21.5 L5,21.5 Z" fill="#FFFFFF" stroke="%s" stroke-width="1"/>' % INK + path("M14,2.5 L14,7.5 L19,7.5", stroke=INK, w=1) + plus((17.5, 18), GRN, 3.6))
 # "freeworks" (app mark) is generated from the owner's logo by tools/make_branding.py
 
+# ---- mate types (two parts: amber + grey, relation in green)
+def _two(a, b):
+    return svg(a + b)
+MG = "#2E7D32"
+I["mate_coincident"] = svg(poly([(2, 15), (12, 10), (22, 15), (12, 20)], AMB["top"], AMB["edge"]) + poly([(2, 10), (12, 5), (22, 10), (12, 15)], GRY["top"], GRY["edge"], extra='fill-opacity="0.85"')
+                           + line((12, 10), (12, 15), MG, 1.6))
+I["mate_parallel"] = svg(line((4, 18), (14, 6), INK, 2.2) + line((10, 20), (20, 8), "#C97A10", 2.2) + line((8, 10), (12, 14), MG, 1.0) + line((14, 12), (18, 16), MG, 1.0))
+I["mate_perpendicular"] = svg(line((4, 20), (20, 20), INK, 2.2) + line((12, 20), (12, 4), "#C97A10", 2.2) + path("M12,15 L17,15 L17,20", stroke=MG, w=1.2))
+I["mate_tangent"] = svg(line((2, 19), (22, 19), INK, 2.0) + circ((12, 12), 6.8, "url(#cg%s)" % AMB["left"][1:], AMB["edge"], 0.8) + dot((12, 19), 1.8, MG))
+I["mate_concentric"] = svg(circ((12, 12), 9, "none", INK, 1.8) + circ((12, 12), 5, "url(#cg%s)" % AMB["left"][1:], AMB["edge"], 0.8) + dot((12, 12), 1.6, MG))
+I["mate_lock"] = svg('<rect x="5" y="10.5" width="14" height="10.5" rx="1.6" fill="#F2B53C" stroke="#7A4B06" stroke-width="0.8"/>'
+                     + path("M8,10.5 L8,7.5 A4,4 0 0 1 16,7.5 L16,10.5", stroke=INK, w=1.8) + circ((12, 15.5), 1.5, INK, INK, 0.4))
+I["mate_distance"] = svg(line((4, 3), (4, 21), INK, 2.0) + line((20, 3), (20, 21), "#C97A10", 2.0) + arrow((12, 12), (5.5, 12), MG, 1.3, 2.6) + arrow((12, 12), (18.5, 12), MG, 1.3, 2.6))
+I["mate_angle"] = svg(line((3, 20), (21, 20), INK, 2.0) + line((3, 20), (17, 5), "#C97A10", 2.0) + path("M12,20 A9,9 0 0 0 9.5,13.5", stroke=MG, w=1.3))
+I["mate_hinge"] = svg(box(0, 0, 0, 10, 3, 8, GRY, ox=7, oy=15) + box(0, 0, 0, 10, 3, 8, AMB, ox=14, oy=17) + line((12, 3), (12, 21), MG, 1.4, dash="2,1.4"))
+I["mate_align"] = svg(arrow((6, 20), (6, 4), MG, 1.6, 3) + arrow((18, 20), (18, 4), MG, 1.6, 3))
+I["mate_antialign"] = svg(arrow((6, 20), (6, 4), MG, 1.6, 3) + arrow((18, 4), (18, 20), RED, 1.6, 3))
+I["ok"] = svg(path("M4,12.5 L10,18.5 L20.5,6", stroke="#2EA043", w=3.2))
+I["cancel"] = svg(line((5, 5), (19, 19), RED, 3.0) + line((19, 5), (5, 19), RED, 3.0))
+
 # fix placeholders that referenced each other
 I["mate_fixed"] = I["fix_component"]
 I["delete_relations"] = svg('<rect x="3" y="3" width="8" height="8" rx="1.2" fill="#2EA043" stroke="#1B6E2C" stroke-width="0.6"/>' + line((5, 7), (9, 7), "#FFFFFF", 1.3)

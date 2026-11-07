@@ -511,6 +511,102 @@ def t_evaluate_dialogs():
     record("material dialog: pick and apply", ok, b.ShapeMaterial.Name)
     App.closeDocument(doc.Name)
 
+
+# --------------------------------------------------------------------------- mates (P13/P14)
+def _bbl(o):
+    import Part
+    b = Part.getShape(o).BoundBox
+    return [round(x, 2) for x in (b.XMin, b.YMin, b.ZMin, b.XMax, b.YMax, b.ZMax)]
+
+
+@step(1200)
+def t_mates():
+    from freeworks import mates, matepm
+    k = mates.suggest
+    record("mates: suggestions", (k("plane", "plane"), k("cylinder", "cylinder"), k("cylinder", "plane"), k("circle", "line"), k("vertex", "plane"))
+           == ("coincident", "concentric", "tangent", "concentric", "coincident"),
+           (k("plane", "plane"), k("cylinder", "cylinder"), k("cylinder", "plane"), k("circle", "line"), k("vertex", "plane")))
+    a = mates.allowed("plane", "plane")
+    record("mates: allowed types for two planes", "angle" in a and "concentric" not in a and "tangent" not in a, a)
+    doc = App.newDocument("FWMates")
+    STATE["mates_doc"] = doc.Name
+
+    def body(name, kind, dims):
+        b = doc.addObject("PartDesign::Body", name)
+        f = b.newObject("PartDesign::Additive" + ("Box" if kind == "box" else "Cylinder"), name + "F")
+        if kind == "box":
+            f.Length, f.Width, f.Height = dims
+        else:
+            f.Radius, f.Height = dims
+        b.Visibility = False
+        return b
+    bodies = {"A": body("A", "box", (40, 40, 10)), "B": body("B", "box", (10, 10, 10)), "C": body("C", "cyl", (5, 20)),
+              "D": body("D", "cyl", (3, 10)), "E": body("E", "box", (10, 10, 10))}
+    asm = doc.addObject("Assembly::AssemblyObject", "Assembly")
+    asm.Type = "Assembly"
+    plc = {"A": App.Placement(), "B": App.Placement(App.Vector(60, 0, 30), App.Rotation()),
+           "C": App.Placement(App.Vector(0, 80, 0), App.Rotation()), "D": App.Placement(App.Vector(30, 80, 20), App.Rotation()),
+           "E": App.Placement(App.Vector(60, 30, 7), App.Rotation(App.Vector(0, 0, 1), 30))}
+    L = {}
+    for n, b in bodies.items():
+        l = asm.newObject("App::Link", "L" + n)
+        l.LinkedObject = b
+        l.Placement = plc[n]
+        L[n] = l
+    doc.recompute()
+    import JointObject, UtilsAssembly
+    gj = UtilsAssembly.getJointGroup(asm).newObject("App::FeaturePython", "GroundedJoint")
+    JointObject.GroundedJoint(gj, L["A"])
+    JointObject.ViewProviderGroundedJoint(gj.ViewObject)
+    doc.recompute()
+    STATE["mates_L"] = L
+    STATE["mates_asm"] = asm
+    Gui.Selection.clearSelection()
+    matepm.start()
+    p = matepm._PANEL["p"]
+    record("mate PM: opens as task panel", p is not None and Gui.Control.activeDialog(), bool(p))
+    if p is None:
+        return
+    p.add_selection(asm, "LA.AF.Face6", (20, 20, 10))
+    p.add_selection(asm, "LB.BF.Face5", (65, 5, 30))
+    record("mate PM: two planar faces -> Coincident, faces touch", p.mate == "coincident" and _bbl(L["B"])[2] == 10.0,
+           (p.mate, _bbl(L["B"])))
+    p.value.setValue(15.0)
+    p.set_type("distance")
+    record("mate PM: change to Distance 15", p.mate == "distance" and _bbl(L["B"])[2] == 25.0, (p.mate, _bbl(L["B"])))
+    before = _bbl(L["B"])
+    p.flip()
+    flipped = _bbl(L["B"])
+    record("mate PM: flip alignment moves the part", flipped != before, (before, flipped))
+    p.flip()
+    p.commit()
+    j = p.added[-1] if p.added else None
+    record("mate PM: commit -> Distance1 (A,B) in Mates", j is not None and j.Label.startswith("Distance1") and p.list.count() == 1,
+           j.Label if j else None)
+    p.add_selection(asm, "LC.CF.Face1", (5, 80, 10))
+    p.add_selection(asm, "LD.DF.Face1", (33, 80, 25))
+    c, d = _bbl(L["C"]), _bbl(L["D"])
+    cc = ((c[0] + c[3]) / 2, (c[1] + c[4]) / 2)
+    dc = ((d[0] + d[3]) / 2, (d[1] + d[4]) / 2)
+    record("mate PM: two cylinders -> Concentric, axes aligned", p.mate == "concentric" and abs(cc[0] - dc[0]) < 0.05 and abs(cc[1] - dc[1]) < 0.05,
+           (p.mate, cc, dc))
+    p.commit()
+    e0 = str(L["E"].Placement)
+    p.add_selection(asm, "LE.EF.Face6", (62, 32, 17))
+    p.add_selection(asm, "LA.AF.Face1", (0, 20, 5))
+    p.set_type("lock")
+    record("mate PM: Lock keeps the component where it is", p.mate == "lock" and str(L["E"].Placement) == e0, str(L["E"].Placement))
+    p.discard()
+    n_joints = len([o for o in UtilsAssembly.getJointGroup(asm).Group if hasattr(o, "JointType")])
+    record("mate PM: discard leaves no joint", n_joints == 2 and str(L["E"].Placement) == e0, n_joints)
+    p.accept()
+    Gui.Control.closeDialog()
+    QtWidgets.QApplication.processEvents()
+    record("mate PM: OK closes, mates kept", not Gui.Control.activeDialog() and matepm._PANEL["p"] is None and
+           [mates.mate_of(o) for o in UtilsAssembly.getJointGroup(asm).Group if hasattr(o, "JointType")] == ["distance", "concentric"],
+           [o.Label for o in UtilsAssembly.getJointGroup(asm).Group])
+    App.closeDocument(doc.Name)
+
 @step(800)
 def t_no_errors():
     import freeworks

@@ -79,6 +79,24 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
 - `QObject.findChildren()` over the whole main window costs 60-100 ms with ~3000 widgets; search
   direct children or known parents only.
 
+## Assembly joints as SOLIDWORKS mates (verified in FreeCAD 1.1.4, P13/P14)
+- Create a joint without the task panel: `jg = UtilsAssembly.getJointGroup(asm)`,
+  `j = jg.newObject("App::FeaturePython", "Joint")`, `JointObject.Joint(j, JointTypes.index(t))`,
+  `JointObject.ViewProviderJoint(j.ViewObject)`, set Distance/Angle, then
+  `j.Proxy.setJointConnectors(j, [ref1, ref2])` (presolves and solves).
+- Reference = `[component, [sub, sub_vertex]]`, built like FreeCAD's task: `resolveSubElement` →
+  `fixBodyExtraFeatureInSub` → `getComponentReference(asm, root, sub)` → `findElementClosestVertex`
+  → `addVertexToReference`.
+- Grounding: `GroundedJoint(jg.newObject(...), link)` (CommandCreateJoint.createGroundedJoint needs
+  an active assembly). Nothing moves on solve without a grounded part.
+- Distance joint with 0: plane/plane = coincident face to face; round face/plane = **tangent**.
+  Cylindrical joint on two cylinder faces = concentric. `Proxy.flipOnePart(j)` + solve = flip
+  alignment. Fixed joint with whole-component refs (`[c, ["", ""]]`) and
+  `Offset2 = P2.inverse() * P1` = SOLIDWORKS Lock (nothing moves).
+- The active assembly must be in edit mode (`Gui.ActiveDocument.setEdit(asm)`) for FreeCAD's
+  assembly commands; `UtilsAssembly.setJointsPickableState(doc, False)` while picking.
+- `getStandardButtons` must return an int: `(sb.Ok | sb.Close).value` in PySide6.
+
 ## Sandbox constraint (Claude sessions)
 Running third-party add-on code may be blocked in Claude's sandbox; test FreeWorks' own code
 only, read add-on sources instead.

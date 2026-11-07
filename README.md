@@ -138,7 +138,7 @@ FreeWorks changes what you see and how you work. It doesn't change FreeCAD's geo
 - **Feature dialogs (PropertyManager content)** are FreeCAD's own panels, renamed and restyled. Fields and options are FreeCAD's: Pad "Length" instead of "D1", and so on.
 - **Rollback:** use *Roll Back* (right-click a feature) and *Roll to End*. There is no draggable rollback bar.
 - **Bodies:** FreeCAD needs a **Body** per solid. A new Part already contains one; insert more with Insert → Body. Combine, Intersect and Split work between bodies.
-- **Mates** are FreeCAD Assembly joints with SolidWorks names. Each joint usually equals one or two SolidWorks mates. For example, a Hinge is Concentric + Coincident, and Lock is Fixed. There are no Width, Cam or Symmetric mates.
+- **Mates:** the Mate PropertyManager works like SolidWorks' one: you pick two entities, it suggests a mate, and you use the pop-up mate toolbar. Behind the scenes each mate is a FreeCAD Assembly joint. Coincident and Tangent are a Distance joint at 0, Concentric is a Cylindrical joint, and Lock is a Fixed joint. Width, Symmetric, Cam, Slot and Universal Joint mates aren't available yet. Gear, Rack Pinion and Screw open FreeCAD's own joint panel.
 - **Not available** (FreeCAD has no equivalent): Weldments, Rib, Wrap, Fill Pattern, Variable Pattern, DimXpert, SolidWorks Simulation / Motion. Items marked *(closest FreeCAD equivalent)* in their tooltip are approximations.
 - **Sketcher:** FreeCAD shows on-screen value boxes while drawing, and some relations are inferred differently.
 - **Speed:** rebuilds of large models depend on FreeCAD's geometry kernel and will usually be slower than SolidWorks.
