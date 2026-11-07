@@ -75,10 +75,13 @@ reviewed by reading; ask the owner to report results.
 
 ## Git
 
-Commit regularly. **A `vX.Y.Z` tag is a release**: the one-line installer and the in-app update
-check install the highest such tag, so only tag tested work. `Mod/FreeWorks/package.xml`,
-`freeworks/__init__.py` and `versions.json` (`freeworks`) carry the version of the latest
-release and are bumped only in release commits. Never move or delete a published tag.
+Commit regularly to `main` (development). **Releasing = pushing to the `stable` branch**: the
+one-line installer and the in-app update check install whatever `stable` holds and compare
+versions using `Mod/FreeWorks/package.xml` there. Release steps: bump the version in
+`package.xml`, `freeworks/__init__.py`, `versions.json` (`freeworks`) and `CHANGELOG.md` on `main`,
+test, then `git push origin main:stable`. Only push tested work to `stable`.
+Claude sessions can push branches but not tags (GitHub 403); the owner may add `vX.Y.Z` tags /
+GitHub Releases on the web for the record.
 
 Install/update/uninstall entry points (Windows): `get.ps1` (install-or-update, one line),
 `uninstall.ps1` (one line, one confirmation), `install.ps1` (does the work; registers in

@@ -63,12 +63,12 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | P34 | GUI | Polish pass + v1.5 release | ⬜ |
 
 ## Known issues / owner feedback
-- GitHub: Claude sessions can push to `scp15156402/FreeWorks` (working since 2026-11-07 P1). If a push is refused, fall back to `FreeWorks.bundle`.
+- GitHub: Claude sessions can push **branches** (`main`, `stable`) but not tags (403). Releases = push to `stable`.
 - Installer scripts (get/install/uninstall.ps1) are structurally checked and reviewed but not yet run on a real Windows PC - owner to test the v1.0.1 one-liners.
 
 ## Session log
 | Date (IST) | Part | Summary |
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
-| 2026-11-07 | P2 | One-line install/update/uninstall, installer v2, projects-folder guard, tag-based updates; released v1.0.1. |
+| 2026-11-07 | P2 | One-line install/update/uninstall, installer v2, projects-folder guard, stable-branch releases (tags blocked for Claude sessions); released v1.0.1. |
 | 2026-11-07 | P1 | Tracker, CLAUDE.md/AGENTS.md, UPDATE_PROTOCOL, DEV_NOTES rewrite, versions.json; new logo → vector mark, .ico, splash, Welcome dialog, README (tools/make_branding.py). |

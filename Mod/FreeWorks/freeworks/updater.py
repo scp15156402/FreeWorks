@@ -16,7 +16,7 @@ from PySide import QtCore, QtWidgets
 from . import __version__, log, params
 
 REPO = "scp15156402/FreeWorks"
-TAGS = "https://api.github.com/repos/%s/tags?per_page=100" % REPO
+STABLE_PKG = "https://raw.githubusercontent.com/%s/stable/Mod/FreeWorks/package.xml" % REPO
 GET_PS1 = "https://raw.githubusercontent.com/%s/main/get.ps1" % REPO
 
 _result = {}
@@ -45,18 +45,11 @@ def _fetch(url):
 
 
 def _check_thread():
-    """Newest version = highest vX.Y.Z tag on GitHub (the one-line installer uses the same rule)."""
+    """Released version = version in package.xml on the 'stable' branch (same rule as get.ps1)."""
     try:
-        tags = json.loads(_fetch(TAGS))
-        best = None
-        for t in tags:
-            n = t.get("name", "")
-            if n.startswith("v") and n[1:].replace(".", "").isdigit() and n.count(".") == 2:
-                if best is None or _vtuple(n) > _vtuple(best):
-                    best = n
-        if best is None:
-            raise RuntimeError("no versions published yet")
-        _result.update(version=best, notes="", url="https://github.com/%s/blob/%s/CHANGELOG.md" % (REPO, best))
+        pkg = _fetch(STABLE_PKG)
+        v = pkg.split("<version>")[1].split("</version>")[0].strip()
+        _result.update(version=v, notes="", url="https://github.com/%s/blob/stable/CHANGELOG.md" % REPO)
     except Exception as e:
         _result.update(error=str(e))
     _result["done"] = True

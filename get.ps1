@@ -13,7 +13,7 @@
 
   Options: set before the one-liner, e.g.  $env:FREEWORKS_DIR = "E:\FreeWorks"
       FREEWORKS_DIR      install folder for a new installation
-      FREEWORKS_CHANNEL  "stable" (default, newest version tag) or "main" (development)
+      FREEWORKS_CHANNEL  "stable" (default, released version) or "main" (development)
       FREEWORKS_FORCE    "1" = reinstall even if already up to date
 #>
 param(
@@ -82,24 +82,24 @@ param(
             while (Running-In $dir) { Start-Sleep -Seconds 2 }
         }
 
-        # which version?
+        # which version? the "stable" branch is the released version, "main" is development
         $ch = if ($Channel) { $Channel } elseif ($env:FREEWORKS_CHANNEL) { $env:FREEWORKS_CHANNEL } else { "stable" }
+        $branch = if ($ch -eq "main") { "main" } else { "stable" }
         $hdr = @{ "User-Agent" = "FreeWorks-Installer" }
-        $tag = $null
-        if ($ch -ne "main") {
-            try {
-                $tags = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/tags?per_page=100" -Headers $hdr
-                $tag = $tags | Where-Object { $_.name -match '^v\d+\.\d+\.\d+$' } |
-                    Sort-Object { [version]($_.name.Substring(1)) } | Select-Object -Last 1 -ExpandProperty name
-            } catch { Say "  (could not list versions: $($_.Exception.Message); using the latest development version)" "DarkYellow" }
+        $latest = $null
+        try {
+            $pkg = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$Repo/$branch/Mod/FreeWorks/package.xml" -Headers $hdr -UseBasicParsing).Content
+            if ("$pkg" -match "<version>([^<]+)</version>") { $latest = $Matches[1].Trim() }
+        } catch {
+            $branch = "main"   # stable branch not published yet
         }
-        if ($tag) { $url = "https://github.com/$Repo/archive/refs/tags/$tag.zip"; $label = $tag }
-        else { $url = "https://github.com/$Repo/archive/refs/heads/main.zip"; $label = "main" }
+        $url = "https://github.com/$Repo/archive/refs/heads/$branch.zip"
+        $label = if ($latest) { "$latest ($branch)" } else { $branch }
 
-        if ($update -and $tag -and -not $env:FREEWORKS_FORCE) {
+        if ($update -and $latest -and -not $env:FREEWORKS_FORCE) {
             $cur = (Get-ItemProperty $RegKey -ErrorAction SilentlyContinue).Version
-            if ($cur -and ("v" + $cur) -eq $tag) {
-                Say "  FreeWorks is already up to date ($tag)." "Green"
+            if ($cur -and $cur -eq $latest) {
+                Say "  FreeWorks is already up to date ($latest)." "Green"
                 if ($Restart) { $exe = Join-Path $dir "FreeWorks.exe"; if (Test-Path $exe) { Start-Process $exe } }
                 return
             }
@@ -120,7 +120,7 @@ param(
         if ($NoAddons)    { $a += "-NoAddons" }
         if ($WithRender)  { $a += "-WithRender" }
         if ($NoShortcuts) { $a += "-NoShortcuts" }
-        if ($tag)         { $a += @("-Version", $tag.Substring(1)) }
+        if ($latest)      { $a += @("-Version", $latest) }
         $ps = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
         $p = Start-Process -FilePath $ps -ArgumentList $a -NoNewWindow -Wait -PassThru
         Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
