@@ -54,7 +54,7 @@ release.
 | `docs/` | Research and reference (CSWA/CSWP scope, community projects, SOLIDWORKS reference). |
 | `docs/swref/` | **SOLIDWORKS reference catalogue** (2.0 research): every PropertyManager, option, window and interaction with sources and confidence tags; `00_INDEX.md` lists files and the verification queue; `95_gap_matrix.md` compares with FreeCAD/FreeWorks. Read the relevant file before building any SOLIDWORKS-facing feature. |
 | `docs/SW_BEHAVIOR_SPEC.md` | Acceptance criteria (IDs PM-, VW-, SEL-, CTX-, SK-, FT-, FM-, EV-, AS-) that 2.0 must pass; tests reference these IDs. |
-| `dev/V2_PLAN.md` | FreeWorks 2.0 architecture (own PM framework, interaction layer, own FeatureManager) and parts P40–P104. |
+| `dev/V2_PLAN.md` | FreeWorks 2.x master plan: own code, complexity tiers, decisions D1–D8, stages A–J (parts P40–P140) ordered simple → complex. |
 | `dev/TRACKER.md` | Roadmap, part list, status, session log. **Keep it current.** |
 | `dev/UPDATE_PROTOCOL.md` | The "get it up to date" procedure. |
 | `dev/DEV_NOTES.md` | Technical findings about FreeCAD internals. |

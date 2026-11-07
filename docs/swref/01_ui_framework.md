@@ -159,6 +159,13 @@ Order left→right; "▾" = flyout; **|** = separator.
   - *Plane*: **Sketch** · Edit Feature · Hide/Show · **Normal To** · Zoom to Selection.
   - *Sketch entities in a sketch*: valid **Add Relations** icons + Construction Geometry +
     Smart Dimension (+ "Make Path", "Mirror" etc. depending on selection).
+  - Evidence found in text (screenshots could not be viewed — image fetches fail and no browser
+    was available): component → **Hide Components / Show Components** (both shown when the
+    selection mixes states, 2024+), **Change Transparency**, **Component Properties**, Isolate;
+    right-click the top assembly → **Top Level Transparency**; **Isolate pop-up toolbar**:
+    Wireframe / Transparent / Hidden, Save as Display State, Exit Isolate; planes → Hide/Show
+    toggle; face → Edit Feature (FeatureWorks on imported faces). [H 2012–2024, B Javelin 2026,
+    3DSwym wiki]
   - *Component (assembly)*: Edit Part / Open Part · Hide/Show · Change Transparency · Isolate ·
     Rebuild · **Quick Mates** row when two entities from different components are selected.
 

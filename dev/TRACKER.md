@@ -1,7 +1,8 @@
 # FreeWorks project tracker
 
-**Next part:** P40 – PM framework: PMPage/PMGroup/buttons/message, task-dialog host, Enter/Esc/Tab
-(start of FreeWorks 2.0 — see `dev/V2_PLAN.md`; owner to review the plan and answer Q1–Q5 there)
+**Next part:** P40 – Stage A: owner profile + standard profile (keys, trimetric, transitions,
+arrow increment). Full ordered plan (simple → complex, own code, decisions D1–D8 replacing the
+open questions) in `dev/V2_PLAN.md`.
 
 ## FreeWorks 2.0 (owner direction 2026-11-08)
 "Even a regular SOLIDWORKS user shouldn't feel a difference." Research first, then build.
@@ -76,8 +77,17 @@ then P23, P25, P28 → P34.
 | P36 | GUI | Open items: draggable rollback bar, Material/Solid Bodies nodes in the tree, selection context toolbar, Add Relations PM, hole callout, auto balloon, revision table, PropertyManager pushpin — **folded into the 2.0 plan** (P43, P49, P70, P90–P91) | ➡️ |
 | P37 | Research | SOLIDWORKS reference catalogue `docs/swref/` (UI framework, view, selection, FeatureManager, sketch environment, every sketch tool's two-state PM, boss/cut and applied features, patterns, reference geometry, multibody/Instant3D, evaluate, equations/configurations, assemblies, drawings, options/files/visual, hidden interactions, release changes 2008–2026 SP5, community pain points) | ✅ |
 | P38 | Research | Gap matrix vs FreeCAD 1.1.4/26.3 and FreeWorks 1.5.4 (`docs/swref/95_gap_matrix.md`); behaviour spec with acceptance IDs (`docs/SW_BEHAVIOR_SPEC.md`) | ✅ |
-| P39 | Plan | `dev/V2_PLAN.md`: own PM framework, interaction layer, sketch PMs, feature PMs, own FeatureManager tree; phases 1–8, parts P40–P104; open questions Q1–Q5 | ✅ |
-| P40–P104 | 2.0 | See `dev/V2_PLAN.md` §3 | ⏳ |
+| P39 | Plan | `dev/V2_PLAN.md` master plan: own code, tiers T1–T5, decisions D1–D8, stages A–J ordered simple → complex | ✅ |
+| Stage A | 2.0-a1 | T1 quick wins: profiles, keys, Normal To rules, status-bar measurements, selection filters, Select Other, contextual selection, isolate, CommandManager order, View Orientation, colours, Options wiring (P40–P47d) | ⏳ |
+| Stage B | 2.0-a2 | PM framework: page, controls, selection routing, pushpin/memory/flyout, RMB cue, spec harness, port Mate/Move PMs (P48–P54) | ⬜ |
+| Stage C | 2.0-a3 | Simple feature PMs: Plane, Axis, Point, CSYS, Shell, Draft, Revolve, Chamfer, patterns, Mirror, Sweep/Loft, Hole Wizard (P55–P66) | ⬜ |
+| Stage D | 2.0-a4 | Feature-first flow, Extrude PM, Fillet PM, selection toolbar, edit round-trip (P67–P73) | ⬜ |
+| Stage E | 2.0-a5/6 | Sketching: Edit Sketch message, Modify box, two-state entity PMs, Smart Dimension, snaps, numeric input, Trim/Offset/Convert/Mirror/Fillet/patterns/Move, relations, status (P74–P95a) | ⬜ |
+| Stage F | 2.0-a7 | Interaction layer: zoom, orbit, context toolbar, breadcrumbs, draggers/rulers, drag modifiers, box/cross, shortcut menus (P96–P102a) | ⬜ |
+| Stage G | 2.0.0 | Own FeatureManager tree, rollback, reorder, prefixes, What's Wrong; 2.0.0 acceptance (P103–P109) | ⬜ |
+| Stage H | 2.1 | Own geometry: advanced fillets, chamfers, thin feature, selected contours, feature scope, pattern extras, more features, Instant3D (P110–P122) | ⬜ |
+| Stage I | 2.2 | Evaluate, configurations, assemblies (P123–P133) | ⬜ |
+| Stage J | 2.3 | Drawings, Fully Define/SketchXpert, Simplified Interface, file dialogs (P134–P140) | ⬜ |
 
 ## Known issues / owner feedback
 - GitHub: Claude sessions can push **branches** (`main`, `stable`) but not tags (403). Releases = push to `stable`.
@@ -86,6 +96,7 @@ then P23, P25, P28 → P34.
 ## Session log
 | Date (IST) | Part | Summary |
 |---|---|---|
+| 2026-11-08 | P39 | Plan rewritten as the full 2.x master plan (owner: plan simple → complex, own code; cannot supply screenshots): decisions D1–D8 replace the open questions; FreeCAD 1.1.4 APIs for own code verified (AdditivePython/SubtractivePython, Body.insertObject, Suppressed, Sketch trim/setDatum/label APIs, variable makeFillet, makeOffset2D; no Python rotation-centre API → own orbit); stages A–J, P40–P140. Screenshots could not be viewed (image fetches fail, Chrome not connected), so layouts come from documented text with per-PM unverified flags. |
 | 2026-11-08 | P37–P39 | Research phase for 2.0 (owner: research before any development): ~90 searches/fetches of SOLIDWORKS help (help.solidworks.com now serves a JS shell; search snippets, nexthelp and reseller/blog pages used), tips, What's New 2026, community threads → `docs/swref/` catalogue, gap matrix, behaviour spec, 2.0 plan. Key findings: wheel zoom pulls the pointed point toward the centre (zoom-out about centre); rotate pivot rules with magenta marker; PMs accept picks any time; Fillet/Extrude/Trim/Rectangle/Line full option sets; owner's S key = Quick Snaps. |
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
