@@ -2,19 +2,23 @@
 
 Tags: [H] help, [B] blog, [O] owner, [K] known, unconfirmed.
 
-## 14.1 New assembly and Insert Components  [K — verify]
-- New assembly → **Begin Assembly PM** opens automatically (option *Start command when creating
-  new assembly*): **Message**, **Part/Assembly to Insert** — *Open documents* list, **Browse…**;
-  **Thumbnail Preview**; **Options**: *Start command when creating new assembly*, *Graphics
-  preview*, *Make virtual*, *Envelope*, *Show Rotate context toolbar* (rotate the component 90°
-  about X/Y/Z before placing); **Create Layout** button.
-- **Click OK (✓) without clicking in the graphics area → the first component is placed with its
-  origin at the assembly origin and planes aligned, and it is Fixed** — the standard CSWA/CSWP
-  start. Clicking in the graphics area places it there instead (still fixed as first). [K, widely
-  taught]
-- **Insert Components PM** (Assembly tab): same layout; **pushpin** keeps it open to insert
-  several; preview follows the pointer; click to drop; **Esc** cancels; when the PM is opened
-  with an assembly already containing parts, components are floating "(-)".
+## 14.1 New assembly and Insert Components  [H 2012–2025, B Lynda, power guide 2017]
+- One PM with two names: **Begin Assembly** (new assembly) / **Insert Components** (existing
+  assembly; Assembly tab or Insert > Component > Existing Part/Assembly). Also File > **Make
+  Assembly from Part** opens a new assembly with it.
+- **Create Layout** (new assemblies) · **Part/Assembly to Insert**: *Open documents* list (Ctrl-
+  select several), **Browse…** (**Automatic Browse when creating new assembly** opens the file
+  dialog if nothing is open) · **Thumbnail Preview** · **Options**: *Start command when creating
+  new assembly* · *Graphics preview* (component follows the pointer) · *Make virtual* · *Envelope*
+  · **Show Rotate context toolbar** (on by default: X / Y / Z buttons with an Angle field default
+  90° to rotate the attached component before placing) · **Fix / float component on insert**
+  (2023+: *Only fix first component* / *Fix* / *Float*).
+- Placing: **click OK (✓) → the component origin is coincident with the assembly origin and the
+  planes are aligned**; or move the pointer onto the assembly origin (graphics preview) and click;
+  or click anywhere to drop it there. **The first component in an empty assembly is fixed `(f)`**;
+  later ones float. Multiple components: double-click → all at that spot (at the origin if
+  double-clicked there). If not pinned, the PM closes after placing. [H]
+- Right-click a fixed component > **Float** (and Fix). [B]
 - Drag a part from the File Explorer / Design Library / an open window into the assembly also
   inserts it; with **SmartMates** (Alt-drag) mates on drop.
 - Tree: `Part1<1>`, `(f) Part1<1>` fixed, `(-) Part2<1>` under-defined, `(+)` over-defined;

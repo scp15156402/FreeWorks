@@ -40,11 +40,28 @@ Features tab or Insert > Features > Move/Copy. Two pages switched by buttons at 
   (+ Tangent fill).
 - **Offset Surface**, **Replace Face**, **Instant3D on imported faces**.
 
-## 11.5 Instant3D  [K, from earlier summary]
-- Toggle on the Features tab (default on). **Click a face** of a feature → its dimensions appear;
-  **blue drag handles/arrows** on the face; drag to change, with a **ruler** (snaps when the
-  pointer is on the ruler; ruler ticks show increments); release rebuilds.
-- Click a dimension → edit box in place (quick edit); double-click → Modify box.
-- Select a **closed contour or sketch** and drag its arrow to create an extrude/cut directly.
-- **Ctrl+drag a feature's face/handle to copy a feature** (e.g. a hole) to another face; Alt-drag?
-- **Instant2D** is the sketch equivalent (see 05 §5.12).
+## 11.5 Instant3D  [H 2012–2022, B Hawk Ridge, TriMech, CATI, CADimensions]
+- Toggle on the **Features** tab, **on by default**; parts and assemblies.
+- **Single click a face** of a feature → that feature's dimensions appear (with Instant3D off a
+  double-click is needed) and **drag handles/arrows** (blue dots / arrows; a green arrow on an
+  edge) appear on the face/edge; drag to resize; the whole model updates. [B]
+- **Rulers**: while dragging, a ruler appears; **pointer away from the ruler = free drag;
+  pointer on the ruler = snap to its increments**; an **angular ruler** for revolves, drafts and
+  section-plane rings. Rulers also show in Edit Feature for extrudes, revolves, base flanges. [H]
+- **Snap to geometry**: while dragging a handle **hold Alt and move over a face/vertex** to snap
+  the size to it. [H 2012]
+- **Create features**: exit the sketch, **select a closed contour** → an arrow appears → drag
+  away from the solid = boss, into the solid = cut (a contour on a face cuts, one off the face
+  bosses; overhanging contours depend on where you click); **hold M for a mid-plane extrude**
+  [B Hawk Ridge]; an optional **context toolbar** lets you add draft or swap boss/cut. [H 2017]
+- **Move/copy features**: drag the triad centre to move a feature to another face; **Ctrl+drag
+  to copy** (e.g. Ctrl+drag a fillet to another edge). Drag an extrude handle the other way to
+  turn growth into a cut. Works for Fillet, Simple Hole, Move Face (offset/translate/rotate),
+  Revolve (sketch lines, angle), Shell, mirrored/patterned instances (dragging an instance edits
+  the seed). [H 2012–2022]
+- **Not draggable** → the handle turns black or a "no" icon appears (unsupported or constrained).
+  [H]
+- Dimension handles: drag the **blue balloon at the end of a dimension line**; click a dimension
+  → in-place edit; double-click → Modify box. [B]
+- **Instant2D** is the sketch equivalent (see 05 §5.12); disabling Instant3D/Instant2D restores
+  plain single-click selection of dimension values. [B]

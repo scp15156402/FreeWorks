@@ -29,16 +29,28 @@ picked).
 - Tree: Plane1…; planes show as transparent rectangles with names; resize by dragging the
   corner handles [K].
 
-## 10.2 Axis  [K — verify]
-**Selections** box + type buttons: **One Line/Edge/Axis** · **Two Planes** · **Two
-Points/Vertices** · **Cylindrical/Conical Face** · **Point and Face/Plane**. Temporary axes
-(View > Temporary Axes) exist for every cylinder and can be picked. Tree: Axis1.
+## 10.2 Axis  [H 2012–2014]
+PM "Axis": **Selections** box + type buttons: **One Line/Edge/Axis** (sketch line, edge, or a
+temporary axis — View > Temporary Axes) · **Two Planes** (planar faces or planes) · **Two
+Points/Vertices** (vertices, points, midpoints) · **Cylindrical/Conical Face** · **Point and
+Face/Plane** (axis normal to the face through the point; on non-planar faces the point must lie
+on the face). Tree: Axis1.
 
-## 10.3 Coordinate System  [K — verify] (CSWP segment 3 needs it)
-**Position**: Origin (vertex/point/midpoint; or **Define position with numeric values** X/Y/Z) ·
-**Orientation**: X axis, Y axis, Z axis direction references (edges, axes, faces, planes) with
-**Reverse** buttons; **Define rotation with numeric values**. Triad preview. Tree: Coordinate
-System1. Used in Mass Properties "Report coordinate values relative to".
+## 10.3 Coordinate System  [H 2010–2022] (CSWP segment 3 needs it)
+PM "Coordinate System" (Insert > Reference Geometry > Coordinate System):
+- **Position**: **Origin** box (vertex, point, midpoint or the default origin) · **Define position
+  with numeric values** → X/Y/Z Coordinate fields (relative to the *local* origin; 2022+).
+- **Orientation**: **X axis**, **Y axis**, **Z axis** direction reference boxes — vertex/point/
+  midpoint (axis toward it), linear edge or sketch line (parallel), non-linear edge/sketch entity
+  (toward the picked location), planar face (normal) — each with **Reverse Axis Direction** ·
+  **Define rotation with numeric values** → X/Y/Z Rotation Angle (applied in X, then Y, then Z
+  sequence; 2022+).
+- Right-click in the graphics area > Clear Selections to restart. Triad preview with coloured
+  axes. When entities are insufficient, define it elsewhere and move the origin. [H 2010]
+- Uses: Measure and Mass Properties output, export (IGES, STL, ACIS, STEP, Parasolid, VRML, VDA),
+  assembly mates; its planes, axes and origin can be referenced (sketch on its XY plane, revolve
+  about its Z axis); Measure the angle between two coordinate systems. [H 2024]
+- Tree: Coordinate System1.
 
 ## 10.4 Point  [B Narayanpure (CSWE)]
 Types: **Arc Center** · **Center of Face** · **Intersection** · **Projection** · **On Point**

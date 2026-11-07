@@ -41,10 +41,22 @@ Pattern** — pattern must stay within the same face/boundary), Bodies (**Solid/
 Pattern**), reference geometry, Instances to Skip, Feature Scope, Options, Instances to Vary
 (spacing increment is cumulative: 1.5 + 0.3 → 1.8, 2.1 … [H]).
 
-## 9.3 Mirror  [K — verify]
-**Mirror Face/Plane** box (plane or planar face) · **Features to Mirror** · **Faces to Mirror** ·
-**Bodies to Mirror** (Merge solids, Knit surfaces) · Options: **Geometry pattern**, **Propagate
-visual properties**, Full / Partial preview. Preselect plane + features works in any order.
+## 9.3 Mirror  [H 2013–2024]
+PM "Mirror" (Features tab; Insert > Pattern/Mirror > Mirror; assemblies: Assembly Features >
+Mirror):
+- **Mirror Face/Plane** (plane or planar face; Select Other if hidden) · **Secondary Mirror
+  Face/Plane** (2022+: mirror about two planes in one feature) + **Mirror seed only** (when the
+  second plane is perpendicular to the first).
+- **Features to Mirror** (graphics or the flyout tree) · **Faces to Mirror** (parts; imported
+  geometry) · **Bodies to Mirror** (parts; **Solid/Surface Bodies to Mirror** — the mirrored body
+  attaches at the selected face).
+- **Options**: **Geometry Pattern** (features/faces only; faster; not for features whose faces
+  merge with the part) · **Merge solids** (bodies; cleared → a separate mirrored body) · **Knit
+  surfaces** (surface bodies) · **Propagate visual properties** · **Full preview / Partial
+  preview**.
+- **Feature Scope** (multibody).
+- Order of picks is free: preselect the plane and features before clicking Mirror and both boxes
+  fill. [K]
 
 ## 9.4 Other feature patterns [K — verify]
 - **Curve Driven Pattern**: Direction 1 curve/edge/sketch, Reverse, Number, Spacing / Equal
