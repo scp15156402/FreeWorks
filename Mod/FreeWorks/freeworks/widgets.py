@@ -419,6 +419,14 @@ class NewDocumentDialog(QtWidgets.QDialog):
         self.setMinimumWidth(620)
         lay = QtWidgets.QVBoxLayout(self)
         lay.setSpacing(12)
+        if welcome:
+            from . import RES_DIR
+            lp = os.path.join(RES_DIR, "logo.png")
+            if os.path.exists(lp):
+                lg = QtWidgets.QLabel()
+                lg.setPixmap(QtGui.QPixmap(lp))
+                lg.setAlignment(Qt.AlignCenter)
+                lay.addWidget(lg)
         row = QtWidgets.QHBoxLayout()
         for kind, title, desc, ic in (
                 ("part", "Part", "a 3D representation of a single design component", "new_part"),

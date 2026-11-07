@@ -431,9 +431,7 @@ I["filter_edge"] = svg(path("M3,4 L21,4 L14,12 L14,20 L10,18 L10,12 Z", fill="#C
 I["filter_face"] = svg(path("M3,4 L21,4 L14,12 L14,20 L10,18 L10,12 Z", fill="#CFE2FF", stroke=SKD, w=1.1) + '<rect x="15" y="15" width="7" height="7" fill="#FF8A80" stroke="%s" stroke-width="0.8"/>' % RED)
 I["clear_filters"] = svg(path("M3,4 L21,4 L14,12 L14,20 L10,18 L10,12 Z", fill="#E5E7EB", stroke="#6B7280", w=1.1) + line((15, 15), (22, 22), RED, 1.8) + line((22, 15), (15, 22), RED, 1.8))
 I["new_document"] = svg('<path d="M5,2.5 L14,2.5 L19,7.5 L19,21.5 L5,21.5 Z" fill="#FFFFFF" stroke="%s" stroke-width="1"/>' % INK + path("M14,2.5 L14,7.5 L19,7.5", stroke=INK, w=1) + plus((17.5, 18), GRN, 3.6))
-I["freeworks"] = svg('<rect x="1.5" y="1.5" width="21" height="21" rx="4" fill="#C8102E"/>'
-                     '<path d="M6,18 L6,6 L14.5,6 M6,11.5 L12.5,11.5" stroke="#FFFFFF" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
-                     '<path d="M12,18 L14.2,11 L16.2,16.4 L18.4,9" stroke="#FFFFFF" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>')
+# "freeworks" (app mark) is generated from the owner's logo by tools/make_branding.py
 
 # fix placeholders that referenced each other
 I["mate_fixed"] = I["fix_component"]

@@ -27,7 +27,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 ## Parts
 | # | Track | Part | Status |
 |---|---|---|---|
-| P1 | Docs/AI | Tracker, CLAUDE.md/AGENTS.md entry point, versions.json, UPDATE_PROTOCOL, new logo (icon, splash, branding, README) | 🔄 |
+| P1 | Docs/AI | Tracker, CLAUDE.md/AGENTS.md entry point, versions.json, UPDATE_PROTOCOL, new logo (icon, splash, branding, README) | ✅ |
 | P2 | Install | Installer v2: read versions.json; SHA-256 verification (GitHub asset digest); resumable download (BITS fallback); install log; preflight (Win10/11 x64, PS 5.1, disk, missing D: → ask); clearer progress | ⏳ |
 | P3 | Install | Updates v2: FreeCAD upgrades side-by-side with swap + rollback; add-on refs pinned; Windows "Apps & features" uninstall entry; `FreeWorks.exe --update/--rollback`; release-notes dialog | ⬜ |
 | P4 | Dev/AI | `dev/check_updates.py` (latest FreeCAD/add-ons vs pins, report), `dev/fetch_freecad.sh`, `dev/run_tests.sh` automated suite (catalog command existence, startup, contexts, screenshots) | ⬜ |
@@ -70,4 +70,4 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | Date (IST) | Part | Summary |
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
-| 2026-11-07 | P1 | (in progress) tracker, AI entry point, versions manifest, logo. |
+| 2026-11-07 | P1 | Tracker, CLAUDE.md/AGENTS.md, UPDATE_PROTOCOL, DEV_NOTES rewrite, versions.json; new logo → vector mark, .ico, splash, Welcome dialog, README (tools/make_branding.py). |

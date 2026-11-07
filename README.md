@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/assets/logo.png" alt="FreeWorks - open-source CAD software" width="560"></p>
+
 # FreeWorks
 
 **A SolidWorks-style user experience on top of FreeCAD 1.1.4.** Same parametric FreeCAD engine underneath, with a SolidWorks-like interface on top: the CommandManager, FeatureManager, PropertyManager, SolidWorks names, icons, keyboard shortcuts, mouse gestures and view tools.
