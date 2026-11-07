@@ -1,6 +1,14 @@
 # FreeWorks project tracker
 
-**Next part:** P35 – Windows field-test fixes (owner feedback) / open items list below
+**Next part:** P40 – PM framework: PMPage/PMGroup/buttons/message, task-dialog host, Enter/Esc/Tab
+(start of FreeWorks 2.0 — see `dev/V2_PLAN.md`; owner to review the plan and answer Q1–Q5 there)
+
+## FreeWorks 2.0 (owner direction 2026-11-08)
+"Even a regular SOLIDWORKS user shouldn't feel a difference." Research first, then build.
+Research is in `docs/swref/` (catalogue of every PropertyManager, option, window and interaction,
+with sources), distilled into `docs/SW_BEHAVIOR_SPEC.md` (acceptance criteria) and
+`docs/swref/95_gap_matrix.md`; the build plan with phases and parts P40–P104 is
+`dev/V2_PLAN.md`. 1.5.x stays on `stable` (fixes only) until 2.0.0 ships.
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -65,7 +73,11 @@ then P23, P25, P28 → P34.
 | P33 | GUI | Tools > Options: System Options (FreeWorks options, reset, FreeCAD preferences) and Document Properties (drafting standard ISO/ANSI → sheet format + projection angle; units MMGS/CGS/MKS/IPS stored in the document's UnitSystem + decimals; Edit Material); gesture wheel built once (no widget creation in the mouse filter); released 1.5.1 | ✅ |
 | P34 | GUI | Polish pass: CLAUDE.md project map for all new modules, docs, stress run; v1.5.x released | ✅ |
 | P35 | Install | Windows field test of get/install/uninstall one-liners (needs the owner). 1.5.3: TLS 1.2 in every one-liner; raw.githubusercontent.com blocked on owner's ISP → GitHub API / jsDelivr fallback for scripts, encrypted-DNS fallback for the FreeCAD download. Waiting: owner's install → open/save → rerun → uninstall | 🔄 |
-| P36 | GUI | Open items: draggable rollback bar, Material/Solid Bodies nodes in the tree, selection context toolbar, Add Relations PM, hole callout, auto balloon, revision table, PropertyManager pushpin | ⬜ |
+| P36 | GUI | Open items: draggable rollback bar, Material/Solid Bodies nodes in the tree, selection context toolbar, Add Relations PM, hole callout, auto balloon, revision table, PropertyManager pushpin — **folded into the 2.0 plan** (P43, P49, P70, P90–P91) | ➡️ |
+| P37 | Research | SOLIDWORKS reference catalogue `docs/swref/` (UI framework, view, selection, FeatureManager, sketch environment, every sketch tool's two-state PM, boss/cut and applied features, patterns, reference geometry, multibody/Instant3D, evaluate, equations/configurations, assemblies, drawings, options/files/visual, hidden interactions, release changes 2008–2026 SP5, community pain points) | ✅ |
+| P38 | Research | Gap matrix vs FreeCAD 1.1.4/26.3 and FreeWorks 1.5.4 (`docs/swref/95_gap_matrix.md`); behaviour spec with acceptance IDs (`docs/SW_BEHAVIOR_SPEC.md`) | ✅ |
+| P39 | Plan | `dev/V2_PLAN.md`: own PM framework, interaction layer, sketch PMs, feature PMs, own FeatureManager tree; phases 1–8, parts P40–P104; open questions Q1–Q5 | ✅ |
+| P40–P104 | 2.0 | See `dev/V2_PLAN.md` §3 | ⏳ |
 
 ## Known issues / owner feedback
 - GitHub: Claude sessions can push **branches** (`main`, `stable`) but not tags (403). Releases = push to `stable`.
@@ -74,6 +86,7 @@ then P23, P25, P28 → P34.
 ## Session log
 | Date (IST) | Part | Summary |
 |---|---|---|
+| 2026-11-08 | P37–P39 | Research phase for 2.0 (owner: research before any development): ~90 searches/fetches of SOLIDWORKS help (help.solidworks.com now serves a JS shell; search snippets, nexthelp and reseller/blog pages used), tips, What's New 2026, community threads → `docs/swref/` catalogue, gap matrix, behaviour spec, 2.0 plan. Key findings: wheel zoom pulls the pointed point toward the centre (zoom-out about centre); rotate pivot rules with magenta marker; PMs accept picks any time; Fillet/Extrude/Trim/Rectangle/Line full option sets; owner's S key = Quick Snaps. |
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
 | 2026-11-07 | P35 | Field test round 2: jitter (line-smoothing AA, periodic work during drags, corner re-raise), rotation centre, view cube, plane picking, gesture overlay on Windows; released 1.5.4. Open: sketch Tab/on-view dimensions (works here; waiting for owner's details). |

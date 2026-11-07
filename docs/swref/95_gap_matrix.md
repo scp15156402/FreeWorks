@@ -75,7 +75,7 @@ interactions aren't there" — comes from three things a skin cannot fix:
 | PM anatomy: coloured active selection box, Tab/Space/arrows, message box, pushpin, flyout tree, RMB OK cue (01 §1.1–1.2) | S1 | ❌ | partial (green/red buttons) | own PM framework |
 | Context toolbar on selection + above shortcut menu (01 §1.4) | S1 | ❌ | ❌ (open P36) | IL widget |
 | Breadcrumbs (01 §1.6) | S2 | ❌ | ❌ | widget |
-| Select Other with RMB-hide (01 §1.5) | S2 | 🟡 (verify 1.1 "clarify selection") | ❌ | IL |
+| Select Other with RMB-hide (01 §1.5) | S2 | 🟡 1.1.4 has **Std_ClarifySelection** (pick list; long-press LMB option `EnableLongPressClarifySelection`) — no RMB-hide (checked in the pinned build) | ❌ | map + IL for RMB-hide |
 | Box (blue, window) / cross (green, crossing) by drag direction; lasso (03 §3.2) | S2 | ✅ 26.3 drag box window/crossing; 1.1 Shift+B box | ❌ | adopt 26.3 or IL |
 | Selection filters F5/F6/E/V/X, 2026 feature/component filters (03 §3.4) | S2 | 🟡 selection filter toolbar? (verify) | ❌ | IL |
 | FeatureManager: rollback bar, drag reorder, slow-double-click rename, (-) prefixes, folders, What's Wrong (04) | S1 | 🟡 tree reorder via move, no rollback bar (Tip only) | 🟡 names | custom tree delegate + "Set Tip" mapping |
