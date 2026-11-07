@@ -63,7 +63,7 @@ Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the nex
 | P34 | GUI | Polish pass + v1.5 release | ⬜ |
 
 ## Known issues / owner feedback
-- GitHub push from Claude's session is refused (403) until the Claude GitHub App has write access to the repo. Until then the owner pushes `FreeWorks.bundle`.
+- GitHub: Claude sessions can push to `scp15156402/FreeWorks` (working since 2026-11-07 P1). If a push is refused, fall back to `FreeWorks.bundle`.
 - v1.0 installer not yet confirmed on a real Windows PC.
 
 ## Session log
