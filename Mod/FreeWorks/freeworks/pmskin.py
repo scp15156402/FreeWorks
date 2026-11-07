@@ -170,6 +170,9 @@ def _pass():
     if not open_:
         stop()
         return
+    from . import gestures
+    if gestures.should_wait("pmskin", interval_ms=400):
+        return
     root = _task_root()
     if root is not None:
         skin(root, _edited_type())

@@ -1234,6 +1234,56 @@ def t_document_properties():
     App.closeDocument(doc.Name)
 
 @step(800)
+def t_field_fixes():
+    """Windows field test (v1.5.4): smooth view, rotation centre, view cube, plane picking."""
+    v = App.ParamGet("User parameter:BaseApp/Preferences/View")
+    record("view: no line-smoothing anti-aliasing (opaque planes, slow drivers)", v.GetInt("AntiAliasing", -1) in (0, 3), v.GetInt("AntiAliasing", -1))
+    record("view: rotate about the model (Object center)", v.GetInt("RotationMode", -1) == 2, v.GetInt("RotationMode", -1))
+    record("view: view cube shown", v.GetBool("ShowNaviCube", False), v.GetBool("ShowNaviCube", False))
+    from freeworks import gestures
+    gestures._last_input[0] = time.monotonic()
+    busy = gestures.should_wait("test")
+    gestures._last_input[0] = 0.0
+    record("smoothness: periodic work waits while the user drags/zooms", busy and not gestures.should_wait("test"), busy)
+    from freeworks import naming, commands
+    doc = naming.new_document("part")
+    STATE["pick_doc"] = doc.Name
+    cam = Gui.activeView().getCameraNode()
+    h = cam.height.getValue() if hasattr(cam, "height") else None
+    record("new part: view shows ~100 mm around the origin (not a 4 mm empty fit)", h is not None and 50 <= h <= 500, h)
+    Gui.Selection.clearSelection()
+    commands.run_key("sketch")
+    for _ in range(10):
+        QtWidgets.QApplication.processEvents()
+    from freeworks import shell
+    d = shell._dock("Tasks")
+    lws = [w for w in d.widget().findChildren(QtWidgets.QListWidget) if w.property("fw_quickpick")] if d and d.widget() else []
+    record("sketch: plane list picks with one click", bool(Gui.Control.activeDialog()) and bool(lws), (bool(Gui.Control.activeDialog()), len(lws)))
+    shot("07_plane_pick")
+    if lws and lws[0].count():
+        it = lws[0].item(1 if lws[0].count() > 1 else 0)     # Front Plane
+        STATE["pick_label"] = it.text()
+        it.setSelected(True)
+        lws[0].itemClicked.emit(it)
+
+
+@step(1500)
+def t_field_fixes_check():
+    from freeworks import context, shell
+    sk = context.edited_sketch()
+    record("sketch: one click on a plane opens the sketch", sk is not None, (STATE.get("pick_label"), sk and sk.Label))
+    c = shell._S.get("corner")
+    ok = c is not None and c.isVisible() and c.x() + c.width() <= c.mdi.width() - 150
+    record("confirmation corner: left of the view cube", ok, c and (c.isVisible(), c.x(), c.width(), c.mdi.width()))
+    try:
+        Gui.ActiveDocument.resetEdit()
+    except Exception:
+        pass
+    Gui.Control.closeDialog()
+    App.closeDocument(STATE["pick_doc"])
+
+
+@step(800)
 def t_no_errors():
     import freeworks
     log = os.environ.get("FREEWORKS_DEBUG_LOG")

@@ -76,6 +76,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P35 | Field test round 2: jitter (line-smoothing AA, periodic work during drags, corner re-raise), rotation centre, view cube, plane picking, gesture overlay on Windows; released 1.5.4. Open: sketch Tab/on-view dimensions (works here; waiting for owner's details). |
 | 2026-11-07 | P35 | Field test: PowerShell 5.1 TLS 1.0 default and ISP block of GitHub file servers fixed with fallbacks; released 1.5.3. |
 | 2026-11-07 | P29, P34 | Sketch panel terms, docs; released 1.5.2. |
 | 2026-11-07 | P28, P33 | Display/Delete Relations, Options/Document Properties, gesture wheel reuse; 154 checks incl. stress; released 1.5.1. |

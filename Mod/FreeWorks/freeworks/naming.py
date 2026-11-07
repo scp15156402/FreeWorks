@@ -197,7 +197,11 @@ def new_document(kind="part"):
         Gui.runCommand("TechDraw_PageDefault")
     doc.recompute()
     try:
-        Gui.SendMsgToActiveView("ViewFit")
+        if kind == "part":
+            from .commands import home_camera
+            home_camera()            # a fit on the empty part would zoom to a few millimetres
+        else:
+            Gui.SendMsgToActiveView("ViewFit")
     except Exception:
         pass
     from . import shell

@@ -2,6 +2,7 @@
 report / interference / new-document / options dialogs."""
 import math
 import os
+import sys
 import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
@@ -154,12 +155,21 @@ class ShortcutBar(_Popup):
 class GestureWheel(QtWidgets.QWidget):
     R_IN, R_OUT = 26, 92
 
+    # Windows: a frameless, translucent top-level window above everything (always composited there;
+    # a child widget can end up underneath the OpenGL view). Elsewhere: a child of the main window,
+    # transparent with or without a compositor.
+    TOPLEVEL = sys.platform == "win32"
+
     def __init__(self, keys, center):
-        # a child of the main window (not a top-level window) so it is
-        # transparent on every system, with or without desktop compositing
-        super().__init__(mw())
+        if self.TOPLEVEL:
+            super().__init__(None, Qt.ToolTip | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
+                             | Qt.WindowDoesNotAcceptFocus)
+            self.setAttribute(Qt.WA_TranslucentBackground)
+            self.setAttribute(Qt.WA_ShowWithoutActivating)
+        else:
+            super().__init__(mw())
+            self.setAttribute(Qt.WA_NoSystemBackground)
         self.setAttribute(Qt.WA_TransparentForMouseEvents)
-        self.setAttribute(Qt.WA_NoSystemBackground)
         s = 2 * (self.R_OUT + 52)
         self.resize(int(s * 1.6), s)
         self.restart(keys, center)
@@ -169,7 +179,7 @@ class GestureWheel(QtWidgets.QWidget):
         self.keys = keys
         self.sel = -1
         self.center = center
-        lp = mw().mapFromGlobal(center)
+        lp = center if self.TOPLEVEL else mw().mapFromGlobal(center)
         self.move(lp.x() - self.width() // 2, lp.y() - self.height() // 2)
         self.raise_()
         self.icons = [icon(catalog.C[k]["icon"] or catalog.first_existing(catalog.C[k]) or "") if k else None for k in keys]
@@ -582,7 +592,7 @@ class OptionsDialog(QtWidgets.QDialog):
         App.ParamGet("User parameter:BaseApp/Preferences/View").SetBool("InvertZoom", self.zoom.currentIndex() == 1)
         from . import perf
         if not perf.is_on():
-            App.ParamGet("User parameter:BaseApp/Preferences/View").SetInt("AntiAliasing", 3 if p.GetBool("HighQualityAA", False) else 1)
+            App.ParamGet("User parameter:BaseApp/Preferences/View").SetInt("AntiAliasing", 3 if p.GetBool("HighQualityAA", False) else 0)
         p.SetInt("LargeIconSize", 24 if self.icon_size.currentIndex() == 0 else 32)
         from . import perf
         if self.large.isChecked() != perf.is_on():

@@ -8,7 +8,7 @@ import FreeCADGui as Gui
 from . import log, params, safe_slow
 
 LARGE = {"MeshDeviation": 0.5, "MeshAngularDeflection": 28.5, "AntiAliasing": 0, "UseNavigationAnimations": False}
-NORMAL = {"MeshDeviation": 0.1, "MeshAngularDeflection": 12.0, "AntiAliasing": 1, "UseNavigationAnimations": True}
+NORMAL = {"MeshDeviation": 0.1, "MeshAngularDeflection": 12.0, "AntiAliasing": 0, "UseNavigationAnimations": True}
 SUGGEST_OBJECTS = 600          # suggest Large Model Mode above this many objects
 
 

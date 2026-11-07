@@ -7,7 +7,7 @@ import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
 
 from . import catalog, context, icon, log, params, safe, safe_slow, harden, warn
-from . import commands
+from . import commands, gestures
 
 Qt = QtCore.Qt
 _S = {}            # singletons: dock, topbar, cm, headsup, filters, status, controller
@@ -734,6 +734,8 @@ class CommandManager(QtWidgets.QWidget):
     def update_states(self):
         if not self.isVisible() or not QtWidgets.QApplication.activeWindow():
             return
+        if gestures.should_wait("cm", interval_ms=400):
+            return
         w = self.stack.currentWidget()
         for pk, (pw, btns) in self.panels.items():
             if pw is w:
@@ -847,8 +849,17 @@ class ConfirmationCorner(QtWidgets.QFrame):
         self.hide()
 
     def reposition(self):
+        """Top-right of the graphics area, left of the view cube when that sits top-right.
+        Only moves/raises when something changed: raising a widget over the 3D view every tick
+        makes the view repaint (visible as jitter on Windows)."""
         self.adjustSize()
-        self.move(max(0, self.mdi.width() - self.width() - 28), 8)
+        right = 28
+        v = App.ParamGet("User parameter:BaseApp/Preferences/View")
+        if v.GetBool("ShowNaviCube", True) and v.GetInt("CornerNaviCube", 1) == 1:
+            right += 150
+        pos = QtCore.QPoint(max(0, self.mdi.width() - self.width() - right), 8)
+        if pos != self.pos():
+            self.move(pos)
         self.raise_()
 
     def update_for(self, task_open, ctx):
@@ -856,11 +867,18 @@ class ConfirmationCorner(QtWidgets.QFrame):
             and bool(self.mdi.subWindowList())
         if show:
             sketch = ctx == "sketch" and not task_open
-            self.ok.setToolTip("Exit Sketch" if sketch else "OK")
-            self.no.setToolTip("Exit Sketch" if sketch else "Cancel")
-            self.reposition()
+            tip = "Exit Sketch" if sketch else "OK"
+            if self.ok.toolTip() != tip:
+                self.ok.setToolTip(tip)
+                self.no.setToolTip("Exit Sketch" if sketch else "Cancel")
+            key = (self.mdi.width(), self.isVisible())
+            if key != getattr(self, "_placed", None) or not self.isVisible():
+                self.reposition()
+                self._placed = (self.mdi.width(), True)
         if show != self.isVisible():
             self.setVisible(show)
+            if not show:
+                self._placed = None
 
     def _task_button(self, ok):
         d = _dock("Tasks")
@@ -872,6 +890,7 @@ class ConfirmationCorner(QtWidgets.QFrame):
                 return b
         return None
 
+    @safe_slow          # runs the command the user confirmed (creates/exits the sketch)
     def accept(self):
         b = self._task_button(True) or self._task_button(False)
         if b is not None:
@@ -879,6 +898,7 @@ class ConfirmationCorner(QtWidgets.QFrame):
         elif context.current() == "sketch":
             commands.run_key("exit_sketch")
 
+    @safe_slow
     def cancel(self):
         b = self._task_button(False)
         if b is not None:
@@ -1054,6 +1074,8 @@ class Controller(QtCore.QObject):
 
     @safe
     def tick(self):
+        if gestures.should_wait("controller", interval_ms=250):
+            return
         self.n = getattr(self, "n", 0) + 1
         if self.n % 8 == 0:              # every 2 s: self-heal layout (cheap)
             self.heal()

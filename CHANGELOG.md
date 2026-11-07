@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.5.4 - 2026-11-07
+Fixes from the first Windows field test.
+- **Smoother 3D view.** Anti-aliasing "line smoothing" is off: on many graphics drivers it slows
+  every frame, and it drew the Front/Top/Right planes opaque and without names. Edges are crisp
+  by default; MSAA 4x stays available under FreeWorks Options > High-quality anti-aliasing.
+  FreeWorks' own periodic work (button states, panel terms, layout checks) now waits while you
+  rotate, pan, zoom or drag, and the confirmation corner no longer re-raises itself four times a
+  second over the 3D view.
+- **Rotation stays centred on the model** (FreeCAD "Object center"): the model no longer swings
+  around the point under the cursor; middle-drag on empty space turns about the model.
+- **The view cube is back** (top-right); the confirmation corner moved to its left.
+- **Picking a sketch plane:** Sketch with nothing selected shows the three planes in view (a new
+  part opens looking at the origin, about 120 mm tall, instead of zooming to 4 mm of empty space),
+  and one click on a plane in the list or in the graphics area starts the sketch.
+- **Mouse gestures on Windows:** the gesture wheel is drawn as its own always-on-top overlay there,
+  so the 3D view can never cover it.
+
 ## v1.5.3 - 2026-11-07
 - **Install works on more networks.** The one-line install, update and uninstall commands switch on
   TLS 1.2 first (Windows PowerShell 5.1 uses TLS 1.0 by default, which GitHub refuses: "The

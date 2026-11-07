@@ -159,6 +159,74 @@ def _last_unused_sketch():
     return None
 
 
+def home_camera(view=None, height=120.0):
+    """Isometric view of the origin, about `height` mm tall. (A View Fit on an empty part zooms to a
+    few millimetres and clips the origin planes away.)"""
+    v = view or Gui.activeView()
+    if v is None:
+        return
+    v.viewIsometric()
+    try:
+        import math
+        from pivy import coin
+        cam = v.getCameraNode()
+        if cam.isOfType(coin.SoOrthographicCamera.getClassTypeId()):
+            cam.height.setValue(height)
+            fd = max(cam.focalDistance.getValue(), 2.0 * height)
+        else:
+            fd = height / (2.0 * math.tan(cam.heightAngle.getValue() / 2.0))
+        d = cam.orientation.getValue().multVec(coin.SbVec3f(0, 0, -1))
+        cam.focalDistance.setValue(fd)
+        cam.position.setValue(coin.SbVec3f(-d[0] * fd, -d[1] * fd, -d[2] * fd))
+    except Exception:
+        Gui.SendMsgToActiveView("ViewFit")
+
+
+def _on_screen(v, p):
+    for fn in ("getPointOnViewport", "getPointOnScreen"):
+        try:
+            x, y = getattr(v, fn)(p)
+            w, h = v.getSize()
+            return 0 <= x <= w and 0 <= y <= h
+        except Exception:
+            continue
+    return True
+
+
+@safe_slow
+def _accept_task():
+    from . import shell
+    c = shell._S.get("corner")
+    if c is not None and Gui.Control.activeDialog():
+        c.accept()
+
+
+@safe
+def _plane_pick_assist():
+    """SOLIDWORKS: after Sketch with nothing selected the three planes are in view, and one click on
+    a plane (graphics area or list) starts the sketch on it."""
+    if not Gui.Control.activeDialog():
+        return
+    v = Gui.activeView()
+    body = None
+    try:
+        body = Gui.ActiveDocument.ActiveView.getActiveObject("pdbody")
+    except Exception:
+        pass
+    empty = body is None or body.Shape.isNull()
+    if empty:
+        home_camera(v)
+    elif not _on_screen(v, body.Placement.Base if body is not None else App.Vector()):
+        Gui.SendMsgToActiveView("ViewFit")
+    from . import shell
+    d = shell._dock("Tasks")
+    root = d.widget() if d is not None else None
+    for lw in (root.findChildren(QtWidgets.QListWidget) if root is not None else []):
+        if not lw.property("fw_quickpick"):
+            lw.setProperty("fw_quickpick", True)
+            lw.itemClicked.connect(lambda *_: QtCore.QTimer.singleShot(0, _accept_task))
+
+
 def sketch_cmd():
     sk = context.edited_sketch()
     if sk is not None:
@@ -172,6 +240,8 @@ def sketch_cmd():
         new_document("part")
     if not run("PartDesign_NewSketch"):
         run("Sketcher_NewSketch")
+    elif not sel:
+        QtCore.QTimer.singleShot(0, _plane_pick_assist)
 
 
 def edit_sketch():

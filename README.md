@@ -140,10 +140,11 @@ Documents\FreeWorks\   your projects and macros (never touched by updates/uninst
 - A light, SolidWorks-style theme: light grey panels, blue accents, a gradient background, and orange hover / blue selection highlights.
 - Sketch colours follow SolidWorks: blue = under defined, black = fully defined, red = over defined, green relation symbols.
 - Graphics settings:
-  - 4× anti-aliasing and GPU vertex buffers
+  - GPU vertex buffers; 4× anti-aliasing is optional (FreeWorks Options → High-quality anti-aliasing)
   - finer tessellation for smooth round faces
   - animated view changes
   - a balanced 3-light setup
+- Navigation: SolidWorks mouse buttons, rotation about the model, the view cube (top-right) and the spacebar view selector.
 - **New / Welcome dialog** with Part, Assembly and Drawing, the same as SolidWorks' New Document.
 
 ## Where it differs from SolidWorks

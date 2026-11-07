@@ -124,6 +124,31 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
   X/Y is set to (before/after recompute, delayed). FreeWorks' Standard 3 View therefore places
   three `DrawViewPart` views itself. `XSource` (cross-document) needs both documents saved.
 
+## 3D view settings (field test, v1.5.4; verified in FreeCAD 1.1.4)
+- `View/AntiAliasing`: the 1.1.4 combo offers None, Line smoothing, MSAA 4x. **Line smoothing (1)
+  renders the origin planes opaque and drops their XY/XZ/YZ labels** (found by bisecting all
+  FreeWorks settings) and is slow on many drivers. Default 0; MSAA 4x (3) is opt-in.
+- `View/RotationMode`: 0 Window center, 1 Drag at cursor (FreeCAD default), 2 Object center. SW feel = 2.
+- `View/OrbitStyle`: 0 Turntable, 1 Trackball (horizontal drag turns about screen Y, like SW),
+  2 Free Turntable, 3 Trackball Classic, 4 Rounded Arcball.
+- `View/ShowNaviCube`, `View/CornerNaviCube` (0 TL, 1 TR, 2 BL, 3 BR).
+- Origin planes are drawn at constant screen size, but a View Fit on an empty body sets a ~4 mm
+  orthographic camera whose clipping hides them: new parts use `commands.home_camera()` instead.
+- `PartDesign_NewSketch` without selection opens `TaskFeaturePick` (a QListWidget in the Tasks
+  dock). 3D clicks on a plane auto-accept (`Selection/singleClickFeatureSelect`, default true);
+  FreeWorks also accepts on a single click in the list.
+- Sketcher on-view parameters (Tab between length/angle) work with FreeWorks under Xvfb (the
+  QuantitySpinBox takes focus after the first click); `Mod/Sketcher/Tools/OnViewParameterVisibility`
+  is left at FreeCAD's default.
+- Periodic Python work on the GUI thread (Controller 250 ms, CommandManager 400 ms, PM skin 400 ms)
+  is skipped while `gestures.interacting()` (mouse button held or 3D-view input < 350 ms ago),
+  for at most 2 s in a row.
+- Overlay widgets: child widgets of the main window can end up under the OpenGL view on Windows;
+  the gesture wheel is a top-level `Qt.ToolTip` translucent window there.
+- `dev/tests/interactive`-style X11 driving (python-xlib XTest) reproduces real clicks/keys; the
+  sandbox cannot pick datum planes with `getObjectInfo` reliably, so plane picking is tested via
+  the list.
+
 ## Windows downloads (field test, v1.5.3)
 - Windows PowerShell 5.1 defaults to TLS 1.0 (`ServicePointManager.SecurityProtocol` = Ssl3|Tls) and
   GitHub refuses it: "The underlying connection was closed: An unexpected error occurred on a send".

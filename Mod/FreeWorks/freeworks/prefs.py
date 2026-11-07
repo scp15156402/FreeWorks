@@ -6,7 +6,7 @@ import FreeCAD as App
 
 from . import THEME_DIR, log, params
 
-PREFS_VERSION = 10
+PREFS_VERSION = 11
 
 
 def c(hexstr, a=255):
@@ -26,21 +26,24 @@ SETTINGS = {
     "View": {
         "NavigationStyle": ("s", "Gui::SolidWorksNavigationStyle"),
         "OrbitStyle": ("i", 1),                 # trackball
-        "RotationMode": ("i", 1),               # rotate about the window/model center like SW
+        "RotationMode": ("i", 2),               # 0 window center, 1 drag at cursor, 2 object center (SW:
+                                                # the model stays in place; clicking on it pivots there)
         "ZoomAtCursor": ("b", True),
         "InvertZoom": ("b", False),             # SW: wheel toward you zooms in
         "ZoomStep": ("f", 0.2),
         "UseNavigationAnimations": ("b", True), # animated view transitions
         "AnimationDuration": ("i", 300),
         "Spinning": ("b", False),
-        "ShowNaviCube": ("b", False),           # SW uses the spacebar view selector instead
+        "ShowNaviCube": ("b", True),            # view cube (top-right); the spacebar view selector also works
+        "CornerNaviCube": ("i", 1),             # 0 top-left, 1 top-right, 2 bottom-left, 3 bottom-right
         "CornerCoordSystem": ("b", True),       # reference triad
         "CornerCoordSystemSize": ("i", 9),
         "ShowAxisCross": ("b", False),
         "ShowFPS": ("b", False),
         # rendering quality + speed
-        "AntiAliasing": ("i", 1),               # line smoothing (MSAA 4x is opt-in: it makes FreeCAD
-                                                # re-allocate buffers on every sketch edit = memory growth)
+        "AntiAliasing": ("i", 0),               # none. 1 = "line smoothing" turns datum planes opaque and
+                                                # hides their labels (and is slow on many drivers); MSAA 4x (3)
+                                                # is opt-in: FreeWorks Options > High-quality anti-aliasing
         "UseVBO": ("b", True),                  # vertex buffer objects (GPU)
         "RenderCache": ("i", 0),                # auto render cache
         "TransparentObjectRenderType": ("i", 0),

@@ -1,5 +1,7 @@
 """SolidWorks mouse gestures: hold the right button in the graphics area and
 drag toward a command.  A plain right-click still opens the context menu."""
+import time
+
 import FreeCAD as App
 import FreeCADGui as Gui
 from PySide import QtCore, QtGui, QtWidgets
@@ -8,6 +10,33 @@ from . import catalog, context, params, safe, harden
 
 Qt = QtCore.Qt
 THRESHOLD = 12
+
+# ---------------------------------------------------------------- interaction tracking
+# Periodic FreeWorks work (button states, tree/panel skinning, layout checks) waits while the user
+# orbits, pans, zooms or drags in the 3D view, so a frame is never held up by Python work.
+_last_input = [0.0]
+_skips = {}
+
+
+def interacting(window=0.35):
+    """True while a mouse button is held or the mouse moved/scrolled in a 3D view very recently."""
+    if QtWidgets.QApplication.mouseButtons() != Qt.NoButton:
+        return True
+    return time.monotonic() - _last_input[0] < window
+
+
+def should_wait(job, max_wait_ms=2000, interval_ms=250):
+    """For periodic jobs: True = skip this round (the user is interacting). Never skips for longer
+    than max_wait_ms in a row, so state still catches up during long drags."""
+    if not interacting():
+        _skips[job] = 0
+        return False
+    n = _skips.get(job, 0) + 1
+    if n * interval_ms >= max_wait_ms:
+        _skips[job] = 0
+        return False
+    _skips[job] = n
+    return True
 
 
 def view_widgets():
@@ -41,7 +70,10 @@ class _Gesture(QtCore.QObject):
     def eventFilter(self, obj, ev):
         t = ev.type()
         if t not in (QtCore.QEvent.MouseButtonPress, QtCore.QEvent.MouseMove, QtCore.QEvent.MouseButtonRelease):
+            if t == QtCore.QEvent.Wheel:
+                _last_input[0] = time.monotonic()
             return False
+        _last_input[0] = time.monotonic()
         if self.replaying:
             return False
         try:
