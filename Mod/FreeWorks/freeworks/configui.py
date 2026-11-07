@@ -16,8 +16,16 @@ class ConfigurationManager(QtWidgets.QDialog):
 
     @classmethod
     def open(cls):
+        """Show the ConfigurationManager tab next to FeatureManager / PropertyManager (dialog fallback)."""
         if App.ActiveDocument is None:
             return None
+        d = dock()
+        if d is not None:
+            p = d.widget()
+            p.use_doc(App.ActiveDocument)
+            d.show()
+            d.raise_()
+            return p
         if cls._inst is not None and cls._inst.doc is not App.ActiveDocument:
             cls._inst.close()
         if cls._inst is None:
@@ -27,35 +35,49 @@ class ConfigurationManager(QtWidgets.QDialog):
         cls._inst.raise_()
         return cls._inst
 
-    def __init__(self, doc):
-        super().__init__(Gui.getMainWindow(), Qt.Tool)
+    def use_doc(self, doc):
         self.doc = doc
-        self.setWindowTitle("ConfigurationManager - %s" % doc.Label)
+        self.refresh()
+
+    def __init__(self, doc, embedded=False):
+        super().__init__(Gui.getMainWindow(), Qt.Widget if embedded else Qt.Tool)
+        self.embedded = embedded
+        self.doc = doc
+        self.setWindowTitle("ConfigurationManager - %s" % (doc.Label if doc else ""))
         self.setWindowIcon(icon("configurations"))
         self.setStyleSheet(STYLE)
         self.resize(820, 440)
-        lay = QtWidgets.QHBoxLayout(self)
+        lay = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.TopToBottom if embedded else QtWidgets.QBoxLayout.LeftToRight, self)
         left = QtWidgets.QVBoxLayout()
-        left.addWidget(QtWidgets.QLabel("<b>%s Configuration(s)</b>" % doc.Label))
+        self.head = QtWidgets.QLabel("")
+        left.addWidget(self.head)
         self.list = QtWidgets.QListWidget()
         self.list.itemDoubleClicked.connect(lambda it: self.activate(it.text().replace(" (active)", "")))
         left.addWidget(self.list, 1)
-        for text, fn in (("Show Configuration", self.activate_selected), ("Add Configuration...", self.add),
-                         ("Rename...", self.rename), ("Delete", self.delete)):
+        btns = QtWidgets.QGridLayout()
+        for i, (text, fn) in enumerate((("Show", self.activate_selected), ("Add...", self.add),
+                                        ("Rename...", self.rename), ("Delete", self.delete))):
             b = QtWidgets.QPushButton(text)
+            b.setToolTip({"Show": "Show Configuration (or double-click)", "Add...": "Add Configuration (copy of the selected one)"}.get(text, text))
             b.clicked.connect(fn)
-            left.addWidget(b)
-        lay.addLayout(left, 1)
+            btns.addWidget(b, i // 2 if embedded else i, i % 2 if embedded else 0)
+        left.addLayout(btns)
+        lay.addLayout(left, 2 if embedded else 1)
         right = QtWidgets.QVBoxLayout()
-        right.addWidget(QtWidgets.QLabel("<b>Design Table</b> - rows are configurations, columns are configured values "
-                                         "(D1@Sketch1, $STATE@Fillet1, global variables). Everything else is shared."))
+        desc = QtWidgets.QLabel("<b>Design Table</b> - rows are configurations, columns are configured values "
+                                "(D1@Sketch1, $STATE@Fillet1, global variables). Everything else is shared.")
+        desc.setWordWrap(True)
+        desc.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
+        right.addWidget(desc)
         self.grid = QtWidgets.QTableWidget()
+        self.grid.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Expanding)
         self.grid.itemChanged.connect(self.cell_changed)
         right.addWidget(self.grid, 1)
         row = QtWidgets.QHBoxLayout()
         self.pick = QtWidgets.QComboBox()
         self.pick.setEditable(True)
-        self.pick.setMinimumWidth(200)
+        self.pick.setMinimumWidth(80 if embedded else 200)
+        self.pick.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
         row.addWidget(self.pick, 1)
         for text, fn in (("Add Column", self.add_column), ("Remove Column", self.remove_column)):
             b = QtWidgets.QPushButton(text)
@@ -76,6 +98,13 @@ class ConfigurationManager(QtWidgets.QDialog):
         self._busy = False
 
     def refresh(self):
+        if self.doc is None or self.doc.Name not in App.listDocuments():
+            self.doc = None
+            self.list.clear()
+            self.grid.clear()
+            self.head.setText("<i>No document</i>")
+            return
+        self.head.setText("<b>%s Configuration(s)</b>" % self.doc.Label)
         self._busy = True
         order, cols, rows = cf.table(self.doc)
         a = cf.active(self.doc)
@@ -198,5 +227,37 @@ class ConfigurationManager(QtWidgets.QDialog):
             cf.export_table(self.doc, path if path.lower().endswith(".csv") else path + ".csv")
 
     def closeEvent(self, e):
+        if getattr(self, "embedded", False):
+            e.ignore()
+            d = _DOCK.get("d")
+            if d is not None:
+                d.hide()
+            return
         ConfigurationManager._inst = None
         super().closeEvent(e)
+
+
+_DOCK = {"d": None}
+
+
+def dock():
+    """The ConfigurationManager dock tab (created once, tabified with the FeatureManager)."""
+    try:
+        from . import shell
+        if shell._S.get("dock") is None:
+            return None
+    except Exception:
+        return None
+    d = _DOCK["d"]
+    if d is None:
+        win = Gui.getMainWindow()
+        d = QtWidgets.QDockWidget("ConfigurationManager", win)
+        d.setObjectName("FreeWorksConfigurationManager")
+        d.setWidget(ConfigurationManager(App.ActiveDocument, embedded=True))
+        win.addDockWidget(Qt.LeftDockWidgetArea, d)
+        _DOCK["d"] = d
+        try:
+            shell._S["controller"].fix_docks()
+        except Exception as e:
+            log("configuration dock: %s" % e)
+    return d

@@ -2,7 +2,7 @@
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
   <name>FreeWorks</name>
   <description>SolidWorks-style user experience for FreeCAD: CommandManager, FeatureManager naming, SolidWorks terminology and icons, keyboard shortcuts, mouse gestures, heads-up view toolbar and evaluate tools.</description>
-  <version>1.4.1</version>
+  <version>1.5.0</version>
   <date>2026-11-07</date>
   <maintainer email="siddhantcpatil@gmail.com">Siddhant Patil</maintainer>
   <license file="LICENSE">LGPL-2.1-or-later</license>

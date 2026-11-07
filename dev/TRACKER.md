@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P30 – FeatureManager tree SOLIDWORKS structure + rollback bar
+**Next part:** P28 – Sketch relations PropertyManager (Add Relations, Display/Delete Relations, Fully Define Sketch)
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -52,16 +52,16 @@ then P23, P25, P28 → P34.
 | P20 | Drawing | Model Items (sketch dimensions of sketches parallel to the view → DistanceX/DistanceY/Radius/Diameter drawing dimensions on matching view edges), centre marks on holes by default, Annotation tab order; hole callout, auto balloon, revision table: not done (no TechDraw basis) | ✅ |
 | P21 | Drawing | View display styles: Hidden Lines Removed / Visible, tangent edges visible / removed (View Layout tab); title-block fill cached; released 1.4.1. Shaded drawing views: not in TechDraw | ✅ |
 | P22 | Part | SOLIDWORKS terms inside FreeCAD's feature panels (pmskin.py, display-only relabel while a panel is open, 400 ms timer only then): Boss-Extrude/Cut-Extrude titles, Directions, End Condition (Blind, Through All, Up To Next, Up To Surface, Offset From Surface, Up To Body, Mid Plane), Depth, Draft angle, Reverse Direction; Revolve, Chamfer (Angle Distance / Distance Distance), Shell, Draft, patterns; green ✓ / red ✗ OK/Cancel; Options toggle. Not available in FreeCAD: From offset, Thin Feature, Selected Contours | ✅ |
-| P23 | Part | Revolve, Fillet (constant/variable/face/full round), Chamfer types, Shell, Draft PMs | ⬜ |
+| P23 | Part | Revolve / Chamfer (Angle Distance, Distance Distance) / Shell / Draft / Fillet panels in SW terms via pmskin (P22). Variable, face and full-round fillets: not in PartDesign | 🟡 |
 | P24 | Part | Hole Wizard terms in FreeCAD's Hole panel (Hole Type, End Condition Blind/Through All, Fit Close/Normal/Loose, Hole diameter/depth, Counterbore/Countersink, Custom Sizing); released 1.3.0. Separate Type/Positions tabs: not done | ✅ |
-| P25 | Part | Patterns (linear 2 directions, skip instances, circular) + Mirror + Reference geometry PMs | ⬜ |
+| P25 | Part | Linear/Circular Pattern, Mirror, Plane/Axis/Point panels in SW terms via pmskin; FreeCAD 1.1 linear pattern already has two directions. Skip instances: not done | 🟡 |
 | P26 | Part | Equations dialog (Tools > Equations): Global Variables (VarSet, stored GV_<name>), Equations with SOLIDWORKS syntax ("D1@Sketch1" = "A" * 2) translated to FreeCAD expressions and back, D<n> numbering for sketch and feature dimensions, Add rows, Delete, Rebuild, OK/Cancel as one undo step; 7 tests; released 1.2.1 | ✅ |
 | P27 | Part | Configurations engine (configurations.py, table in a hidden VarSet, SW design-table headers D1@Sketch1 / $STATE@Feature / global vars / $DESCRIPTION), capture-on-switch = "this configuration" edits, shared unconfigured values; ConfigurationManager window (show/add/rename/delete, design table grid, add/remove column, CSV/XLSX import, CSV export); 8 tests; released 1.2.2. Docked ConfigurationManager tab: later (P30) | ✅ |
 | P28 | Sketch | Smart Dimension behaviour + Modify box, Add Relations PM, Display/Delete relations, Fully Define Sketch | ⬜ |
 | P29 | Sketch | Offset/Convert/Trim PM details, v1.4 release | ⬜ |
-| P30 | GUI | FeatureManager tree SW structure (Annotations, Material, planes at root, Solid Bodies folder) + rollback bar | ⬜ |
-| P31 | GUI | PropertyManager look (section headers, green ✓ / red ✗, pushpin) applied to all task panels | ⬜ |
-| P32 | GUI | Confirmation corner in graphics area; selection context toolbar | ⬜ |
+| P30 | GUI | ConfigurationManager as a third tab next to FeatureManager / PropertyManager (done). Tree restructuring (Annotations, Material node, Solid Bodies folder) and a draggable rollback bar: open — FreeCAD's tree shows the document structure and has no rollback bar; labels can't carry (-) prefixes because equations reference labels | 🟡 |
+| P31 | GUI | Green ✓ / red ✗ on every task panel, SW titles and terms (pmskin); FreeWorks' own PMs styled. Pushpin: open | 🟡 |
+| P32 | GUI | Confirmation corner (✓ / ✗ top-right of the graphics area while a PM or sketch is open; Options toggle). Selection context toolbar: open | 🟡 |
 | P33 | GUI | Options dialog (System Options / Document Properties) mapping; document properties (units, drafting standard) | ⬜ |
 | P34 | GUI | Polish pass + v1.5 release | ⬜ |
 
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P30–P32 | ConfigurationManager tab, confirmation corner, panel polish; **v1.5.0 released**. |
 | 2026-11-07 | P20–P21 | Model Items, centre marks, display styles; released 1.4.1. |
 | 2026-11-07 | P18–P19 | Sheet formats, title block fill, Standard 3 View, Model View; **v1.4.0 released**. |
 | 2026-11-07 | P22, P24 | SOLIDWORKS terms in feature panels (Extrude, Revolve, Hole Wizard ...); **v1.3.0 released**. |

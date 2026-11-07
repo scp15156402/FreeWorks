@@ -1154,6 +1154,21 @@ class Controller(QtCore.QObject):
                 win.tabifyDockWidget(model, tasks)
             if model and not self.task_open:
                 model.raise_()
+        try:
+            from .configui import _DOCK
+            cd = _DOCK.get("d")
+        except Exception:
+            cd = None
+        if cd is not None and model is not None:
+            if win.dockWidgetArea(cd) != Qt.LeftDockWidgetArea:
+                win.addDockWidget(Qt.LeftDockWidgetArea, cd)
+            if cd not in win.tabifiedDockWidgets(model):
+                win.tabifyDockWidget(model, cd)
+            if not isinstance(cd.titleBarWidget(), _NoTitle):
+                cd.setTitleBarWidget(_NoTitle())
+            p = cd.widget()
+            if cd.isVisible() and p is not None and p.doc is not App.ActiveDocument:
+                p.use_doc(App.ActiveDocument)
         user = _S.get("user_docks", {})
         for n in ("Tree view", "Property view"):
             d = _dock(n)

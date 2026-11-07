@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.0 - 2026-11-07
+GUI polish.
+- **Confirmation corner:** a green check and a red cross in the top-right of the graphics area
+  while a PropertyManager or a sketch is open (Options can turn it off).
+- **ConfigurationManager tab** next to FeatureManager and PropertyManager (Tools >
+  ConfigurationManager opens it): configurations list, Show / Add / Rename / Delete, design table.
+- Every feature panel has SOLIDWORKS' green check / red cross.
+
 ## v1.4.1 - 2026-11-07
 - **Model Items** (Annotation tab): inserts the part's sketch dimensions into the selected drawing
   views (all views if none is selected) - horizontal/vertical distances and radii/diameters,

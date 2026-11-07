@@ -992,8 +992,12 @@ def t_configurations():
     out = cf.export_table(doc, os.path.join(OUT, "design_table_out.csv"))
     record("design table: export", "Wide" in open(out).read(), out)
     d = configui.ConfigurationManager.open()
-    record("ConfigurationManager window lists configurations + table", d.list.count() == 4 and d.grid.columnCount() == 3,
+    dk = configui._DOCK.get("d")
+    from freeworks import shell
+    record("ConfigurationManager tab lists configurations + table", d.list.count() == 4 and d.grid.columnCount() == 3,
            (d.list.count(), d.grid.columnCount()))
+    record("ConfigurationManager is a tab next to the FeatureManager", dk is not None and dk in mw().tabifiedDockWidgets(shell._dock("Model")),
+           dk and [x.windowTitle() for x in mw().tabifiedDockWidgets(dk)])
     d.close()
     App.closeDocument(doc.Name)
 
