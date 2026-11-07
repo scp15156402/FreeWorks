@@ -997,6 +997,51 @@ def t_configurations():
     d.close()
     App.closeDocument(doc.Name)
 
+
+@step(1500)
+def t_pm_terms():
+    from freeworks import pmskin, naming
+    doc = App.newDocument("FWSkin")
+    b = doc.addObject("PartDesign::Body", "Body")
+    import Part, Sketcher
+    sk = b.newObject("Sketcher::SketchObject", "Sketch")
+    sk.AttachmentSupport = [(b.Origin.OriginFeatures[3], "")]
+    sk.MapMode = "FlatFace"
+    sk.addGeometry(Part.Circle(App.Vector(), App.Vector(0, 0, 1), 10))
+    pad = b.newObject("PartDesign::Pad", "Pad")
+    pad.Profile = sk
+    pad.Length = 10
+    doc.recompute()
+    Gui.ActiveDocument.setEdit(pad.Name)
+    STATE["skin_doc"] = doc.Name
+
+
+@step(1500)
+def t_pm_terms_check():
+    from freeworks import pmskin
+    root = pmskin._task_root()
+    texts = set()
+    if root is not None:
+        for w in root.findChildren(QtWidgets.QComboBox):
+            texts.update(w.itemText(i) for i in range(w.count()))
+        for w in root.findChildren(QtWidgets.QLabel):
+            texts.add(w.text().rstrip(":"))
+    shot("05_extrude_pm")
+    want = {"Blind", "Through All", "Up To Next", "Up To Surface", "Up To Body", "Direction 1", "End Condition"}
+    record("PropertyManager terms: extrude end conditions renamed", want <= texts and "Dimension" not in texts and "To first" not in texts,
+           sorted(t for t in texts if t)[:40])
+    record("PropertyManager terms: Depth instead of Length", "Depth" in texts, "Depth" in texts)
+    t = dict(pmskin.TITLES)
+    t.update(pmskin.HOLE)
+    record("PropertyManager terms: Hole Wizard table", pmskin._map("Depth type:", t) == "End Condition:" and pmskin._map("Dimension", t) == "Blind"
+           and pmskin._map("Hole parameters", t) == "Hole Wizard", (pmskin._map("Depth type:", t), pmskin._map("Hole parameters", t)))
+    try:
+        Gui.ActiveDocument.resetEdit()
+    except Exception:
+        pass
+    Gui.Control.closeDialog()
+    App.closeDocument(STATE["skin_doc"])
+
 @step(800)
 def t_no_errors():
     import freeworks

@@ -33,12 +33,12 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 ## 3. Part features
 | ID | FreeCAD | FreeWorks | Gap | Plan |
 |---|---|---|---|---|
-| R-PF-1 Extrude boss/cut | 🟡 Pad/Pocket: Blind, Two dims, Through all, Up to first/last/face/shape, symmetric, offset, taper; ❌ thin feature, ❌ Up To Vertex/Body as names, ❌ feature scope | 🟡 FW_ExtrudedBoss/Cut | SW Extrude PM (From, Dir 1/2, end-condition names), thin feature via Thickness | **P22** |
+| R-PF-1 Extrude boss/cut | 🟡 Pad/Pocket: Blind, Two dims, Through all, Up to first/last/face/shape, symmetric, offset, taper; ❌ thin feature, ❌ Up To Vertex/Body as names, ❌ feature scope | ✅ 1.3.0 SW terms in the panel (no From offset / thin / contours) | SW Extrude PM (From, Dir 1/2, end-condition names), thin feature via Thickness | **P22** |
 | R-PF-2 Revolve | ✅ Revolution/Groove (angle, symmetric, two angles, up to face) | 🟡 mapped | Revolve PM names | P23 |
 | R-PF-3 Sweep | ✅ AdditivePipe/SubtractivePipe (profile, path, twist via Frenet/aux) | 🟡 mapped | Sweep PM; solid-body sweep cut ❌ | P23 |
 | R-PF-4 Loft | ✅ AdditiveLoft/SubtractiveLoft; ❌ guide curves | 🟡 mapped | Loft PM; guides via Curves add-on (outside body) | P23 |
 | R-PF-5 Fillet/Chamfer | 🟡 constant fillet, chamfer (equal, two distances, distance-angle); ❌ variable / face / full-round | 🟡 mapped (F) | Fillet PM; variable via Part_Fillet (radius per edge, outside body) | P23 |
-| R-PF-6 Hole Wizard | 🟡 `PartDesign_Hole`: hole, counterbore, countersink, threads ISO/UTS, positions from sketch points; ❌ slot, pipe tap | 🟡 mapped | Hole Wizard PM with Type / Position tabs | **P24** |
+| R-PF-6 Hole Wizard | 🟡 `PartDesign_Hole`: hole, counterbore, countersink, threads ISO/UTS, positions from sketch points; ❌ slot, pipe tap | ✅ 1.3.0 SW terms in the Hole panel | Hole Wizard PM with Type / Position tabs | **P24** |
 | R-PF-7 Patterns & mirror | 🟡 linear with **two directions and custom spacings** (1.1: `Direction2`, `Occurrences2`, `Spacings`), polar, mirror, MultiTransform; ❌ fill, curve-driven, skip instances | 🟡 mapped | SW Linear Pattern PM (Direction 1/2), skip instances = own wrapper | P25 |
 | R-PF-8 Draft / shell / rib | ✅ Draft, Thickness (shell, faces to remove, inward/outward); ❌ multi-thickness faces, ❌ **rib** | 🟡 mapped | **Rib** = own feature (pad of an offset open profile, both directions) | P23 |
 | R-PF-9 Reference geometry | ✅ plane (attachment modes cover offset/angle/3-point/normal), axis, point, CS | 🟡 mapped | SW Plane PM wording ("First/Second/Third reference", constraints) ; mate reference ❌ | P25 |

@@ -137,7 +137,7 @@ Documents\FreeWorks\   your projects and macros (never touched by updates/uninst
 
 FreeWorks changes what you see and how you work. It doesn't change FreeCAD's geometry engine. The main differences are:
 
-- **Feature dialogs (PropertyManager content)** are FreeCAD's own panels, renamed and restyled. Fields and options are FreeCAD's: Pad "Length" instead of "D1", and so on.
+- **Feature dialogs (PropertyManager content)** are FreeCAD's own panels, shown with SolidWorks wording: Boss-Extrude, End Condition Blind / Through All / Up To Next / Up To Surface, Depth, Draft angle, and the Hole Wizard terms. The fields are still FreeCAD's, so there's no From offset, Thin Feature or Selected Contours.
 - **Rollback:** use *Roll Back* (right-click a feature) and *Roll to End*. There is no draggable rollback bar.
 - **Bodies:** FreeCAD needs a **Body** per solid. A new Part already contains one; insert more with Insert → Body. Combine, Intersect and Split work between bodies.
 - **Mates:** the Mate PropertyManager works like SolidWorks' one: you pick two entities, it suggests a mate, and you use the pop-up mate toolbar. Behind the scenes each mate is a FreeCAD Assembly joint. Coincident and Tangent are a Distance joint at 0, Concentric is a Cylindrical joint, and Lock is a Fixed joint. Width, Limit Distance, Limit Angle, Hinge, Gear, Rack Pinion and Screw work too. Symmetric, Profile Center, Path, Cam, Slot and Universal Joint mates aren't available, because FreeCAD's joints can't express them. The Width mate uses the face positions at the time you create it.
@@ -164,7 +164,7 @@ FreeWorks changes what you see and how you work. It doesn't change FreeCAD's geo
 
 FreeWorks aims to cover everything a CSWA/CSWP-certified SolidWorks user does.
 - [What that scope is](docs/CSWA_CSWP_SCOPE.md), [what FreeCAD can and can't do today](docs/GAP_ANALYSIS.md), and [which community add-ons FreeWorks uses](docs/COMMUNITY.md).
-- Done in **v1.2**: SolidWorks materials and Mass Properties, the Mate PropertyManager, assembly tree names, collision detection and Replace Components. Next: **v1.3** equations and configurations, then **v1.4** drawings. **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
+- Done in **v1.2**: SolidWorks materials and Mass Properties, the Mate PropertyManager, assembly tree names, collision detection and Replace Components. Done in **v1.3**: equations, configurations and design tables, and SolidWorks wording in feature panels. Next: **v1.4** drawings. **v1.3** equations and configurations. **v1.4** drawings. Progress is tracked in [dev/TRACKER.md](dev/TRACKER.md).
 
 ## Credits and licences
 

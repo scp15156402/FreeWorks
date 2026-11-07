@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.0 - 2026-11-07
+CSWP Segments 1 and 2 milestone (1.2.1 Equations + 1.2.2 Configurations + the items below).
+- **SOLIDWORKS terms inside feature panels (PropertyManager):** Boss-Extrude / Cut-Extrude with
+  Directions, End Condition (Blind, Through All, Up To Next, Up To Surface, Offset From Surface,
+  Up To Body, Mid Plane), Depth, Draft angle, Reverse Direction; Revolve; Chamfer (Angle Distance,
+  Distance Distance); Shell; Draft; Linear/Circular Pattern; **Hole Wizard** (Hole Type, End
+  Condition, Fit, Hole diameter and depth, Counterbore/Countersink, Custom Sizing). OK/Cancel get
+  the green check and red cross. Only the wording changes - the panels still work as FreeCAD's.
+  Turn it off in FreeWorks Options if you prefer FreeCAD's words.
+
 ## v1.2.2 - 2026-11-07
 - **Configurations and design tables** (Tools > ConfigurationManager): show, add (copy of the
   selected configuration), rename and delete configurations; a design table grid with SOLIDWORKS

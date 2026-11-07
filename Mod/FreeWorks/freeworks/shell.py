@@ -1003,6 +1003,9 @@ class Controller(QtCore.QObject):
             if d:
                 d.show()
                 d.raise_()
+            if open_:
+                from . import pmskin
+                pmskin.start()          # SOLIDWORKS terms in FreeCAD's feature panels
         doc0 = App.ActiveDocument
         if doc0 is not None and getattr(self, "hinted", None) != doc0.Name:
             self.hinted = doc0.Name

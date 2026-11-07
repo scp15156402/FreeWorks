@@ -6,7 +6,7 @@ import traceback
 
 import FreeCAD as App
 
-__version__ = "1.2.2"
+__version__ = "1.3.0"
 
 MOD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES_DIR = os.path.join(MOD_DIR, "Resources")
