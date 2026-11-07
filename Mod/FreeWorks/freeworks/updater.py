@@ -16,9 +16,19 @@ from PySide import QtCore, QtWidgets
 from . import __version__, log, params, safe
 
 REPO = "scp15156402/FreeWorks"
-STABLE_PKG = "https://raw.githubusercontent.com/%s/stable/Mod/FreeWorks/package.xml" % REPO
-STABLE_LOG = "https://raw.githubusercontent.com/%s/stable/CHANGELOG.md" % REPO
-GET_PS1 = "https://raw.githubusercontent.com/%s/main/get.ps1" % REPO
+RAW = "https://raw.githubusercontent.com/%s/%s/%s"
+API = "https://api.github.com/repos/%s/contents/%s?ref=%s"
+STABLE_PKG = RAW % (REPO, "stable", "Mod/FreeWorks/package.xml")
+STABLE_LOG = RAW % (REPO, "stable", "CHANGELOG.md")
+GET_PS1 = RAW % (REPO, "main", "get.ps1")
+GET_PS1_API = API % (REPO, "get.ps1", "main")
+
+# PowerShell that loads get.ps1 into $s: TLS 1.2 on (Windows PowerShell 5.1 defaults to TLS 1.0, which
+# GitHub refuses), raw.githubusercontent.com first, GitHub's API where raw is blocked (some Indian ISPs).
+PS_LOAD = ("[Net.ServicePointManager]::SecurityProtocol = 'Tls12'; $h = @{'User-Agent'='FreeWorks-Updater'}; "
+           "try { $s = Invoke-RestMethod -Uri '%s' -Headers $h -TimeoutSec 20 } "
+           "catch { $h['Accept'] = 'application/vnd.github.raw'; $s = Invoke-RestMethod -Uri '%s' -Headers $h }; "
+           % (GET_PS1, GET_PS1_API))
 
 _result = {}
 
@@ -39,10 +49,25 @@ def install_root():
     return None
 
 
-def _fetch(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "FreeWorks-Updater", "Accept": "application/vnd.github+json"})
+def _get(url, accept):
+    req = urllib.request.Request(url, headers={"User-Agent": "FreeWorks-Updater", "Accept": accept})
     with urllib.request.urlopen(req, timeout=10) as r:
         return r.read().decode("utf-8", "replace")
+
+
+def _fetch(url):
+    """A raw.githubusercontent.com file; through GitHub's API when raw is blocked on this network."""
+    try:
+        return _get(url, "text/plain")
+    except Exception as first:
+        prefix = "https://raw.githubusercontent.com/%s/" % REPO
+        if not url.startswith(prefix):
+            raise
+        ref, path = url[len(prefix):].split("/", 1)
+        try:
+            return _get(API % (REPO, path, ref), "application/vnd.github.raw")
+        except Exception:
+            raise first
 
 
 def _check_thread():
@@ -126,9 +151,8 @@ def _offer(latest):
 
 def _run_update(root):
     import subprocess
-    cmd = ("$s = Invoke-RestMethod -Uri '%s' -Headers @{'User-Agent'='FreeWorks-Updater'}; "
-           "& ([scriptblock]::Create($s)) -InstallDir '%s' -UpdateOnly -WaitPid %d -Restart; "
-           "Start-Sleep -Seconds 4") % (GET_PS1, root, os.getpid())
+    cmd = PS_LOAD + ("& ([scriptblock]::Create($s)) -InstallDir '%s' -UpdateOnly -WaitPid %d -Restart; "
+                     "Start-Sleep -Seconds 4") % (root, os.getpid())
     try:
         subprocess.Popen(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                          creationflags=getattr(subprocess, "CREATE_NEW_CONSOLE", 0))
@@ -234,8 +258,7 @@ def rollback():
     if r != QtWidgets.QMessageBox.Yes:
         return
     import subprocess
-    cmd = ("$s = Invoke-RestMethod -Uri '%s' -Headers @{'User-Agent'='FreeWorks-Updater'}; "
-           "& ([scriptblock]::Create($s)) -Rollback -WaitPid %d -Restart; Start-Sleep -Seconds 4") % (GET_PS1, os.getpid())
+    cmd = PS_LOAD + "& ([scriptblock]::Create($s)) -Rollback -WaitPid %d -Restart; Start-Sleep -Seconds 4" % os.getpid()
     try:
         subprocess.Popen(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                          creationflags=getattr(subprocess, "CREATE_NEW_CONSOLE", 0))

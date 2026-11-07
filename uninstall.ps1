@@ -1,7 +1,9 @@
 <#
   Uninstall FreeWorks - one line, one confirmation:
 
-      irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 | iex
+      [Net.ServicePointManager]::SecurityProtocol='Tls12'; iex $(try{irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 -TimeoutSec 20}catch{irm https://api.github.com/repos/scp15156402/FreeWorks/contents/uninstall.ps1 -Headers @{Accept='application/vnd.github.raw'}})
+
+  (TLS 1.2 on, and GitHub's API as a fallback where raw.githubusercontent.com is blocked.)
 
   Also available in Windows Settings > Apps > FreeWorks.
   Removes the FreeWorks folder (program, FreeCAD copy, settings), shortcuts and registry entries.

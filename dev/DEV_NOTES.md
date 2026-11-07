@@ -124,6 +124,23 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
   X/Y is set to (before/after recompute, delayed). FreeWorks' Standard 3 View therefore places
   three `DrawViewPart` views itself. `XSource` (cross-document) needs both documents saved.
 
+## Windows downloads (field test, v1.5.3)
+- Windows PowerShell 5.1 defaults to TLS 1.0 (`ServicePointManager.SecurityProtocol` = Ssl3|Tls) and
+  GitHub refuses it: "The underlying connection was closed: An unexpected error occurred on a send".
+  Every published one-liner sets `[Net.ServicePointManager]::SecurityProtocol='Tls12'` first.
+- The same error with TLS 1.2 forced means the connection is cut on the way: Indian ISPs (Jio, ACT,
+  BSNL) block `raw.githubusercontent.com` from time to time; antivirus web shields can also reset it.
+  `github.com`, `codeload.github.com` and `api.github.com` normally stay reachable.
+- Fallback for text files: `https://api.github.com/repos/<repo>/contents/<path>?ref=<branch>` with
+  header `Accept: application/vnd.github.raw` returns the raw file (content type
+  `application/vnd.github.raw; charset=utf-8`; Invoke-WebRequest in 5.1 gives byte[] for it, decode
+  as UTF-8). Unauthenticated limit 60 requests/hour/IP - fine as a fallback, not as the first choice
+  (CGNAT shares IPs). jsDelivr (`cdn.jsdelivr.net/gh/<repo>@<branch>/<path>`) is the third choice;
+  it caches branches for hours, so never trust its version alone.
+- get.ps1 takes the version from the downloaded ZIP's package.xml, not from the check.
+- Not testable in the sandbox: no PowerShell, and downloading it is not permitted. `dev/tests/pscheck.py`
+  checks bracket balance; Windows behaviour is confirmed by the owner's field test.
+
 ## Sandbox constraint (Claude sessions)
 Running third-party add-on code may be blocked in Claude's sandbox; test FreeWorks' own code
 only, read add-on sources instead.

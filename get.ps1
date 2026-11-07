@@ -1,7 +1,10 @@
 <#
   FreeWorks - one line to install or update (Windows PowerShell or PowerShell 7):
 
-      irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 | iex
+      [Net.ServicePointManager]::SecurityProtocol='Tls12'; iex $(try{irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 -TimeoutSec 20}catch{irm https://api.github.com/repos/scp15156402/FreeWorks/contents/get.ps1 -Headers @{Accept='application/vnd.github.raw'}})
+
+  (The line turns on TLS 1.2, which Windows PowerShell 5.1 does not use by default, and fetches this
+   script from GitHub's API when raw.githubusercontent.com is blocked - some Indian ISPs block it.)
 
   - Not installed yet  -> installs the latest FreeWorks (D:\FreeWorks if drive D: exists and has
                           space, otherwise %LOCALAPPDATA%\Programs\FreeWorks) and starts it.
@@ -9,15 +12,17 @@
                           Settings are kept; projects (Documents\FreeWorks) are never touched.
 
   Roll back to the version you had before the last update (projects are never touched):
-      & ([scriptblock]::Create((irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1))) -Rollback
+      in FreeWorks: Help > Roll Back to Previous Version...; or run the line above with
+      $env:FREEWORKS_ROLLBACK = "1" set first.
 
   Uninstall (one line, one confirmation):
-      irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 | iex
+      [Net.ServicePointManager]::SecurityProtocol='Tls12'; iex $(try{irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 -TimeoutSec 20}catch{irm https://api.github.com/repos/scp15156402/FreeWorks/contents/uninstall.ps1 -Headers @{Accept='application/vnd.github.raw'}})
 
   Options: set before the one-liner, e.g.  $env:FREEWORKS_DIR = "E:\FreeWorks"
       FREEWORKS_DIR      install folder for a new installation
       FREEWORKS_CHANNEL  "stable" (default, released version) or "main" (development)
       FREEWORKS_FORCE    "1" = reinstall even if already up to date
+      FREEWORKS_ROLLBACK "1" = go back to the previous version
 #>
 param(
     [string]$InstallDir = "",
@@ -34,11 +39,47 @@ param(
 & {
     $ErrorActionPreference = "Stop"
     $ProgressPreference = "SilentlyContinue"
-    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+    try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12 } catch {}
     $Repo = "scp15156402/FreeWorks"
     $RegKey = "HKCU:\Software\FreeWorks"
+    if ($env:FREEWORKS_ROLLBACK -eq "1") { $Rollback = $true }
 
     function Say($t, $c = "Cyan") { Write-Host $t -ForegroundColor $c }
+
+    # A text file from the repository. raw.githubusercontent.com first; GitHub's API and jsDelivr
+    # when raw is blocked (some Indian ISPs block it) or an antivirus web shield cuts the connection.
+    function Get-RepoText($path, $ref) {
+        $tries = @(
+            @{ u = "https://raw.githubusercontent.com/$Repo/$ref/$path"; h = @{ "User-Agent" = "FreeWorks-Installer" } },
+            @{ u = "https://api.github.com/repos/$Repo/contents/$($path)?ref=$ref"; h = @{ "User-Agent" = "FreeWorks-Installer"; "Accept" = "application/vnd.github.raw" } },
+            @{ u = "https://cdn.jsdelivr.net/gh/$Repo@$ref/$path"; h = @{ "User-Agent" = "FreeWorks-Installer" } }
+        )
+        foreach ($t in $tries) {
+            try {
+                $r = Invoke-WebRequest -Uri $t.u -Headers $t.h -UseBasicParsing -TimeoutSec 20
+                $c = $r.Content
+                if ($c -is [byte[]]) { $c = [Text.Encoding]::UTF8.GetString($c) }
+                if ($c) { return [string]$c }
+            } catch {}
+        }
+        return $null
+    }
+
+    function Version-Of($xml) {
+        if ("$xml" -match "<version>([^<]+)</version>") { return $Matches[1].Trim() }
+        return $null
+    }
+
+    # File download: Windows' curl.exe first (clear errors, retries, resumes), then .NET.
+    function Fetch($url, $dest) {
+        $curl = Join-Path $env:SystemRoot "System32\curl.exe"
+        if (Test-Path $curl) {
+            & $curl -sS -L --fail --retry 3 --retry-delay 2 --connect-timeout 20 -A "FreeWorks-Installer" -o $dest $url
+            if ($LASTEXITCODE -eq 0 -and (Test-Path $dest)) { return }
+            Remove-Item -Force $dest -ErrorAction SilentlyContinue
+        }
+        Invoke-WebRequest -Uri $url -OutFile $dest -Headers @{ "User-Agent" = "FreeWorks-Installer" } -UseBasicParsing
+    }
 
     function Find-Install {
         if (Test-Path $RegKey) {
@@ -131,15 +172,7 @@ param(
         # which version? the "stable" branch is the released version, "main" is development
         $ch = if ($Channel) { $Channel } elseif ($env:FREEWORKS_CHANNEL) { $env:FREEWORKS_CHANNEL } else { "stable" }
         $branch = if ($ch -eq "main") { "main" } else { "stable" }
-        $hdr = @{ "User-Agent" = "FreeWorks-Installer" }
-        $latest = $null
-        try {
-            $pkg = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$Repo/$branch/Mod/FreeWorks/package.xml" -Headers $hdr -UseBasicParsing).Content
-            if ("$pkg" -match "<version>([^<]+)</version>") { $latest = $Matches[1].Trim() }
-        } catch {
-            $branch = "main"   # stable branch not published yet
-        }
-        $url = "https://github.com/$Repo/archive/refs/heads/$branch.zip"
+        $latest = Version-Of (Get-RepoText "Mod/FreeWorks/package.xml" $branch)
         $label = if ($latest) { "$latest ($branch)" } else { $branch }
 
         if ($update -and $latest -and -not $env:FREEWORKS_FORCE) {
@@ -155,10 +188,35 @@ param(
         New-Item -ItemType Directory -Force -Path $tmp | Out-Null
         $zip = Join-Path $tmp "FreeWorks.zip"
         Say "  Downloading FreeWorks $label ..."
-        Invoke-WebRequest -Uri $url -OutFile $zip -Headers $hdr -UseBasicParsing
+        $got = $false; $why = ""
+        foreach ($url in @("https://github.com/$Repo/archive/refs/heads/$branch.zip",
+                           "https://codeload.github.com/$Repo/zip/refs/heads/$branch",
+                           "https://api.github.com/repos/$Repo/zipball/$branch")) {
+            try { Fetch $url $zip; $got = $true; break } catch { $why = $_.Exception.Message }
+        }
+        if (-not $got) {
+            throw ("could not download FreeWorks from GitHub ($why). Your network or antivirus is blocking " +
+                   "github.com - try another network (e.g. a phone hotspot) or pause the antivirus web shield")
+        }
         Expand-Archive -Path $zip -DestinationPath (Join-Path $tmp "x") -Force
         $script = Get-ChildItem -Path (Join-Path $tmp "x") -Recurse -Filter "install.ps1" | Select-Object -First 1
         if (-not $script) { throw "install.ps1 not found in the download." }
+
+        # the downloaded files are the truth for the version (the check above can be blocked or cached)
+        $pkgFile = Join-Path $script.DirectoryName "Mod\FreeWorks\package.xml"
+        if (Test-Path $pkgFile) {
+            $v = Version-Of (Get-Content -Raw $pkgFile)
+            if ($v) { $latest = $v }
+        }
+        if ($update -and $latest -and -not $env:FREEWORKS_FORCE) {
+            $cur = (Get-ItemProperty $RegKey -ErrorAction SilentlyContinue).Version
+            if ($cur -and $cur -eq $latest) {
+                Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
+                Say "  FreeWorks is already up to date ($latest)." "Green"
+                if ($Restart) { $exe = Join-Path $dir "FreeWorks.exe"; if (Test-Path $exe) { Start-Process $exe } }
+                return
+            }
+        }
 
         # run the installer in Windows PowerShell 5.1 (works under any execution policy)
         $a = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$($script.FullName)`"", "-InstallDir", "`"$dir`"")

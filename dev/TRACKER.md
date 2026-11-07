@@ -64,7 +64,7 @@ then P23, P25, P28 → P34.
 | P32 | GUI | Confirmation corner (✓ / ✗ top-right of the graphics area while a PM or sketch is open; Options toggle). Selection context toolbar: open | 🟡 |
 | P33 | GUI | Tools > Options: System Options (FreeWorks options, reset, FreeCAD preferences) and Document Properties (drafting standard ISO/ANSI → sheet format + projection angle; units MMGS/CGS/MKS/IPS stored in the document's UnitSystem + decimals; Edit Material); gesture wheel built once (no widget creation in the mouse filter); released 1.5.1 | ✅ |
 | P34 | GUI | Polish pass: CLAUDE.md project map for all new modules, docs, stress run; v1.5.x released | ✅ |
-| P35 | Install | Windows field test of get/install/uninstall one-liners (needs the owner) | ⏳ |
+| P35 | Install | Windows field test of get/install/uninstall one-liners (needs the owner). 1.5.3: TLS 1.2 in every one-liner; raw.githubusercontent.com blocked on owner's ISP → GitHub API / jsDelivr fallback for scripts, encrypted-DNS fallback for the FreeCAD download. Waiting: owner's install → open/save → rerun → uninstall | 🔄 |
 | P36 | GUI | Open items: draggable rollback bar, Material/Solid Bodies nodes in the tree, selection context toolbar, Add Relations PM, hole callout, auto balloon, revision table, PropertyManager pushpin | ⬜ |
 
 ## Known issues / owner feedback
@@ -76,6 +76,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P35 | Field test: PowerShell 5.1 TLS 1.0 default and ISP block of GitHub file servers fixed with fallbacks; released 1.5.3. |
 | 2026-11-07 | P29, P34 | Sketch panel terms, docs; released 1.5.2. |
 | 2026-11-07 | P28, P33 | Display/Delete Relations, Options/Document Properties, gesture wheel reuse; 154 checks incl. stress; released 1.5.1. |
 | 2026-11-07 | P30–P32 | ConfigurationManager tab, confirmation corner, panel polish; **v1.5.0 released**. |

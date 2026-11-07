@@ -8,12 +8,21 @@
 
 Open **PowerShell** (Start menu → type *PowerShell*) and paste:
 
-| | Command |
-|---|---|
-| **Install or update** | `irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 \| iex` |
-| **Uninstall** | `irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 \| iex` |
-
 **Install or update**
+```powershell
+[Net.ServicePointManager]::SecurityProtocol='Tls12'; iex $(try{irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 -TimeoutSec 20}catch{irm https://api.github.com/repos/scp15156402/FreeWorks/contents/get.ps1 -Headers @{Accept='application/vnd.github.raw'}})
+```
+
+**Uninstall**
+```powershell
+[Net.ServicePointManager]::SecurityProtocol='Tls12'; iex $(try{irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 -TimeoutSec 20}catch{irm https://api.github.com/repos/scp15156402/FreeWorks/contents/uninstall.ps1 -Headers @{Accept='application/vnd.github.raw'}})
+```
+
+The first part switches on TLS 1.2 (old Windows PowerShell does not use it by default). If GitHub's
+`raw.githubusercontent.com` file server is blocked on your network (some Indian ISPs such as Jio, ACT and
+BSNL block it from time to time), the line fetches the same script through GitHub's API instead.
+
+**What the install line does**
 - The same line does both. On a new PC it installs FreeWorks and starts it. If FreeWorks is already there, it updates it in place.
 - Your **projects** live in `Documents\FreeWorks` (the default save folder), outside the program folder. Updates and uninstall never touch them.
 - Your **settings** are kept across updates.

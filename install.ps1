@@ -76,21 +76,71 @@ try {
     if ($running) { throw "FreeWorks is running. Save your work, close it, and run the command again." }
 
     # -------------------------------------------------------------- helpers
+    # curl.exe (in Windows 10 1803+) with retries and resume; returns curl's exit code
+    function Curl-Get($url, $part, $extra) {
+        $curl = Join-Path $env:SystemRoot "System32\curl.exe"
+        if (-not (Test-Path $curl)) { return 99 }
+        $a = @("-L", "--fail", "--retry", "3", "--retry-delay", "3", "--connect-timeout", "30", "-C", "-",
+               "--progress-bar", "-A", "FreeWorks-Installer") + $extra + @("-o", $part, $url)
+        & $curl @a
+        return $LASTEXITCODE
+    }
+
+    # A host's real address from Cloudflare / Google over HTTPS (bypasses an ISP's DNS block)
+    function Doh-IP($name) {
+        foreach ($srv in @("https://cloudflare-dns.com/dns-query?name=$name&type=A", "https://dns.google/resolve?name=$name&type=A")) {
+            try {
+                $r = Invoke-WebRequest -Uri $srv -Headers @{ "Accept" = "application/dns-json" } -UseBasicParsing -TimeoutSec 15
+                $c = $r.Content
+                if ($c -is [byte[]]) { $c = [Text.Encoding]::UTF8.GetString($c) }
+                $ip = (ConvertFrom-Json $c).Answer | Where-Object { $_.type -eq 1 } | Select-Object -First 1 -ExpandProperty data
+                if ($ip) { return $ip }
+            } catch {}
+        }
+        return $null
+    }
+
     function Download($url, $dest) {
         # resumable: data goes to <dest>.part and is renamed only when complete
         if (Test-Path $dest) { Remove-Item -Force $dest }
         $part = "$dest.part"
+        $name = Split-Path -Leaf $dest
         $curl = Join-Path $env:SystemRoot "System32\curl.exe"
         if (Test-Path $curl) {
-            & $curl -L --fail --retry 3 --retry-delay 3 -C - --progress-bar -A "FreeWorks-Installer" -o $part $url
-            if ($LASTEXITCODE -eq 0) { Move-Item -Force $part $dest; return }
-            Warn "download interrupted (curl code $LASTEXITCODE), retrying"
-            Remove-Item -Force $part -ErrorAction SilentlyContinue
+            $code = Curl-Get $url $part @()
+            if ($code -eq 0) { Move-Item -Force $part $dest; return }
+            Warn "download of $name failed (curl code $code) - trying encrypted DNS (some networks block GitHub's download server)"
+            # 1) curl 7.62+ resolves every host of the redirect chain over HTTPS itself
+            foreach ($doh in @("https://cloudflare-dns.com/dns-query", "https://dns.google/dns-query")) {
+                $code = Curl-Get $url $part @("--doh-url", $doh)
+                if ($code -eq 0) { Ok "downloaded through encrypted DNS"; Move-Item -Force $part $dest; return }
+                if ($code -eq 2) { break }   # this curl has no --doh-url
+            }
+            # 2) older curl: resolve the hosts of the redirect chain ourselves and pin them
+            $pins = @(); $loc = $url
+            for ($i = 0; $i -lt 6 -and $loc; $i++) {
+                $h = ([Uri]$loc).Host
+                $ip = Doh-IP $h
+                if ($ip) { $pins += @("--resolve", "$($h):443:$ip") }
+                $next = & $curl -s -I -o NUL -w "%{redirect_url}" -A "FreeWorks-Installer" @pins $loc
+                if ($next -and $next -ne $loc) { $loc = "$next".Trim() } else { $loc = $null }
+            }
+            if ($pins.Count -gt 0) {
+                $code = Curl-Get $url $part $pins
+                if ($code -eq 0) { Ok "downloaded through encrypted DNS"; Move-Item -Force $part $dest; return }
+            }
+            Info "(encrypted DNS did not help either: curl code $code for $url)"
         }
-        $wc = New-Object System.Net.WebClient
-        $wc.Headers.Add("User-Agent", "FreeWorks-Installer")
-        $wc.DownloadFile($url, $part)
-        Move-Item -Force $part $dest
+        try {
+            $wc = New-Object System.Net.WebClient
+            $wc.Headers.Add("User-Agent", "FreeWorks-Installer")
+            $wc.DownloadFile($url, $part)
+            Move-Item -Force $part $dest
+        } catch {
+            throw ("could not download $name. Your network (or antivirus web shield) blocks GitHub's download " +
+                   "server. Use another connection (for example a phone hotspot) or set this PC's DNS to " +
+                   "1.1.1.1, then run the same command again - finished parts are kept.")
+        }
     }
 
     function Sha256-Of($path) { (Get-FileHash -Algorithm SHA256 -Path $path).Hash.ToLower() }
@@ -336,8 +386,7 @@ public static class FreeWorksLauncher {
     Info "Projects:  $projects   (never touched by updates or uninstall)"
     Info "Update:    run the same one-line command again, or Help > Check for FreeWorks Updates"
     if ($UpdateOnly) { Info "Rollback:  Help > Roll Back to Previous Version (keeps your projects)" }
-    Info "Uninstall: irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 | iex"
-    Info "           (or Windows Settings > Apps > FreeWorks)"
+    Info "Uninstall: Windows Settings > Apps > FreeWorks (projects are kept)"
 } catch {
     Write-Host ""
     Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red

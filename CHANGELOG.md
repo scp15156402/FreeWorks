@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.3 - 2026-11-07
+- **Install works on more networks.** The one-line install, update and uninstall commands switch on
+  TLS 1.2 first (Windows PowerShell 5.1 uses TLS 1.0 by default, which GitHub refuses: "The
+  underlying connection was closed"). Where `raw.githubusercontent.com` is blocked (some Indian
+  ISPs such as Jio, ACT and BSNL), the line, the installer and Help > Check for Updates use
+  GitHub's API (and jsDelivr) instead. New one-liners are in the README.
+- The installer downloads with Windows' `curl.exe` (retries, clear error messages) and tries three
+  GitHub addresses for the FreeWorks ZIP; if all are blocked it says so plainly.
+- The version is read from the downloaded files, so a blocked or cached version check can no
+  longer install the wrong branch.
+- `$env:FREEWORKS_ROLLBACK = "1"` before the one-liner rolls back (no long command needed).
+
 ## v1.5.2 - 2026-11-07
 - The sketch panel speaks SOLIDWORKS: Relations, Sketch Entities, Sketch Status ("Under Defined:
   5 degrees of freedom", Fully Defined, Over Defined), Parameters; the Offset tool shows "Add
