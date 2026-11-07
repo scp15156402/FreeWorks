@@ -115,6 +115,7 @@ Documents\FreeWorks\   your projects and macros (never touched by updates/uninst
 **Evaluate**
 - **Mass Properties** (Evaluate tab): mass, volume, surface area, centre of mass, principal axes and moments, and moments of inertia at the centre of mass and at the output coordinate system, laid out like SolidWorks' report. You can report relative to any coordinate system, in MMGS, CGS, MKS or IPS, with your choice of decimal places, and include or leave out hidden bodies. It works for parts, assemblies (sub-assemblies included, each component with its own material) and selections.
 - **Move / Rotate Component** with Collision Detection (the component stops at the first contact), **Replace Components** that re-attaches the mates, and **Make Subassembly Rigid / Flexible**.
+- **Equations** (Tools > Equations) with SolidWorks syntax (`"D1@Sketch1" = "A" * 2`) and **configurations with design tables** (Tools > ConfigurationManager: `D1@Sketch1`, `$STATE@Fillet1` columns, CSV/Excel import).
 - **Edit Material** (right-click a body): a material library with SolidWorks names and densities (AISI 1020, Alloy Steel, 6061 Alloy, 1060 Alloy, Copper, Brass, ABS and more), or a custom density taken from the drawing. With no material assigned, the density is 1000 kg/m³, the same default as SolidWorks.
 - **Section Properties**.
 - **Interference Detection**: lists the clashes and highlights the interference volume in red.

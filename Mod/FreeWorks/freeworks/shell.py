@@ -263,6 +263,7 @@ def build_menubar(bar):
     _sub(m, "Selection Filter", ["sel_filter", "filter_vertex", "filter_edge", "filter_face", "filter_clear"], "selection_filter")
     m.addSeparator()
     _act(m, "equations")
+    _act(m, "configurations")
     m.addSeparator()
     mm = m.addMenu("Macro")
     for c in ("Std_DlgMacroExecute", "Std_DlgMacroRecord", "Std_OpenMacrosFolder"):

@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P27 – Configurations (ConfigurationManager) + design tables
+**Next part:** P22 – Extrude PropertyManager
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -56,7 +56,7 @@ then P23, P25, P28 → P34.
 | P24 | Part | Hole Wizard PM (types, ANSI/ISO sizes, positions) | ⬜ |
 | P25 | Part | Patterns (linear 2 directions, skip instances, circular) + Mirror + Reference geometry PMs | ⬜ |
 | P26 | Part | Equations dialog (Tools > Equations): Global Variables (VarSet, stored GV_<name>), Equations with SOLIDWORKS syntax ("D1@Sketch1" = "A" * 2) translated to FreeCAD expressions and back, D<n> numbering for sketch and feature dimensions, Add rows, Delete, Rebuild, OK/Cancel as one undo step; 7 tests; released 1.2.1 | ✅ |
-| P27 | Part | Configurations (ConfigurationManager) + design tables | ⬜ |
+| P27 | Part | Configurations engine (configurations.py, table in a hidden VarSet, SW design-table headers D1@Sketch1 / $STATE@Feature / global vars / $DESCRIPTION), capture-on-switch = "this configuration" edits, shared unconfigured values; ConfigurationManager window (show/add/rename/delete, design table grid, add/remove column, CSV/XLSX import, CSV export); 8 tests; released 1.2.2. Docked ConfigurationManager tab: later (P30) | ✅ |
 | P28 | Sketch | Smart Dimension behaviour + Modify box, Add Relations PM, Display/Delete relations, Fully Define Sketch | ⬜ |
 | P29 | Sketch | Offset/Convert/Trim PM details, v1.4 release | ⬜ |
 | P30 | GUI | FeatureManager tree SW structure (Annotations, Material, planes at root, Solid Bodies folder) + rollback bar | ⬜ |
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P27 | Configurations + design tables; released 1.2.2. |
 | 2026-11-07 | P26 | Equations dialog on VarSet + expressions; released 1.2.1. |
 | 2026-11-07 | P17 | Collision detection, Replace Components, rigid/flexible; 106 checks; **v1.2.0 released**. |
 | 2026-11-07 | P16 | Assembly naming (instances, (f), Mates), Edit Mate, perf fixes; 99 + 12 stress checks; released 1.1.4. |

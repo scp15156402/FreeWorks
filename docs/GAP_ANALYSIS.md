@@ -49,8 +49,8 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 ## 4. Configurations — CSWP segment 2
 | ID | FreeCAD | FreeWorks | Gap | Plan |
 |---|---|---|---|---|
-| R-CF-1 ConfigurationManager | 🟡 no configurations; closest: **Spreadsheet "Setup Configuration Table"** (enumeration property switches rows) + per-feature `Suppressed` | ⬜ | ConfigurationManager panel: list/add/activate configurations backed by a configuration table; dimension "This configuration / All" | **P27** |
-| R-CF-2 Design table | 🟡 spreadsheet configuration table (rows = configs, columns = aliases bound by expressions) | ⬜ | Design Table importer (CSV/XLSX → configuration table + expression bindings), `$STATE` columns → `Suppressed` | **P27** |
+| R-CF-1 ConfigurationManager | 🟡 no configurations; closest: **Spreadsheet "Setup Configuration Table"** (enumeration property switches rows) + per-feature `Suppressed` | ✅ 1.2.2 FreeWorks configurations engine + window (not docked yet) | ConfigurationManager panel: list/add/activate configurations backed by a configuration table; dimension "This configuration / All" | **P27** |
+| R-CF-2 Design table | 🟡 spreadsheet configuration table (rows = configs, columns = aliases bound by expressions) | ✅ 1.2.2 grid + CSV/XLSX import, CSV export | Design Table importer (CSV/XLSX → configuration table + expression bindings), `$STATE` columns → `Suppressed` | **P27** |
 | R-CF-3 Mass per configuration | ✅ follows recompute | 🟡 | — | P27 test |
 
 ## 5. Assemblies

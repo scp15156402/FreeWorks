@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.2.2 - 2026-11-07
+- **Configurations and design tables** (Tools > ConfigurationManager): show, add (copy of the
+  selected configuration), rename and delete configurations; a design table grid with SOLIDWORKS
+  column headers - `D1@Sketch1`, `D2@Boss-Extrude1`, `$STATE@Fillet1` (S/U), global variable names,
+  `$DESCRIPTION`, `$PARTNUMBER`; import a design table from CSV or Excel (.xlsx) and export to CSV.
+  Values that are not in the table are shared by all configurations; changing a configured value
+  while a configuration is shown keeps it for that configuration only. Mass Properties follow the
+  shown configuration. Stored inside the .FCStd file.
+
 ## v1.2.1 - 2026-11-07
 - **Equations** (Tools > Equations): Global Variables and Equations in SOLIDWORKS syntax -
   `"D1@Sketch1" = "A" * 2`, `"D1@Boss-Extrude1" = "B" + 2`, `C = "B" + 20` - with "Evaluates to",

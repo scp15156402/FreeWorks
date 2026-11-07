@@ -466,6 +466,7 @@ I["mate_limit_angle"] = svg(line((3, 20), (21, 20), INK, 2.0) + line((3, 20), (1
                             + path("M17,20 A14,14 0 0 0 13,10", stroke=RED, w=1.2))
 I["equations"] = svg('<rect x="2.5" y="3.5" width="19" height="17" rx="1.5" fill="#FFFFFF" stroke="#4A515C" stroke-width="0.8"/>'
                      + path("M15,7 L7,7 L11.5,12 L7,17 L15,17", stroke="#1F5FD1", w=1.7) + line((16.5, 10.5), (20, 10.5), "#C97A10", 1.2) + line((16.5, 13.5), (20, 13.5), "#C97A10", 1.2))
+I["configurations"] = svg(box(0, 0, 0, 7, 7, 7, AMB, ox=8, oy=11) + box(0, 0, 0, 7, 7, 4, GRY, ox=16, oy=19) + line((3, 21), (11, 21), "#1F5FD1", 1.2) + line((3, 18), (7, 18), "#1F5FD1", 1.2))
 I["ok"] = svg(path("M4,12.5 L10,18.5 L20.5,6", stroke="#2EA043", w=3.2))
 I["cancel"] = svg(line((5, 5), (19, 19), RED, 3.0) + line((19, 5), (5, 19), RED, 3.0))
 

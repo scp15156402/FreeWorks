@@ -946,6 +946,57 @@ def t_equations():
     d.ok()
     App.closeDocument(doc.Name)
 
+
+@step(1000)
+def t_configurations():
+    from freeworks import configurations as cf, configui, massprops, materials
+    doc = App.newDocument("FWCfg")
+    b = doc.addObject("PartDesign::Body", "Body")
+    bx = b.newObject("PartDesign::AdditiveBox", "Box")
+    bx.Label = "Boss-Box1"
+    bx.Length, bx.Width, bx.Height = 40, 20, 10
+    hole = b.newObject("PartDesign::SubtractiveCylinder", "Hole")
+    hole.Label = "Cut-Hole1"
+    hole.Radius, hole.Height = 4, 10
+    hole.Placement.Base = App.Vector(20, 10, 0)
+    doc.recompute()
+    v_full = b.Shape.Volume
+    cf.add_column(doc, "D1@Boss-Box1")
+    cf.add_column(doc, "$STATE@Cut-Hole1")
+    cf.add(doc, "Long")
+    cf.set_cell(doc, "Long", "D1@Boss-Box1", "100")
+    cf.set_cell(doc, "Long", "$STATE@Cut-Hole1", "S")
+    errs = cf.activate(doc, "Long")
+    record("configurations: activate applies dimension + suppression", not errs and abs(b.Shape.Volume - 100 * 20 * 10) < 1e-6,
+           (errs, b.Shape.Volume))
+    cf.activate(doc, "Default")
+    record("configurations: back to Default", abs(b.Shape.Volume - v_full) < 1e-6, b.Shape.Volume)
+    bx.Height = 12          # change while Default is active: Height is not configured -> shared
+    doc.recompute()
+    cf.activate(doc, "Long")
+    record("configurations: unconfigured values are shared", abs(b.Shape.Volume - 100 * 20 * 12) < 1e-6, b.Shape.Volume)
+    bx.Length = 120         # configured value changed in this configuration -> kept for Long only
+    doc.recompute()
+    cf.activate(doc, "Default")
+    cf.activate(doc, "Long")
+    record("configurations: change kept in this configuration only", abs(bx.Length.Value - 120) < 1e-9, bx.Length.Value)
+    path = os.path.join(OUT, "design_table.csv")
+    with open(path, "w") as f:
+        f.write(",D1@Boss-Box1,D2@Boss-Box1,$STATE@Cut-Hole1\nSmall,30,15,U\nWide,30,40,S\n")
+    first = cf.import_table(doc, path)
+    cf.activate(doc, "Wide")
+    record("design table: import creates configurations", first == "Small" and "Wide" in cf.names(doc)
+           and abs(b.Shape.Volume - 30 * 40 * 12) < 1e-6, (cf.names(doc), b.Shape.Volume))
+    m = massprops.compute(massprops.collect(use_selection=False))["mass"]
+    record("design table: mass properties follow the configuration", abs(m - 30 * 40 * 12 * 0.001) < 1e-6, m)
+    out = cf.export_table(doc, os.path.join(OUT, "design_table_out.csv"))
+    record("design table: export", "Wide" in open(out).read(), out)
+    d = configui.ConfigurationManager.open()
+    record("ConfigurationManager window lists configurations + table", d.list.count() == 4 and d.grid.columnCount() == 3,
+           (d.list.count(), d.grid.columnCount()))
+    d.close()
+    App.closeDocument(doc.Name)
+
 @step(800)
 def t_no_errors():
     import freeworks

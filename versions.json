@@ -1,6 +1,6 @@
 {
   "_comment": "Single source of truth for what FreeWorks installs. Installer, updater and dev tools read this file. Add-ons are pinned to tested commits ('ref'); 'branch' is where dev/check_updates.py looks for newer ones. Change versions here only (see dev/UPDATE_PROTOCOL.md).",
-  "freeworks": "1.2.1",
+  "freeworks": "1.2.2",
   "channel": "stable",
   "freecad": {
     "version": "1.1.4",
