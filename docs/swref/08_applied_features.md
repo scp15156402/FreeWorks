@@ -113,13 +113,25 @@ Tags: [H] help, [B] blog/training, [F] forum, [O] owner settings, [K] known, unc
 
 ## 8.2 Chamfer  (Features tab, Fillet flyout · Insert > Features > Chamfer)
 
-[K — verify] Chamfer Type buttons: **Angle Distance** · **Distance Distance** · **Vertex** ·
-**Offset Face** · **Face Face**. Items to Chamfer (edges/faces/vertex), Show selection toolbar,
-Tangent propagation, preview radios. Chamfer Parameters: Distance + Angle (with **Flip
-direction** arrow on the model), D1/D2 (Symmetric/Asymmetric) for Distance Distance, three
-distances (+ Equal distance) for Vertex; **Multi distance chamfer**. Partial Edge Parameters.
-Chamfer Options: Select through faces, **Keep features**. Graphics callouts with arrows on the
-edge.
+[H 2017–2024; 2017 What's New: PM realigned with Fillet, Offset Face and Face Face added,
+convertible chamfer ↔ fillet]
+- **Chamfer Type** (buttons): **Angle Distance** (Distance + Angle, set in the PM **or in the
+  graphics area**; a **handle/arrow points the way the distance is measured — click it to flip**,
+  or **Flip direction**) · **Distance Distance** (Chamfer Method *Symmetric* one value /
+  *Asymmetric* two values) · **Vertex** (three distances or **Equal Distance**) · **Offset Face**
+  (offsets adjacent faces; predictable on non-planar faces; can change direction per edge;
+  whole features and surfaces; **Multi Distance Chamfer** with editable callouts) · **Face Face**
+  (Face Set 1 / Face Set 2; Chamfer Method *Symmetric / Asymmetric / Chord width / Hold line*;
+  **Help point** vertex for ambiguous blends).
+- **Items to Chamfer**: **Edges, Faces, and Loops** box (missing references listed at the top
+  when editing a broken chamfer) · **Show selection toolbar** (Angle Distance, Distance Distance,
+  Offset Face) · **Tangent propagation** · **Full preview / Partial preview / No preview**.
+- **Chamfer Parameters**: per type as above (Distance, Angle (default 45° [K]), Flip direction,
+  Equal Distance …).
+- **Partial Edge Parameters** (offset face): Start/End condition *None / Offset Distance /
+  Percentage Offset / Selected Reference*.
+- **Chamfer Options**: **Select through faces** · **Keep features** · Help point.
+- Tree: Chamfer1. [K]
 
 ## 8.3 Hole Wizard  (Features tab · Insert > Features > Hole > Wizard)
 
@@ -132,25 +144,56 @@ edge.
   tools are active for dimensioning/relations); **Existing 2D Sketch** → holes at every
   endpoint/vertex/point of a selected sketch.
 - **Favorite** group: Add/Update/Delete/Save/Load favourites per hole type (not Legacy).
-- [K] Type tab groups: **Hole Type** (Counterbore, Countersink, Hole, Straight Tap, Tapered Tap,
-  Legacy, Counterbore Slot, Countersink Slot, Slot) · **Standard** (ANSI Inch/Metric, ISO, DIN,
-  JIS …; the owner uses **AS** [O]) · **Type** (fastener) · **Hole Specifications** (Size, Fit
-  Close/Normal/Loose, Show custom sizing) · **End Condition** (Blind, Through All, Up To Next,
-  Up To Vertex, Up To Surface, Offset From Surface; depth, tip angle) · **Options** (head
-  clearance, near/far side countersink, cosmetic thread, thread class) · **Feature Scope**.
+- **Type tab** [H 2012–2019, B Hawk Ridge]:
+  - **Favorite**: *Apply Defaults/No Favorite* · *Add or Update a Favorite* (type a name) ·
+    *Delete* · *Save* · *Load* · favourites list.
+  - **Hole Type** (big buttons): Counterbore · Countersink · Hole · Straight Tap · Tapered Tap ·
+    Legacy Hole (pre-2000 holes) · Counterbore Slot · Countersink Slot · Slot. Then **Standard**
+    (ANSI Inch/Metric, ISO, DIN, JIS, … — the owner uses **AS** [O]) · **Type** (fastener, e.g.
+    Hex Screw, Pan Slot Head, Socket Head Cap Screw, Screw Clearances, Tapped hole) .
+  - **Hole Specifications**: **Size** · **Fit** *Close / Normal / Loose* (Cbore/Csink) · decimal
+    drill size display · **Show Custom Sizing** (override diameters, depths, angle at bottom; the
+    field turns a different colour when overridden [K]) · per-configuration sizes.
+  - **End Condition** (Reverse Direction): Blind (depth; tap: thread depth and type; **Automatically
+    Calculate Depth** — depth follows size), Through All, Up To Next, Up To Vertex, Up To Surface,
+    Offset From Surface (offset distance).
+  - **Options** (vary by type): **Head clearance** (Cbore: added above the head), **Near side
+    countersink**, **Under head countersink**, **Far side countersink** (diameter, angle); tapped:
+    **Tap drill diameter / Cosmetic thread / Remove thread** (+ **With thread callout**), thread
+    class.
+  - **Hole Callout**: Callout Value / Tolerance Type per value (2019+). [H 2019]
+  - **Feature Scope** (assemblies/multibody).
+- Positions tab: **click on a face** places a point at each click (the Point tool is active;
+  Smart Dimension and relations can be used while placing); Existing 2D Sketch. Each hole
+  type/size needs its own Hole Wizard feature. [B]
 - Tree name e.g. "CBORE for M6 Hex Head Bolt1", "M6x1.0 Tapped Hole1". [K]
+- **Advanced Hole** (2018+): Near Side / Far Side **flyouts** of stacked elements (counterbore,
+  countersink, straight, tapered, thread …), each with Element Specification; drag elements to
+  reorder; Up to Next Element end condition; customised callouts; favourites. [H 2025]
 
-## 8.4 Shell  (Insert > Features > Shell) [K — verify]
-Parameters: **Thickness**, **Faces to Remove** box, **Shell outward**, **Show preview**.
-**Multi-thickness Settings**: Multi-thickness faces box + per-face thickness (callouts).
-Errors: thickness ≥ smallest fillet radius → failure; Error Diagnostics group (Check body,
-"Go to geometry"). Tree: Shell1.
+## 8.4 Shell  (Insert > Features > Shell) [H 2012–2024]
+- **Parameters**: **Thickness** (of the faces kept) · **Faces to remove** box (become openings;
+  **no faces removed → closed hollow part**) · **Shell outward** (grow outside the original
+  envelope) · **Show preview**. Multibody parts show a **Solid Body** box until a face or body is
+  picked.
+- **Multi-thickness Settings**: **Multi-thickness Faces** box → select a listed face → set
+  **Multi-thickness(es)** value; repeat per face.
+- **Error Diagnostics** section appears when shelling fails (e.g. thickness larger than a fillet
+  radius) to locate the problem faces [H]. Tree: Shell1. [K]
 
-## 8.5 Draft  (Insert > Features > Draft) [K — verify]
-Manual / DraftXpert tabs. **Type of Draft**: Neutral Plane · Parting Line · Step Draft (Tapered
-steps / Perpendicular steps). Draft angle; Neutral Plane box (arrow for pull direction, click to
-flip); Faces to Draft box; **Face propagation** (None, Along Tangent, All Faces, Inner Faces,
-Outer Faces). Draft Analysis link. Tree: Draft1.
+## 8.5 Draft  (Insert > Features > Draft) [H 2012–2022]
+- **Manual / DraftXpert** toggle (DraftXpert for neutral plane drafts only); no toggle when
+  editing; **remembers its last used state**.
+- **Detailed Preview** (after Draft Direction is set): Highlight new or modified faces / Show only
+  new or modified bodies.
+- **Type of Draft**: **Neutral Plane** · **Parting Line** (Allow reduced angle; Direction of
+  Pull; Parting Lines with "Other Face"; Symmetrical Draft) · **Step Draft** (Tapered steps /
+  Perpendicular steps).
+- **Draft Angle** (perpendicular to the neutral plane).
+- **Neutral Plane**: planar face or plane + **Reverse direction** (arrow on the model).
+- **Faces to Draft**: box + **Face Propagation** *None · Along Tangent · All Faces · Inner Faces
+  · Outer Faces*.
+- Tree: Draft1. [K]
 
 ## 8.6 Dome, Wrap, Thread, Thicken
 - **Thicken** [H 2024]: Surface to Thicken; **Thicken Side 1 / Both Sides / Side 2** buttons

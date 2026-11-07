@@ -56,3 +56,129 @@ radius and options. [H] (Fillet help 2012–2025)
   and right-click then opens the normal menu. [B]
 - After a preview: "Right-click when the pointer changes to [OK cue] to accept the preview, or
   click [cue] to return to the preview without accepting". [H]
+
+## 1.3 Window layout (SOLIDWORKS 2024–2026)
+
+Top to bottom [K unless marked; owner runs **Simplified Interface** + dark theme [O]]:
+- **Menu bar** (title strip): SOLIDWORKS logo/menu flyout (pin it to show File, Edit, View,
+  Insert, Tools, Window, Help as a classic menu), **Quick Access** tools (New, Open, Save, Print,
+  Undo, Redo, Select, Rebuild, File Properties, Options), document name, **search box**
+  (Search Commands / Help / Files and Models), help flyout, user/3DEXPERIENCE. [H "Displaying
+  the Quick Access Tools": shown in the Menu Bar or on the left of the CommandManager]
+- **CommandManager**: context tabs — Part: **Features · Sketch · Markup · Evaluate · MBD
+  Dimensions · SOLIDWORKS Add-Ins · MBD · Analysis Preparation** (+ Sheet Metal, Weldments,
+  Mold, Surfaces, Direct Editing when enabled); Assembly: **Assembly · Layout · Sketch · Markup
+  · Evaluate · …**; Drawing: **Drawing · Annotation · Sketch · Markup · Evaluate · Sheet
+  Format**. Buttons with text below icons ("Use Large Buttons with Text"), flyouts with ▾.
+  Right-click a tab > **Tabs** (show/hide), **Use Large Buttons with Text**, **Customize
+  CommandManager**. Simplified Interface shows an abridged set [O].
+- **Graphics area** with, overlaid: **FeatureManager flyout** (when a PM covers the tree),
+  **Heads-up View toolbar** (top centre), **Confirmation Corner** (top right while a PM/sketch is
+  open), **Selection breadcrumbs** (top left when something is selected), **reference triad**
+  (bottom left), optional **View Cube** (owner: off [O]).
+- **Manager Pane** (left): tabs **FeatureManager design tree · PropertyManager ·
+  ConfigurationManager · DimXpertManager · DisplayManager** (+ add-ins: CAM, Simulation …);
+  2026 lets you choose which tabs appear (customizable Manager Pane tabs). **F9** toggles the
+  pane. A split bar divides it into two panels. [H r_pm_overview]
+- **Task Pane** (right, collapsible): SOLIDWORKS Resources, Design Library, File Explorer, View
+  Palette, Appearances/Scenes/Decals, Custom Properties, 3DEXPERIENCE; Import Model (2026).
+  Pushpin keeps it open; otherwise it auto-hides when the pointer leaves.
+- **Status bar** (bottom): description of the hovered tool / measured info for the selection
+  (length of an edge, area of a face, distance between two picks), pointer XYZ in sketches,
+  sketch status, "Editing Part/Sketch …", **unit system** button (click → MMGS/IPS/… list and
+  Edit Document Units), rebuild indicator, quick tips toggle. [K]
+
+## 1.4 Context toolbars  [H 2011–2023, B SOLIDWORKS blog 2009, Solid Solutions]
+
+- Appear **when items are selected in the graphics area or FeatureManager** and **on top of the
+  right-click shortcut menu**. Introduced 2008 (parts/assemblies), drawings 2010.
+- Behaviour like Office's mini toolbar: **appears semi-transparent, becomes opaque when the
+  pointer moves onto it, fades/disappears when the pointer moves away**.
+- **Buttons are hard-coded per selection type and cannot be customised**; they are the most
+  common shortcut-menu commands.
+- Right-click while it is shown → the rest of the shortcut menu for that item.
+- Options (Tools > Customize > Toolbars > Context toolbar settings): **Show on selection** ·
+  **Show in shortcut menu** (both cleared → commands appear as text in the shortcut menu) ·
+  **Show quick configurations** · **Show quick mates** · **Show flip alignment and lock rotation
+  after quick mates** · **Show OK button** (Quick Mates: Add/Finish Mate for coincident,
+  concentric, parallel, symmetric, tangent).
+- Keyboard: Shift+F10 or the menu key opens the shortcut menu; arrows navigate; Enter runs; Esc
+  dismisses (a context toolbar on its own has no keyboard navigation). [H 2022–2023]
+- Bottom row includes **Zoom to Selection** (magnifier with =) — handy after picking a feature
+  in the tree. [B Solid Solutions]
+- Typical contents [K — to verify per selection type in a later pass]:
+  - *Planar face*: Edit Feature · Edit Sketch · **Sketch** · Hide/Show body · Isolate ·
+    Appearance · **Normal To** · Zoom to Selection · Measure / Section View / Select Other.
+  - *Edge*: Edit Feature · Edit Sketch · **Fillet** · **Chamfer** · Hide/Show · Appearance ·
+    Select Tangency / Select Loop.
+  - *Feature in tree*: Edit Feature · Edit Sketch · **Suppress / Unsuppress** · **Rollback** ·
+    Hide/Show · Appearance · Zoom to Selection.
+  - *Sketch in tree*: Edit Sketch · Hide/Show · Zoom to Selection.
+  - *Plane*: **Sketch** · Edit Feature · Hide/Show · **Normal To** · Zoom to Selection.
+  - *Sketch entities in a sketch*: valid **Add Relations** icons + Construction Geometry +
+    Smart Dimension (+ "Make Path", "Mirror" etc. depending on selection).
+  - *Component (assembly)*: Edit Part / Open Part · Hide/Show · Change Transparency · Isolate ·
+    Rebuild · **Quick Mates** row when two entities from different components are selected.
+
+## 1.5 Shortcut menus (right-click) [K]
+- Graphics area, **nothing selected**: context toolbar of *Previous Selection* etc. on top,
+  then Select Other, Zoom/Pan/Rotate (Zoom to Fit, Zoom to Area, Zoom In/Out, Rotate View, Pan,
+  Roll View), Recent Commands, Insert Sketch?, Comment, Customize Menu.
+- **While a PM is open**: **OK** and **Cancel** at the top, then items relevant to the active
+  selection box (Clear Selections, Delete), view commands, Recent Commands.
+- Menus are **truncated**: "▾" at the bottom expands to all items; **Customize Menu** lets the
+  user tick which items show.
+- **Select Other** (right-click a face): hides that face and shows a **pick list** of the faces
+  behind it; hover highlights; the pointer shows a mouse icon whose **right button = Hide** —
+  right-click more faces to hide them; Esc restores. [B Javelin 2016, GoEngineer cheat sheet]
+
+## 1.6 Selection breadcrumbs  [B Javelin 2024–2025, H 2016 "D key"]
+- Appear **top-left of the graphics area** when something is selected; show the selection in
+  context: the face → its feature → the feature's **sketch** → body → part → **mates** of the
+  part → parent assemblies up to the top level (assemblies: far left).
+- **Every crumb is selectable** (and has its own context toolbar / right-click).
+- **D** moves the breadcrumbs to the pointer when no PM/sketch is open (owner rebinds D [O]).
+
+## 1.7 Shortcut bars (S key)  [B Javelin, GoEngineer 2015]
+- **S** pops a **shortcut bar** at the pointer: a user-customisable toolbar per context —
+  Part, Assembly, Drawing, **Sketch** — with a **command search box** at the top (2016+).
+  Customised in Tools > Customize > **Shortcut Bars** (drag commands onto it). Disappears on
+  Esc, after a command, or when the pointer moves away.
+- Owner rebinds S to command #33513 [O] (to identify).
+
+## 1.8 Mouse gestures  [B Javelin 2025, owner settings [O]]
+- Hold the **right mouse button and move slightly** → a **gesture guide ring** appears with 2,
+  3, 4, 8 or 12 commands around it (Tools > Customize > Mouse Gestures: count, per-context
+  assignments for Part, Assembly, Drawing, Sketch). Drag toward a slot → the slot highlights and
+  the command runs on release. A plain right-click (no move) still opens the shortcut menu.
+- In assemblies right-drag on a component rotates it; **Alt + right-drag** gives gestures. [K]
+- Owner configuration (Guide type 3, i.e. 8 gestures) [O]:
+  - Part/assembly: L=Left, R=Right, U=Top, D=Bottom, UL=Front, UR=Trimetric, DR=Zoom to Area(?),
+    DL=Back.
+  - Sketch: L=Circle, R=Center Rectangle, U=Smart Dimension, D=Line, UL=Convert Entities,
+    UR=Sketch (exit), DR=Sketch Fillet, DL=Trim.
+
+## 1.9 Keyboard  [K defaults; O owner overrides]
+Defaults: **S** shortcut bar · **F** zoom to fit · **Space** View Orientation dialog / View
+Selector · **Ctrl+Space** View Selector · **Ctrl+1…8** Front, Back, Left, Right, Top, Bottom,
+Isometric, Normal To · **Ctrl+Shift+Z** previous view · **Shift+Z** zoom in, **Z** zoom out ·
+arrows rotate 15° (Shift+arrow 90°, Alt+left/right roll, Ctrl+arrow pan) · **Ctrl+B** rebuild ·
+**Ctrl+Q** force rebuild · **Ctrl+R** redraw · **R** recent documents · **Q** temporarily show
+planes/origins/coordinate systems · **D** confirmation corner / breadcrumbs to pointer · **E / V
+/ X** edge / vertex / face selection filters · **F5** selection filter toolbar · **F6** toggle
+filters · **Enter** repeat last command · **Tab / Shift+Tab / Ctrl+Shift+Tab** hide / show /
+show hidden components under the pointer · **Alt** (hover) hide faces? · **W** search commands
+· **H** help · **I** file search · **F9** toggle Manager Pane, **F10** toggle toolbars, **F11**
+full screen · Ctrl+C/V/X/Z/Y, Ctrl+N/O/S/P/W, Ctrl+Tab next document, Ctrl+F4 close.
+Owner overrides: C Circle, D Smart Dimension, E Extruded Boss/Base, F Fillet, M Measure, R
+Corner Rectangle, T Trim, S #33513, X #33094 [O].
+
+## 1.10 Heads-up View toolbar  [H 2012–2019 View toolbar, owner list O]
+Transparent toolbar at the top centre of every viewport: **Zoom to Fit · Zoom to Area ·
+Previous View · Section View · Dynamic Annotation Views · View Orientation (flyout: standard
+views, Normal To, Single view / Two view / Four view layouts, Link views, View Selector toggle)
+· Display Style (Shaded With Edges, Shaded, Hidden Lines Removed, Hidden Lines Visible,
+Wireframe) · Hide/Show Items (planes, axes, origins, sketches, sketch relations, dimensions,
+annotations, lights, cameras …) · Edit Appearance · Apply Scene · View Settings (RealView,
+Shadows in Shaded Mode, Ambient Occlusion, Perspective, Cartoon) · Rotate View?** Simplified
+Interface hides appearances/scenes/view settings [O summary]. Customisable via right-click.

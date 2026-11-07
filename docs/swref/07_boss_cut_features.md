@@ -115,50 +115,80 @@ Rules [H 2025 "Revolves"]:
   to show the symbol). [H]
 - Missing axis → message "select axis of revolution". [H "Check Sketch for Feature" example]
 
-PM [K — standard layout; verify names]:
-- **Axis of Revolution** selection box (centerline, line, edge, axis).
-- **Direction 1**: Reverse Direction · Revolve Type *Blind* / *Up To Vertex* / *Up To Surface* /
-  *Offset From Surface* / *Up To Body* / *Mid-Plane* · **Angle** (default 360°) · Merge result
-  (boss) .
-- **Direction 2** checkbox group (same, angle default from first).
-- **Thin Feature** checkbox: Type One-Direction / Mid-Plane / Two-Direction, thickness.
-- **Selected Contours**.
-- **Feature Scope** (cut/multibody).
-Tree names: Revolve1, Cut-Revolve1, Surface-Revolve1.
+PM "Revolve" [H 2010–2024]:
+- **Axis of Revolution** selection box (centerline, line or edge depending on feature type).
+- **Direction1**: **Reverse Direction** · **Revolve Type** — *Blind* (Direction 1 **Angle**,
+  default **360°**, measured clockwise from the sketch) · *Up To Vertex* · *Up To Surface*
+  (Face/Plane) · *Offset From Surface* (Face/Plane + Offset Distance + Reverse offset) · *Mid-Plane*
+  (angle split clockwise/counter-clockwise) · **Merge result** (boss) · **Flip side to cut**
+  (revolved cut: remove outside the profile).
+- **Direction2** (optional, checkbox; after Direction1; same options; total angle ≤ 360°;
+  picking the same entity in both directions cancels the feature).
+- **Thin Feature** (checkbox): **Type** *One-Direction* (Reverse Direction) / *Mid-Plane* /
+  *Two-Direction* (Direction 1 Thickness outward, Direction 2 Thickness inward); thickness.
+- **Selected Contours**: hover a region → it changes colour → click to add; any combination,
+  single- or multibody result.
+- **Feature Scope** (cut / multibody): All bodies / Selected bodies / Auto-select.
+- Equations allowed in numeric fields (`=`). [H 2013]
+Tree names: Revolve1, Cut-Revolve1, Surface-Revolve1. [K]
 
 ## 7.3 Swept Boss/Base · Swept Cut · Swept Surface
 
-PM [H surface sweep 2024 + K]:
-- **Profile and Path**: *Sketch Profile* (profile sketch + path) or *Circular Profile* (pick a
-  path, enter diameter — no profile sketch needed; 2016+). Cut also: *Solid Profile* (tool body
-  swept along path).
-- Path may be open or closed: sketch curves in one sketch, a curve, or model edges; **the start
-  point of the path must lie on the plane of the profile**. [H]
-- When the path extends through the profile: **Direction 1 / Direction 2 / Bidirectional**. [H]
-- **Options**: Profile orientation *Follow Path* / *Keep Normal Constant*; Profile Twist *None* /
-  *Specify Twist Value* (Degrees, Radians, **Revolutions**; closed paths need whole revolutions)
-  / *Specify Direction Vector* / *Tangent to Adjacent Faces* / *Natural* / *Follow Path and 1st
-  Guide Curve* / *Follow 1st and 2nd Guide Curves*; **Merge tangent faces**; Show preview;
-  Merge result. [H]
-- **Guide Curves** (selection box + up/down order buttons, Merge smooth faces, Show sections).
-- **Start/End Tangency**: None / Normal to Profile / Tangent to Adjacent Faces.
-- **Thin Feature**; **Curvature Display** (mesh preview, zebra stripes, curvature combs). [H]
+PM "Sweep" [H 2012–2024, B Hawk Ridge, SOLIDWORKS blog]:
+- **If the profile and path sketches are preselected, SOLIDWORKS fills both boxes.** [B]
+- **Profile and Path**: **Sketch Profile** (Profile box — closed for boss/base, open or closed
+  for surfaces; Path box) · **Circular Profile** (2016+: rod or tube along a sketch line, edge or
+  curve — path + **Diameter**, no profile sketch) · Cut only: **Solid Profile** (tool body; path
+  must be tangent-continuous and start on/in the tool body; not in assemblies; **Align with end
+  faces**).
+- Path: open or closed; sketch curves in one sketch, a curve, or model edges. **The start point of
+  the path must lie on the plane of the profile.** Neither section, path nor result may
+  self-intersect. [H]
+- When the path runs through the profile: **Direction 1 / Bidirectional / Direction 2** (2016+;
+  no guide curves or start/end tangency for bidirectional; twist per direction). [H]
+- **Guide Curves** (sketch profiles only, not bidirectional): Guide Curves box (curves must be
+  coincident with/pierce the profile) · **Move Up / Move Down** (order) · **Merge smooth faces**
+  (clear to improve performance and segment at non-curvature-continuous points) · **Show
+  Sections** (arrows step through Section Number to troubleshoot).
+- **Options**: **Profile Orientation** (2016+ split): *Follow Path* (default) / *Keep Normal
+  Constant*; **Profile Twist**: *None* / *Minimum Twist* (3D paths) / *Follow Path and First Guide
+  Curve* / *Follow First and Second Guide Curves* / *Specify Twist Value* (**Degrees / Radians /
+  Revolutions**; closed paths need whole revolutions) / *Specify Direction Vector* (plane, face,
+  line, edge, axis, vertex pair) / *Tangent to Adjacent Faces* / *Natural*. (≤2015: one
+  "Orientation/twist type" list incl. *Twist Along Path* / *Twist Along Path With Normal
+  Constant* with **Define by** Degrees/Radians/Turns, and **Path alignment type**.) **Merge
+  tangent faces** · **Show Preview** (on by default) · **Merge result** (on by default).
+- **Start and End Tangency**: Start/End tangency type *None* / *Path Tangent* (normal to the path
+  at the start/end).
+- **Thin Feature**; **Curvature Display** (Mesh preview, Zebra stripes, Curvature combs).
 - **Feature Scope** (cut).
 
 ## 7.4 Lofted Boss/Base · Lofted Cut · Lofted Surface
 
-PM [K — verify]:
-- **Profiles** selection box (order matters; up/down buttons; pick near the same corresponding
-  vertex on each profile). **Connectors** (green dots) appear on the preview; drag to change
-  alignment; right-click > Show All Connectors / Reset Connectors.
-- **Start/End Constraints**: None / Normal To Profile / Direction Vector / Tangency To Face /
-  Curvature To Face, with Draft angle, Start/End Tangent Length, Apply to all.
-- **Guide Curves** (Guide curves influence: To Next Guide / To Next Sharp / To Next Edge /
-  Global) with per-curve tangency type.
-- **Centerline Parameters** (centerline + number of sections).
-- **Sketch Tools** (Drag sketch, Undo sketch drag).
-- **Options**: Merge tangent faces, Close loft, Show preview, Merge result, Micro tolerance.
-- **Thin Feature**, **Curvature Display**, **Feature Scope** (cut).
+PM "Loft" [H 2010–2020]:
+- **Profiles**: Profile box (sketch profiles, faces or edges; **lofts follow the selection
+  order**; **for each profile click near the point from which the loft should travel** —
+  matching points connect) · **Move Up / Move Down**. Bad twist → reselect/reorder.
+  **Connectors** (points on the preview) can be dragged; right-click > Show All Connectors /
+  Reset Connectors [K].
+- **Start/End Constraints**: Start constraint / End constraint — *Default* (≥3 profiles; parabola
+  between first and last) · *None* · *Direction Vector* (+ Direction Vector box) · *Normal To
+  Profile* · *Tangency To Face* / *Curvature To Face* (attaching to existing geometry; **Next
+  Face** toggles between candidate faces) · **Draft angle** (+ Reverse Direction) · **Start/End
+  Tangent Length** · **Apply to all** (one handle per profile; cleared → handles per segment,
+  drag to change tangent length).
+- **Guide Curves**: **Guide curves influence** *To next guide* / *To next sharp* / *To next
+  edge* / *Global* · Guide Curves box · Move Up/Down · **Guide tangency type** per curve *None* /
+  *Normal to Profile* / *Direction Vector* / *Tangency to Face* (+ draft angle).
+- **Centerline Parameters**: Centerline box, **Number of Sections** slider, **Show Sections**
+  (arrows / enter a section number).
+- **Sketch Tools** (3D-sketch profiles): **Drag Sketch** mode (drag segments/points/planes of the
+  3D sketch; preview updates when the drag ends) · **Undo sketch drag** (multiple).
+- **Thin Feature**: One-Direction / Mid-Plane / Two-Direction, Thickness(es).
+- **Options**: **Merge tangent faces** · **Close loft** (joins last to first) · **Show preview**
+  (right-click toggles **Transparent Preview / Opaque Preview**) · **Merge result** · Micro
+  tolerance [K].
+- **Curvature Display** (Mesh preview, Zebra stripes, Curvature combs) · **Feature Scope** (cut).
 
 ## 7.5 Boundary Boss/Base · Boundary Cut · Boundary Surface
 

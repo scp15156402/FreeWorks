@@ -151,16 +151,27 @@ part, assembly, drawing).
 - **This Configuration / All Configurations / Specify** drop-down for configured parts. [H 2017]
 - **Enter** = Save. Values update live in the model as you spin.
 
-## 5.7 Dimension PropertyManager (selecting a dimension) [K — verify]
+## 5.7 Dimension PropertyManager (selecting a dimension) [H 2010–2025 Dimension Value / Leaders]
 
-Three tabs: **Value** · **Leaders** · **Other**.
-- Value: **Style** (favourites: apply/add/update/delete/save/load) · **Tolerance/Precision**
-  (tolerance type None/Basic/Bilateral/Limit/Symmetric/MIN/MAX/Fit…, unit precision, tolerance
-  precision) · **Primary Value** (name `D1@Sketch1`, value, **Override value**) · **Dimension
-  Text** (`<DIM>` with symbols, justification) · **Dual Dimension**.
-- Leaders: Witness/Leader display (arrows outside/inside/smart, style), **Arc Condition**
-  (First/Second arc condition: Center/Min/Max), Custom text position, Break lines.
-- Other: **Override Units**, Text Fonts (use document font), Layer, Options (Read only, Driven).
+Three tabs at the top: **Value** · **Leaders** · **Other**. With several dimensions selected only
+the common properties are shown. [H]
+- **Value**: **Style** (favourites: Apply default, Add/Update/Delete/Save/Load) ·
+  **Tolerance/Precision** (Tolerance Type list by dimension type — None, Basic, Bilateral, Limit,
+  Symmetric, MIN, MAX, Fit, Fit with tolerance, Fit (tolerance only); Maximum/Minimum Variation;
+  Classification, Hole Fit/Shaft Fit; **Show parentheses**; **Unit Precision**; **Tolerance
+  Precision**; Link precisions with model; Inward rounding) · **Primary Value** (dimension name
+  `D1@Sketch1`, **value** — changing it drives the model; **Override value** (does not update with
+  geometry; clearing restores the value, keeps the tolerance); **Reverse Direction**;
+  **Configurations** for parts/assemblies) · **Dimension Text** (text box with `<DIM>`; **Add
+  Value** to re-insert it; symbol buttons; justify) · **Dual Dimension** (both unit systems,
+  dual shown in brackets) · 2nd Tolerance/Precision.
+- **Leaders**: Witness/Leader Display (arrows outside/inside/smart, arrow style; **Radius /
+  Diameter / Linear** for radial dimensions; Parallel to Axis; arc extension line), Break Lines
+  (document gap or custom), **Custom Text Position** (Solid leader aligned text / Broken leader
+  horizontal / Broken leader aligned), **Arc Condition** — First / Second: **Center** (default) /
+  **Min** (closest) / **Max** (farthest). Dimension to inside of arc; Extend bent leader to text.
+- **Other**: **Override Units**, Text Fonts (Use document font / Font…), Layer, Options (Read
+  only, Driven). [K]
 - **Driven** dimensions (reference) are grey; an over-defining dimension prompts **"Make
   Dimension Driven?" — Make this dimension driven / Leave this dimension driving** (option
   *Prompt to set driven state*; *Set driven by default*). [H Sketch options "Over defining
@@ -177,11 +188,21 @@ Three tabs: **Value** · **Leaders** · **Other**.
   **Fastest path in SOLIDWORKS:** select entities (Ctrl/box) → the **context toolbar** next to
   the pointer shows the valid relation icons → one click adds it; the PM on the left shows the
   same buttons. [K]
-- **Display/Delete Relations PM** [K, partly built in FreeWorks 1.5.1]: **Relations** group with
-  filter *All in this sketch / Dangling / Overdefined/Not Solved / External / Defined in context
-  / Locked / Broken / Selected Entities*, list, **Information** (status), **Suppressed**,
-  **Undo last relation change**, **Delete**, **Delete All**; **Entities** group (entity list with
-  Status and Defined In, **Replace** for dangling).
+- **Display/Delete Relations PM** [H 2012–2025] (Tools > Relations > Display/Delete):
+  - **Relations**: **Filter** *All in this sketch · Dangling · Over Defining/Not Solved · External
+    · Defined In Context · Locked · Broken · Selected Entities* (the last shows the names of the
+    entities you pick). **Relations** list — selecting one highlights its entities **and its
+    relation icons** in the graphics area (all relation icons shown if View > Sketch Relations is
+    on, the selected one in another colour) and lists the entities below. **Information** status
+    (Satisfied, Driven, Dangling …; Broken/Locked for in-context). **Suppressed** (this
+    configuration; name greys, status Satisfied → Driven). **Undo last relation change**.
+    **Delete** / **Delete All**. **Repair All Dangling** (2D, not for external references).
+  - **Entities**: table **Entity · Status · Defined In** (Current Sketch / Same Model / External
+    Model; external: Owner, Assembly). **Replace** a dangling entity: pick a new entity in the
+    graphics area → Replace (status Invalid if unsuitable); **Undo last relation change**.
+  - **Configurations** (multi-config models): This configuration / All / Specify (+ All, Reset).
+  - **Options**: **Show PropertyManager when the sketch becomes over defined or unsolvable**
+    (opens e.g. the Circle PM to fix it); SketchXpert for over-defined sketches.
 - **Relation glyphs** on the entities (View > Hide/Show > Sketch Relations); click a glyph to
   select the relation; Delete removes it. [K]
 
