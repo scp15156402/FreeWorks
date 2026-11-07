@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P29 – Sketch tool panels in SW terms (Offset, Convert, Trim) + context toolbar (P32b)
+**Next part:** P35 – Windows field-test fixes (owner feedback) / open items list below
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -58,12 +58,14 @@ then P23, P25, P28 → P34.
 | P26 | Part | Equations dialog (Tools > Equations): Global Variables (VarSet, stored GV_<name>), Equations with SOLIDWORKS syntax ("D1@Sketch1" = "A" * 2) translated to FreeCAD expressions and back, D<n> numbering for sketch and feature dimensions, Add rows, Delete, Rebuild, OK/Cancel as one undo step; 7 tests; released 1.2.1 | ✅ |
 | P27 | Part | Configurations engine (configurations.py, table in a hidden VarSet, SW design-table headers D1@Sketch1 / $STATE@Feature / global vars / $DESCRIPTION), capture-on-switch = "this configuration" edits, shared unconfigured values; ConfigurationManager window (show/add/rename/delete, design table grid, add/remove column, CSV/XLSX import, CSV export); 8 tests; released 1.2.2. Docked ConfigurationManager tab: later (P30) | ✅ |
 | P28 | Sketch | Display/Delete Relations PM (SW names, entities, values, driving state, filters All/Selected/Relations/Dimensions/Driven, Delete / Delete All, sketch status Fully/Under/Over Defined); replaces the old "Delete All Relations" mapping. Add Relations stays the filtered relation menu; Fully Define Sketch: not in FreeCAD | 🟡 |
-| P29 | Sketch | Offset/Convert/Trim PM details, v1.4 release | ⬜ |
+| P29 | Sketch | Sketch panel in SW terms: Relations, Sketch Entities, Sketch Status, Parameters (tool settings), Offset "Add dimensions" / "Corner type", solver status Fully / Under / Over Defined; released 1.5.2 | ✅ |
 | P30 | GUI | ConfigurationManager as a third tab next to FeatureManager / PropertyManager (done). Tree restructuring (Annotations, Material node, Solid Bodies folder) and a draggable rollback bar: open — FreeCAD's tree shows the document structure and has no rollback bar; labels can't carry (-) prefixes because equations reference labels | 🟡 |
 | P31 | GUI | Green ✓ / red ✗ on every task panel, SW titles and terms (pmskin); FreeWorks' own PMs styled. Pushpin: open | 🟡 |
 | P32 | GUI | Confirmation corner (✓ / ✗ top-right of the graphics area while a PM or sketch is open; Options toggle). Selection context toolbar: open | 🟡 |
 | P33 | GUI | Tools > Options: System Options (FreeWorks options, reset, FreeCAD preferences) and Document Properties (drafting standard ISO/ANSI → sheet format + projection angle; units MMGS/CGS/MKS/IPS stored in the document's UnitSystem + decimals; Edit Material); gesture wheel built once (no widget creation in the mouse filter); released 1.5.1 | ✅ |
-| P34 | GUI | Polish pass + v1.5 release | ⬜ |
+| P34 | GUI | Polish pass: CLAUDE.md project map for all new modules, docs, stress run; v1.5.x released | ✅ |
+| P35 | Install | Windows field test of get/install/uninstall one-liners (needs the owner) | ⏳ |
+| P36 | GUI | Open items: draggable rollback bar, Material/Solid Bodies nodes in the tree, selection context toolbar, Add Relations PM, hole callout, auto balloon, revision table, PropertyManager pushpin | ⬜ |
 
 ## Known issues / owner feedback
 - GitHub: Claude sessions can push **branches** (`main`, `stable`) but not tags (403). Releases = push to `stable`.
@@ -74,6 +76,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P29, P34 | Sketch panel terms, docs; released 1.5.2. |
 | 2026-11-07 | P28, P33 | Display/Delete Relations, Options/Document Properties, gesture wheel reuse; 154 checks incl. stress; released 1.5.1. |
 | 2026-11-07 | P30–P32 | ConfigurationManager tab, confirmation corner, panel polish; **v1.5.0 released**. |
 | 2026-11-07 | P20–P21 | Model Items, centre marks, display styles; released 1.4.1. |

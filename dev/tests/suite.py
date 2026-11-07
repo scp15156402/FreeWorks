@@ -1186,6 +1186,26 @@ def t_relations_check():
     p.delete()
     record("relations: delete selected", len(sk.Constraints) == 8 and p.table.topLevelItemCount() == 8, len(sk.Constraints))
     p.close()
+    from freeworks import pmskin
+    root = pmskin._task_root()
+    texts = set()
+    if root is not None:
+        for w in root.findChildren(QtWidgets.QLabel):
+            texts.add(w.text())
+        for w in root.findChildren(QtWidgets.QAbstractButton):
+            texts.add(w.text())
+    for _ in range(3):
+        pmskin._pass()
+        QtWidgets.QApplication.processEvents()
+    texts = set()
+    if root is not None:
+        for w in root.findChildren(QtWidgets.QLabel):
+            texts.add(w.text())
+        for w in root.findChildren(QtWidgets.QAbstractButton):
+            texts.add(w.text())
+    blob = " | ".join(sorted(t for t in texts if t and ("onstrain" in t or "reedom" in t or "Defined" in t or "Relations" in t)))
+    record("sketch panel in SOLIDWORKS terms (Relations, Under Defined)", "Under Defined" in blob and "Under constrained" not in blob,
+           blob[:600])
     Gui.ActiveDocument.resetEdit()
     App.closeDocument(doc.Name)
 

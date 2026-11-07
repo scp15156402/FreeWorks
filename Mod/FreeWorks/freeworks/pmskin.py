@@ -53,11 +53,26 @@ HOLE = {
     "Base profile types": "Positions from", "Switch direction": "Reverse Direction", "Thread Depth Type": "Thread end condition",
     "Hole depth": "Hole depth", "Custom head values": "Custom Sizing", "Custom Clearance": "Custom clearance",
 }
+SKETCH = {
+    "Constraints": "Relations", "Elements": "Sketch Entities", "Solver messages": "Sketch Status",
+    "Edit controls": "Sketch Settings", "Tool settings": "Parameters", "Add offset constraint": "Add dimensions",
+    "Join type": "Corner type", "Delete original geometries": "Delete base geometry",
+    "Show constraints": "Show relations", "Hide internal alignment": "Hide internal relations",
+    "Extended information": "Show entity details",
+}
+PHRASES = {   # partial replacements inside FreeCAD's sketch status texts
+    "Sketcher::SketchObject": [("Fully constrained", "Fully Defined"), ("Under-constrained", "Under Defined"),
+                               ("Under constrained", "Under Defined"), ("Fully-constrained", "Fully Defined"),
+                               ("Over-constrained", "Over Defined"), ("Over constrained", "Over Defined"),
+                               ("Degrees of Freedom", "degrees of freedom"), ("Degree of Freedom", "degree of freedom"),
+                               ("redundant constraints", "redundant relations"), ("conflicting constraints", "conflicting relations")],
+}
 BY_TYPE = {
     "PartDesign::Pad": EXTRUDE_BOSS, "PartDesign::Pocket": EXTRUDE,
     "PartDesign::Revolution": REVOLVE, "PartDesign::Groove": REVOLVE,
     "PartDesign::Chamfer": CHAMFER,
     "PartDesign::Hole": HOLE,
+    "Sketcher::SketchObject": SKETCH,
     "PartDesign::Fillet": {"Use all edges": "Select all edges"},
     "PartDesign::Thickness": {"Make thickness inwards": "Shell inward (clear = Shell outward)", "Thickness": "Thickness"},
     "PartDesign::LinearPattern": {"Length": "Spacing / total length", "Occurrences": "Number of Instances"},
@@ -88,6 +103,7 @@ def skin(root, typeid):
     table = dict(TITLES)
     table.update({"\0" + k.lower(): v for k, v in TITLES.items()})
     table.update(BY_TYPE.get(typeid, {}))
+    phrases = PHRASES.get(typeid, [])
     n = 0
     for w in root.findChildren(QtWidgets.QWidget):
         try:
@@ -96,6 +112,14 @@ def skin(root, typeid):
                 if m and m != w.text():
                     w.setText(m)
                     n += 1
+                elif phrases:
+                    t = w.text()
+                    t2 = t
+                    for old, new in phrases:
+                        t2 = t2.replace(old, new)
+                    if t2 != t:
+                        w.setText(t2)
+                        n += 1
             elif isinstance(w, QtWidgets.QComboBox):
                 for i in range(w.count()):
                     m = _map(w.itemText(i), table)

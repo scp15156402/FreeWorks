@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.2 - 2026-11-07
+- The sketch panel speaks SOLIDWORKS: Relations, Sketch Entities, Sketch Status ("Under Defined:
+  5 degrees of freedom", Fully Defined, Over Defined), Parameters; the Offset tool shows "Add
+  dimensions" and "Corner type".
+
 ## v1.5.1 - 2026-11-07
 - **Display/Delete Relations** (sketch): every relation and dimension of the sketch with
   SOLIDWORKS names, the entities it uses and its value; filter by selected entities, relations,
