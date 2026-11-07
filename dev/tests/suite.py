@@ -1144,6 +1144,51 @@ def t_drawings_close():
             pass
     record("drawings: close", True)
 
+
+@step(1500)
+def t_relations():
+    import Part, Sketcher
+    doc = App.newDocument("FWRel")
+    b = doc.addObject("PartDesign::Body", "Body")
+    sk = b.newObject("Sketcher::SketchObject", "Sketch")
+    sk.AttachmentSupport = [(b.Origin.OriginFeatures[3], "")]
+    sk.MapMode = "FlatFace"
+    pts = [App.Vector(0, 0, 0), App.Vector(40, 0, 0), App.Vector(40, 20, 0), App.Vector(0, 20, 0)]
+    for i in range(4):
+        sk.addGeometry(Part.LineSegment(pts[i], pts[(i + 1) % 4]))
+    for i in range(4):
+        sk.addConstraint(Sketcher.Constraint("Coincident", i, 2, (i + 1) % 4, 1))
+    sk.addConstraint(Sketcher.Constraint("Horizontal", 0))
+    sk.addConstraint(Sketcher.Constraint("Horizontal", 2))
+    sk.addConstraint(Sketcher.Constraint("Vertical", 1))
+    sk.addConstraint(Sketcher.Constraint("Vertical", 3))
+    sk.addConstraint(Sketcher.Constraint("DistanceX", 0, 1, 0, 2, 40))
+    doc.recompute()
+    Gui.ActiveDocument.setEdit(sk.Name)
+    STATE["rel_doc"] = doc.Name
+
+
+@step(1000)
+def t_relations_check():
+    from freeworks import relations
+    doc = App.getDocument(STATE["rel_doc"])
+    sk = doc.getObject("Sketch")
+    p = relations.RelationsPanel.open()
+    n_all = p.table.topLevelItemCount() if p else 0
+    p.filter.setCurrentIndex(3)
+    n_dims = p.table.topLevelItemCount()
+    st = relations.status(sk)
+    record("relations: Display/Delete lists relations with SOLIDWORKS names", n_all == 9 and n_dims == 1 and
+           p.table.topLevelItem(0).text(0).startswith("Horizontal distance"), (n_all, n_dims, p.table.topLevelItem(0).text(0)))
+    record("relations: sketch status under defined", st.startswith("Under Defined"), st)
+    p.filter.setCurrentIndex(0)
+    p.table.topLevelItem(0).setSelected(True)
+    p.delete()
+    record("relations: delete selected", len(sk.Constraints) == 8 and p.table.topLevelItemCount() == 8, len(sk.Constraints))
+    p.close()
+    Gui.ActiveDocument.resetEdit()
+    App.closeDocument(doc.Name)
+
 @step(800)
 def t_no_errors():
     import freeworks

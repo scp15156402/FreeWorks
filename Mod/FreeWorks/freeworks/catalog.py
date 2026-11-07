@@ -103,7 +103,7 @@ add("sk_rotate", "Rotate Entities", "Sketcher_Rotate", "rotate_entities", "Rotat
 add("sk_scale", "Scale Entities", "Sketcher_Scale", "scale_entities", "Scales sketch entities.", ["scale"])
 add("construction", "Construction Geometry", "Sketcher_ToggleConstruction", "construction", "Toggles selected entities between sketch and construction geometry.", ["toggle construction", "for construction"])
 add("relations", "Add Relation", "FW_AddRelation", "relations", "Adds a geometric relation between the selected entities.", ["constraint", "relation"])
-add("delete_relations", "Delete All Relations", "Sketcher_DeleteAllConstraints", "delete_relations", "Deletes all relations in the active sketch.", ["delete constraints"])
+add("delete_relations", "Display/Delete Relations", "FW_DisplayRelations", "delete_relations", "Lists the sketch relations and dimensions with their entities; deletes the selected ones or all.", ["delete constraints", "show relations", "display relations", "constraint list"])
 add("repair_sketch", "Repair Sketch", "Sketcher_ValidateSketch", "repair_sketch", "Finds and fixes sketch errors.", ["validate sketch"])
 add("normal_sketch", "Normal To Sketch", "Sketcher_ViewSketch", "normal_to_sketch", "Rotates the view normal to the sketch plane.", ["view sketch"])
 add("section_sketch", "Section View (Sketch)", "Sketcher_ViewSection", "section_view", "Shows a section through the sketch plane.", [])

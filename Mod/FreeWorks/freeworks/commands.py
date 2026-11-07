@@ -583,6 +583,7 @@ def register():
         ("rotate_component", lambda: __import__("freeworks.movepm", fromlist=["start"]).start(True), "FW_RotateComponent", "doc"),
         ("replace_components", lambda: __import__("freeworks.replace", fromlist=["start"]).start(), "FW_ReplaceComponents", "doc"),
         ("sub_rigid", toggle_rigid, "FW_ToggleRigid", "doc"),
+        ("delete_relations", lambda: __import__("freeworks.relations", fromlist=["RelationsPanel"]).RelationsPanel.open(), "FW_DisplayRelations", "sketch"),
         ("model_items", lambda: __import__("freeworks.drawing", fromlist=["cmd_model_items"]).cmd_model_items(), "FW_ModelItems", "always"),
         ("dv_hlr", lambda: __import__("freeworks.drawing", fromlist=["cmd_display_style"]).cmd_display_style("hlr")(), "FW_ViewHLR", "always"),
         ("dv_hlv", lambda: __import__("freeworks.drawing", fromlist=["cmd_display_style"]).cmd_display_style("hlv")(), "FW_ViewHLV", "always"),
