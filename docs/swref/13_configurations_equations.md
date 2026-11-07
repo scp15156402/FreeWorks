@@ -43,13 +43,25 @@ click > Unlink Value.
   bold/green check; **double-click to activate**. Right-click the part name > **Add
   Configuration…**; right-click a configuration > Show Configuration, **Properties**, Add Derived
   Configuration, Delete, Copy/Paste, **Configuration Publisher**.
-- **Add Configuration PM**: **Configuration Properties** — Configuration name, Description, *Use
-  in bill of materials*, Comment, Custom Properties…; **Bill of Materials Options** — Part number
-  displayed when used in BOM: *Document Name / Configuration Name / Link to Parent Configuration /
-  User Specified Name*; Child component display when used as subassembly; **Advanced Options** —
-  *Suppress new features and mates*, *Hide new components*, *Suppress new components*, *Use
-  configuration specific color* + Color…, *Add Rebuild/Save Mark*; **Parent/Child Options**
-  (derived).
+- **Add Configuration PM** (title "Add Configuration" when creating, "Configuration Properties"
+  when editing) [H 2013–2024]: **Configuration Properties** — Configuration name, Description
+  (+ *Use in bill of materials*: description takes precedence in BOMs), Comment, **Custom
+  Properties…** (editing only: configuration-specific properties) · **Bill of Materials Options**
+  — *Part number displayed when used in a bill of materials*: Document Name / Configuration Name /
+  Link to Parent Configuration / User Specified Name (default from Document Properties >
+  Configurations); *Set 'Exclude from bill of materials' when inserted into assembly*; *Child
+  component display when used as a subassembly* (Show / Hide / Promote; assemblies) · **Advanced
+  Options** — **Suppress features** (parts: new features added in other configurations are
+  suppressed here) / **Suppress new features and mates** (assemblies), *Hide new components*,
+  *Suppress new components*, **Use configuration specific color** (+ Color…; shaded mode unless
+  "apply same colour to wireframe, HLR and shaded"), **Add Rebuild on Save Mark** · **Parent/Child
+  Options** (assemblies, new configuration: also add it to selected components).
+- **Configuration Table** dialog (2022+; System Options > General > *Create configuration tables
+  on open*): rows = configurations (active in bold, "<Creates a new configuration>" row), sections
+  Sketches and Features (values, suppression), Components, Custom Properties, Parameters (Suppress
+  new features, Fix/Float, Child components in BOM, Exclude from BOM on insert); add columns by
+  double-clicking items in the graphics area or tree; blocked columns coloured ("Dimensions,
+  Controlled by Design Table" colour). [H 2022–2024]
 - **Configure Feature / Configure Dimension** (right-click): **Modify Configurations** table —
   rows = configurations, columns = parameters (dimensions, suppression), add parameters by
   clicking dimensions, save **table views**, *Add new configuration* row.
@@ -57,14 +69,25 @@ click > Unlink Value.
   All configurations / Specify configurations** (Modify box drop-down, feature properties).
 - Configuration-specific values: in the dimension's Primary Value / Modify box drop-down.
 
-## 13.4 Design tables  [K — verify]
-Insert > Tables > **Design Table** PM:
-- **Source**: *Blank* · *Auto-create* (from existing configurations/parameters) · *From file*
-  (Browse…, **Link to file**).
-- **Edit Control**: *Allow model edits to update the design table* · *Block model edits that
-  would update the design table*.
-- **Options**: *New parameters* · *New configurations* · *Warn when updating design table* ·
-  *Enable cell drop-down lists*.
+## 13.4 Design tables  [H 2011–2025, B Hawk Ridge, SOLIDWORKS World 2012 deck]
+Insert > Tables > **(Excel) Design Table** PM (renamed "Excel Design Table" in 2025 help):
+- **Source**: *Blank* (empty table; then a dialog lets you pick dimensions/parameters to add) ·
+  *Auto-create* (loads all configured parameters and values; with only a Default configuration a
+  dimension picker appears) · *From file* (Browse…; **Link to file** keeps the external Excel
+  linked; out-of-date linked tables update per System Options > External References: *Prompt /
+  Model / Excel File*). Excel layout for external files: A1/A2 blank, configuration names from
+  A3 down.
+- **Edit Control**: *Allow model edits to update the design table* (model changes flow into the
+  table on next edit) · *Block model edits that would update the design table* (a warning is
+  shown on attempt).
+- **Options**: *New parameters* (new column when a parameter is configured, e.g. suppressing a
+  feature in one configuration) · *New configurations* (new row when a configuration is added) ·
+  *Warn when updating design table* · *Enable cell drop-down lists*. Options other than Source can
+  be changed later via Edit Feature. [B]
+- Editing: **Edit Table** = Excel opens **inside the graphics area** and the SOLIDWORKS ribbons are
+  replaced by Excel's; **Edit Table in New Window** = separate Excel window. Double-click a
+  feature (while editing) to add its parameters. Clicking outside / ✓ applies the table; a
+  message lists generated configurations. [B SWW 2012][H]
 - OK → an **embedded Excel** sheet opens in the graphics area: row 1 title, row 2 headers
   (`D1@Sketch1`, `$STATE@Fillet1`, `$PARTNUMBER`, `$COLOR`, `$DESCRIPTION`, `$PRP@Name`,
   `$CONFIGURATION@Component<1>` …), column A configuration names; an **Add Rows and Columns**
