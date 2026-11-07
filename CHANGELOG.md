@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.4 - 2026-11-07
+Assembly FeatureManager.
+- Components are named like SOLIDWORKS instances: `Bracket<1>`, `Bracket<2>`; a fixed component
+  shows `(f) Bracket<1>`, and loses the prefix when you float it.
+- FreeCAD's "Joints" folder is the **Mates** folder; joints made with FreeCAD's own joint tools get
+  SOLIDWORKS mate names too (`Hinge1 (Shaft<1>,Base<1>)`).
+- **Edit Mate** (right-click a mate): opens the Mate PropertyManager on that mate; change its type,
+  distance/angle or alignment in place, or cancel to leave it as it was.
+- Smoother: the command search list is built once in idle time, and the CommandManager tabs of
+  parts, assemblies and drawings are prepared in the background after start-up.
+
 ## v1.1.3 - 2026-11-07
 More mates in the Mate PropertyManager.
 - **Advanced Mates:** Width (pick two groove faces, then two tab faces - the tab is centred),

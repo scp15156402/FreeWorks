@@ -563,6 +563,7 @@ def register():
         ("tangent_arc", tangent_arc, "FW_TangentArc", "sketch"),
         ("relations", add_relation, "FW_AddRelation", "sketch"),
         ("mate", mate_menu, "FW_Mate", "doc"),
+        ("edit_mate", lambda: __import__("freeworks.matepm", fromlist=["edit_selected"]).edit_selected(), "FW_EditMate", "doc"),
         ("mass_props", mass_properties, "FW_MassProperties", "doc"),
         ("material", edit_material, "FW_EditMaterial", "doc"),
         ("section_props", section_properties, "FW_SectionProperties", "doc"),

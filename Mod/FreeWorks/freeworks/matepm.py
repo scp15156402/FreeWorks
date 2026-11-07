@@ -29,8 +29,8 @@ QGroupBox QToolButton:checked { border-color: #2F7BE5; background: #D6E6FC; }
 _PANEL = {"p": None}
 
 
-def start():
-    """FW_Mate entry point."""
+def start(edit=None):
+    """FW_Mate entry point; edit = an existing mate (joint) to edit."""
     doc = App.ActiveDocument
     asm = mates.assembly_of(doc)
     if asm is None:
@@ -44,12 +44,22 @@ def start():
     for s in Gui.Selection.getSelectionEx("", 0):
         for n, p in zip(s.SubElementNames, s.PickedPoints or [None] * len(s.SubElementNames)):
             pre.append((s.Object, n, p))
-    panel = MatePanel(asm)
+    panel = MatePanel(asm, edit)
     _PANEL["p"] = panel
     Gui.Control.showDialog(panel)
     Gui.Selection.clearSelection()
-    for root, sub, pos in pre[:2]:
-        panel.add_selection(root, sub, pos)
+    if edit is None:
+        for root, sub, pos in pre[:2]:
+            panel.add_selection(root, sub, pos)
+
+
+def edit_selected():
+    """FW_EditMate: edit the selected mate in the Mate PropertyManager."""
+    for o in Gui.Selection.getSelection():
+        if hasattr(o, "JointType") and getattr(o, "Reference2", None):
+            start(edit=o)
+            return
+    QtWidgets.QMessageBox.information(Gui.getMainWindow(), "Edit Mate", "Select a mate in the Mates folder first.")
 
 
 @harden
@@ -142,8 +152,9 @@ class MateToolbar(QtWidgets.QFrame):
 class MatePanel:
     """FreeCAD task panel (= PropertyManager) for mates."""
 
-    def __init__(self, asm):
+    def __init__(self, asm, edit=None):
         self.asm = asm
+        self.edit_name = None
         self.doc = asm.Document
         self.refs = []
         self.joint = None
@@ -162,7 +173,37 @@ class MatePanel:
         except Exception:
             pass
         Gui.Selection.addObserver(self.obs)
+        if edit is not None:
+            self._begin_edit(edit)
         self.sync()
+
+    def _begin_edit(self, j):
+        self.edit_name = j.Name
+        self.refs = [[r[0], list(r[1])] for r in (j.Reference1, j.Reference2)]
+        self.mate = mates.mate_of(j)
+        val, neg = None, False
+        if self.mate == "distance":
+            d = mates._num(j.Distance)
+            val, neg = abs(d), d < 0
+        elif self.mate == "angle":
+            val = mates._num(j.Angle)
+        elif self.mate == "gear":
+            val = mates._num(j.Distance2) / max(mates._num(j.Distance), 1e-9)
+        elif self.mate == "rack_pinion":
+            val = 2 * mates._num(j.Distance)
+        elif self.mate == "screw":
+            val = mates._num(j.Distance)
+        if val is not None:
+            self.value.blockSignals(True)
+            self.value.setValue(val)
+            self.value.blockSignals(False)
+            self._value_for = self.mate
+        self.flip_dim.blockSignals(True)
+        self.flip_dim.setChecked(neg)
+        self.flip_dim.blockSignals(False)
+        self.doc.openTransaction("Edit Mate")
+        self.joint = j
+        self.form.setWindowTitle("Mate: " + j.Label)
 
     # ---------------------------------------------------------------- UI
     def _build(self):
@@ -342,6 +383,10 @@ class MatePanel:
     def add_selection(self, root, sub, pos):
         if self.busy or root is None:
             return
+        if self.edit_name:
+            self.hint.setText("Editing a mate: change its type or values, or close the PropertyManager.")
+            Gui.Selection.clearSelection()
+            return
         need = 4 if self.width_mode else 2
         if len(self.refs) >= need:
             self.commit()                       # one pick too many: keep the current mate, start the next
@@ -385,7 +430,11 @@ class MatePanel:
                 self.doc.abortTransaction()
                 self.joint = None
             self.mate = mate
-            self.doc.openTransaction("Mate")
+            self.doc.openTransaction("Edit Mate" if self.edit_name else "Mate")
+            if self.edit_name:
+                orig = self.doc.getObject(self.edit_name)
+                if orig is not None:
+                    self.doc.removeObject(orig.Name)
             if mate in mates.VALUE and (mate != self._value_for or self.value.value() == 0):
                 self.value.blockSignals(True)
                 self.value.setValue(mates.default_value(mate, self.refs))
@@ -413,6 +462,9 @@ class MatePanel:
         self.sync()
 
     def set_type(self, mate):
+        if self.edit_name and mate in ("width",) + LIMITS:
+            self.hint.setText("Width and limit mates are added as new mates, not by editing this one.")
+            return
         if mate == "width" and not self.width_mode:
             if self.joint is not None:
                 self.doc.abortTransaction()
@@ -465,15 +517,28 @@ class MatePanel:
         self.mate = None
         self.refs = []
         self.width_mode = False
+        if self.edit_name:
+            self.edit_name = None
+            self._close_soon()
         self.toolbar.hide()
         Gui.Selection.clearSelection()
         self.sync()
         return True
 
+    def _close_soon(self):
+        self._cleanup()
+        QtCore.QTimer.singleShot(0, Gui.Control.closeDialog)
+
     def discard(self):
         if self.joint is not None:
             self.doc.abortTransaction()
             self.doc.recompute()
+        if self.edit_name:
+            self.edit_name = None
+            self.joint = None
+            self.toolbar.hide()
+            self._close_soon()
+            return
         self.joint = None
         self.mate = None
         self.refs = []
@@ -490,16 +555,25 @@ class MatePanel:
 
     def accept(self):
         self.commit()
+        self.edit_name = None
         self._cleanup()
         self.asm.recompute(True)
         return True
 
     def reject(self):
+        if self.edit_name and self.joint is not None:
+            self.doc.abortTransaction()
+            self.doc.recompute()
+            self.joint = None
+            self.edit_name = None
         self.discard()
         self._cleanup()
         return True
 
     def _cleanup(self):
+        if getattr(self, "_cleaned", False):
+            return
+        self._cleaned = True
         try:
             Gui.Selection.removeObserver(self.obs)
         except Exception:
@@ -515,3 +589,10 @@ class MatePanel:
         except Exception:
             pass
         _PANEL["p"] = None
+        doc = self.doc
+
+        def _names():
+            from . import asmtree
+            if doc.Name in App.listDocuments():
+                asmtree.sweep(doc)
+        QtCore.QTimer.singleShot(0, _names)

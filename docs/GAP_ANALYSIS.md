@@ -56,11 +56,11 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 ## 5. Assemblies
 | ID | FreeCAD | FreeWorks | Gap | Plan |
 |---|---|---|---|---|
-| R-AS-1 Insert components | ✅ `Assembly_InsertLink`, first part grounded, `InsertNewPart` (1.1) | 🟡 mapped | Begin Assembly / Insert Components PM, instance names `Part<1>`, (f) prefix | **P16** |
+| R-AS-1 Insert components | ✅ `Assembly_InsertLink`, first part grounded, `InsertNewPart` (1.1) | 🟡 mapped; instance names `Part<1>` + `(f)` (1.1.4) | Begin Assembly / Insert Components PM, instance names `Part<1>`, (f) prefix | **P16** |
 | R-AS-2 Standard mates | 🟡 joints: Fixed (=Lock), Revolute, Cylindrical, Slider, Ball, **Distance** (0 = coincident/tangent/concentric by geometry pair), Parallel, Perpendicular, Angle; flip via *Reverse* | ✅ 1.1.2 Mate PM + pop-up toolbar | **Mate PM** that takes two selections and picks the SW mate (coincident/concentric/tangent/distance/angle…), alignment aligned/anti-aligned, pop-up mate toolbar | **P13, P14** |
 | R-AS-3 Advanced mates | 🟡 limits on Cylindrical/Slider (length) and Revolute/Cylindrical (angle); ❌ width, symmetric, profile center, path, linear coupler | 🟡 1.1.3: Width (static), Limit Distance/Angle on motion joints | Limit mates via joint limits; **width / symmetric / profile center** = own constructions (computed distance joints) | **P15** |
 | R-AS-4 Mechanical mates | 🟡 Gears, Belt, RackPinion, Screw; Revolute ≈ Hinge; ❌ cam, slot, universal joint | ✅ 1.1.3 Hinge, Gear, Rack Pinion, Screw in Mate PM | Hinge = Revolute (+ angle limit); slot ≈ Slider + limits; cam/universal ❌ (document) | P15 |
-| R-AS-5 Mates folder | 🟡 "Joints" group | ⬜ | rename to *Mates*, show mates under components, over-defined warnings | P16 |
+| R-AS-5 Mates folder | 🟡 "Joints" group | ✅ 1.1.4 Mates folder, SW mate names, Edit Mate (no per-component mate list) | rename to *Mates*, show mates under components, over-defined warnings | P16 |
 | R-AS-6 Move/Rotate, collision | 🟡 drag with solver; `Std_TransformManip`; ❌ collision detection | 🟡 mapped | **Collision detection while dragging** (own: stop on first boolean common > ε, highlight faces) | **P17** |
 | R-AS-7 Sub-assemblies | ✅ assembly in assembly (rigid); flexible ❌ | 🟡 | insert sub-assembly from file, rigid/flexible wording | P17 |
 | R-AS-8 Replace components | 🟡 `Std_LinkReplace` (joints may lose references) | ⬜ | Replace Components PM that re-maps joint references by face/edge type | **P17** |

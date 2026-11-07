@@ -433,6 +433,8 @@ class TopBar(QtWidgets.QWidget):
         lay.addWidget(self.search)
         self.model = QtGui.QStandardItemModel(self)
         self.comp = QtWidgets.QCompleter(self.model, self)
+        self._cmd_model = None
+        self._other_model = None
         self.comp.setCaseSensitivity(Qt.CaseInsensitive)
         self.comp.setFilterMode(Qt.MatchContains)
         self.comp.setMaxVisibleItems(16)
@@ -446,31 +448,54 @@ class TopBar(QtWidgets.QWidget):
         self.mode_name = m
         self.search.setPlaceholderText({"commands": "Search Commands", "files": "Search Files and Models",
                                         "help": "Search FreeCAD Help"}[m])
-        self.model.clear()
         if m == "commands":
-            seen = set()
-            for k, e in catalog.C.items():
-                if catalog.first_existing(e) is None:
-                    continue
-                it = QtGui.QStandardItem(entry_icon(k), e["label"])
-                it.setData(k, Qt.UserRole)
-                it.setToolTip(e["tip"])
-                self.model.appendRow(it)
-                for a in e["aliases"]:
-                    t = "%s  →  %s" % (a, e["label"])
-                    if t in seen:
-                        continue
-                    seen.add(t)
-                    it = QtGui.QStandardItem(entry_icon(k), t)
-                    it.setData(k, Qt.UserRole)
+            if self._cmd_model is None:
+                QtCore.QTimer.singleShot(0, self._build_cmd_model)     # one-time, after startup work
+                return
+            self.model = self._cmd_model
+        else:
+            if self._other_model is None:
+                self._other_model = QtGui.QStandardItemModel(self)
+            self.model = self._other_model
+            self.model.clear()
+            if m == "files":
+                from .widgets import NewDocumentDialog
+                for f in NewDocumentDialog.recent():
+                    it = QtGui.QStandardItem(icon("new_document"), os.path.basename(f))
+                    it.setData("file:" + f, Qt.UserRole)
+                    it.setToolTip(f)
                     self.model.appendRow(it)
-        elif m == "files":
-            from .widgets import NewDocumentDialog
-            for f in NewDocumentDialog.recent():
-                it = QtGui.QStandardItem(icon("new_document"), os.path.basename(f))
-                it.setData("file:" + f, Qt.UserRole)
-                it.setToolTip(f)
-                self.model.appendRow(it)
+        if self.comp.model() is not self.model:
+            self.comp.setModel(self.model)
+
+    @safe_slow
+    def _build_cmd_model(self):
+        """The command list never changes during a session: build it once (≈60 ms, icons included)."""
+        if self._cmd_model is not None:
+            return
+        cm = QtGui.QStandardItemModel(self)
+        rows, seen = [], set()
+        for k, e in catalog.C.items():
+            if catalog.first_existing(e) is None:
+                continue
+            ic = entry_icon(k)
+            it = QtGui.QStandardItem(ic, e["label"])
+            it.setData(k, Qt.UserRole)
+            it.setToolTip(e["tip"])
+            rows.append(it)
+            for a in e["aliases"]:
+                t = "%s  →  %s" % (a, e["label"])
+                if t in seen:
+                    continue
+                seen.add(t)
+                it = QtGui.QStandardItem(ic, t)
+                it.setData(k, Qt.UserRole)
+                rows.append(it)
+        cm.invisibleRootItem().appendRows(rows)
+        self._cmd_model = cm
+        if self.mode_name == "commands":
+            self.model = cm
+            self.comp.setModel(cm)
 
     def on_pick(self, idx):
         d = idx.data(Qt.UserRole)
@@ -678,12 +703,17 @@ class CommandManager(QtWidgets.QWidget):
         self.update_states()
 
     def prebuild(self, i=0):
-        """Build the remaining tabs of the current environment in idle time, one per
-        timer tick, so the first click on a tab never stutters."""
-        if not self.tabset or i >= len(self.tabset):
+        """Build the tabs of every environment (current one first: part, assembly, drawing) in idle
+        time, one per timer tick, so neither the first click on a tab nor the first switch to an
+        assembly or drawing ever stutters."""
+        if i == 0:
+            kinds = [self.kind] + [k for k in ("part", "assembly", "drawing") if k != self.kind]
+            self._pre = [(k, name, spec) for k in kinds if k for name, spec in self.tabs_for(k)]
+        todo = getattr(self, "_pre", [])
+        if i >= len(todo):
             return
-        name, spec = self.tabset[i]
-        pk = (self.kind, name)
+        kind, name, spec = todo[i]
+        pk = (kind, name)
         if pk not in self.panels:
             w, btns = self.build_panel(name, spec)
             self.panels[pk] = (w, btns)
@@ -696,6 +726,7 @@ class CommandManager(QtWidgets.QWidget):
             w.deleteLater()
         self.panels = {}
         self.set_context(context.current(), force=True)
+        QtCore.QTimer.singleShot(300, self.prebuild)
 
     def update_states(self):
         if not self.isVisible() or not QtWidgets.QApplication.activeWindow():

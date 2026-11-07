@@ -50,6 +50,8 @@ def items(recipient):
             top += ["edit_sketch", "extrude", "extrude_cut", "revolve", "|", "normal_to", "toggle_vis"]
         elif o.isDerivedFrom("PartDesign::Plane") or o.TypeId == "App::Plane":
             top += ["sketch", "normal_to", "|", "plane", "toggle_vis"]
+        elif hasattr(o, "JointType"):
+            top += ["edit_mate", "suppress", "|", "zoom_sel"]
         elif o.isDerivedFrom("PartDesign::Body"):
             top += ["material", "mass_props", "|", "toggle_vis", "appearance", "zoom_sel"]
         elif o.isDerivedFrom("PartDesign::Feature") or o.isDerivedFrom("Part::Feature"):

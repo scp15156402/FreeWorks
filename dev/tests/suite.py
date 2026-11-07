@@ -156,7 +156,11 @@ def t_stability_guards():
     def _fw_selftest_slow():
         time.sleep(0.09)
     n_slow = len(freeworks.STATS["slow"])
+    ready = freeworks.STATS.get("ready_at")
+    record("stability: startup grace period ends", ready is not None, ready)
+    freeworks.STATS["ready_at"] = 0           # outside the startup grace period for this check
     _fw_selftest_slow()
+    freeworks.STATS["ready_at"] = ready
     record("stability: slow callbacks are detected", len(freeworks.STATS["slow"]) == n_slow + 1)
     freeworks.STATS["slow"].pop()
     cm = shell._S["cm"]
@@ -723,6 +727,84 @@ def t_mates_advanced():
     p.accept()
     Gui.Control.closeDialog()
     QtWidgets.QApplication.processEvents()
+    App.closeDocument(doc.Name)
+
+
+@step(1200)
+def t_assembly_tree():
+    from freeworks import asmtree, mates, matepm
+    import JointObject, UtilsAssembly
+    doc = App.newDocument("FWTree")
+
+    def body(name, dims):
+        b = doc.addObject("PartDesign::Body", name)
+        f = b.newObject("PartDesign::AdditiveBox", name + "F")
+        f.Length, f.Width, f.Height = dims
+        b.Visibility = False
+        return b
+    base = body("Base", (40, 40, 10))
+    blk = body("Block", (10, 10, 10))
+    asm = doc.addObject("Assembly::AssemblyObject", "Assembly")
+    asm.Type = "Assembly"
+    l1 = asm.newObject("App::Link", "Link")
+    l1.LinkedObject = base
+    l1.Label = "Base"
+    l2 = asm.newObject("App::Link", "Link001")
+    l2.LinkedObject = blk
+    l2.Placement.Base = App.Vector(60, 0, 20)
+    l3 = asm.newObject("App::Link", "Link002")
+    l3.LinkedObject = blk
+    l3.Label = "Block001"
+    l3.Placement.Base = App.Vector(90, 0, 20)
+    doc.recompute()
+    gj = UtilsAssembly.getJointGroup(asm).newObject("App::FeaturePython", "GroundedJoint")
+    JointObject.GroundedJoint(gj, l1)
+    JointObject.ViewProviderGroundedJoint(gj.ViewObject)
+    Gui.Control.closeDialog()
+    doc.recompute()
+    asmtree.sweep(doc)
+    labels = sorted(o.Label for o in (l1, l2, l3))
+    record("assembly tree: instance names + (f) for fixed", labels == ["(f) Base<1>", "Block<1>", "Block<2>"], labels)
+    record("assembly tree: Joints folder called Mates", UtilsAssembly.getJointGroup(asm).Label == "Mates", UtilsAssembly.getJointGroup(asm).Label)
+    jg = UtilsAssembly.getJointGroup(asm)
+    j = jg.newObject("App::FeaturePython", "Joint")
+    JointObject.Joint(j, JointObject.JointTypes.index("Revolute"))
+    JointObject.ViewProviderJoint(j.ViewObject)
+    j.Label = "Revolute"
+    comp, sub = UtilsAssembly.getComponentReference(asm, asm, "Link.BaseF.Face6")
+    comp2, sub2 = UtilsAssembly.getComponentReference(asm, asm, "Link001.BlockF.Face5")
+    j.Proxy.setJointConnectors(j, [[comp, [sub, sub]], [comp2, [sub2, sub2]]])
+    doc.recompute()
+    asmtree.sweep(doc)
+    record("assembly tree: FreeCAD joint renamed like a SOLIDWORKS mate", j.Label.startswith("Hinge1 (Base<1>,Block<1>)"), j.Label)
+    doc.removeObject(j.Name)
+    doc.recompute()
+    Gui.Selection.clearSelection()
+    matepm.start()
+    p = matepm._PANEL["p"]
+    p.add_selection(asm, "Link.BaseF.Face6", (20, 20, 10))
+    p.add_selection(asm, "Link001.BlockF.Face5", (65, 5, 20))
+    p.accept()
+    Gui.Control.closeDialog()
+    QtWidgets.QApplication.processEvents()
+    mate = [o for o in jg.Group if getattr(o, "MateType", "")][0]
+    record("mate label uses component names without (f)", mate.Label == "Coincident1 (Base<1>,Block<1>)", mate.Label)
+    Gui.Selection.clearSelection()
+    Gui.Selection.addSelection(mate)
+    matepm.edit_selected()
+    p = matepm._PANEL["p"]
+    ok = p is not None and p.edit_name == mate.Name and p.mate == "coincident"
+    record("edit mate: opens the PropertyManager on the mate", ok, p and (p.edit_name, p.mate))
+    if ok:
+        p.set_type("distance")
+        p.value.setValue(12.0)
+        p.commit()
+        for _ in range(5):
+            QtWidgets.QApplication.processEvents()
+        js = [o for o in jg.Group if getattr(o, "MateType", "")]
+        record("edit mate: type/value changed in place, PM closed", len(js) == 1 and js[0].MateType == "distance"
+               and abs(_bbl(l2)[2] - 22) < 0.05 and not Gui.Control.activeDialog(), ([o.Label for o in js], _bbl(l2), bool(Gui.Control.activeDialog())))
+    Gui.Control.closeDialog()
     App.closeDocument(doc.Name)
 
 @step(800)

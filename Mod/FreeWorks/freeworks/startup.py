@@ -33,6 +33,8 @@ def on_activated():
         if Gui.activeWorkbench().name() != "FreeWorksWorkbench":
             Gui.activateWorkbench("FreeWorksWorkbench")
         naming.install_observer()
+        from . import asmtree
+        asmtree.install()
         sketchmode.install()
         shell.install()
         shortcuts.install()
@@ -45,6 +47,7 @@ def on_activated():
         QtCore.QTimer.singleShot(15000, updater.check)
         from . import STATS, watchdog
         STATS["startup_s"] = round(time.time() - t0, 2)
+        STATS["ready_at"] = time.time()
         log("startup %.2fs" % (time.time() - t0))
         watchdog.start()
         safemode.mark("ready")

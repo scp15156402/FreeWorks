@@ -6,7 +6,7 @@ import traceback
 
 import FreeCAD as App
 
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 
 MOD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES_DIR = os.path.join(MOD_DIR, "Resources")
@@ -77,7 +77,7 @@ def _guard(fn, default=None):
             return default
         finally:
             ms = (time.perf_counter() - t0) * 1000.0
-            if ms > SLOW_CALLBACK_MS and name not in _SLOW_OK:
+            if ms > SLOW_CALLBACK_MS and name not in _SLOW_OK and not _starting():
                 STATS["slow"].append((time.time(), name, ms))
                 del STATS["slow"][:-50]
                 log("slow callback %s: %.0f ms" % (name, ms))
@@ -87,6 +87,14 @@ def _guard(fn, default=None):
 
 # callbacks that are slow by design (they open modal dialogs or run commands the user asked for)
 _SLOW_OK = set()
+STARTUP_GRACE_S = 2.0       # first CommandManager panels, icon caches: one-time work right after startup
+
+
+def _starting():
+    """True during startup and STARTUP_GRACE_S after it (one-time work, covered by the startup budget
+    and the freeze watchdog instead of the per-callback 60 ms rule)."""
+    t = STATS.get("ready_at")
+    return t is None or time.time() < t + STARTUP_GRACE_S
 
 
 def safe(fn):
@@ -129,6 +137,7 @@ def icon(key):
     from PySide import QtGui
     if key in _icon_cache:
         return _icon_cache[key]
+    t0 = time.perf_counter()
     p = icon_path(key) if key else None
     if p:
         ic = QtGui.QIcon(p)
@@ -139,4 +148,7 @@ def icon(key):
         except Exception:
             ic = QtGui.QIcon()
     _icon_cache[key] = ic
+    ms = (time.perf_counter() - t0) * 1000.0
+    if ms > 20:
+        log("slow icon %s: %.0f ms" % (key, ms))
     return ic

@@ -302,7 +302,8 @@ def create(asm, mate, refs, value=None, flip_dim=False, vmin=0.0, vmax=0.0):
     j.addProperty("App::PropertyString", "MateType", "FreeWorks", "SOLIDWORKS mate type")
     j.MateType = mate
     c1, c2 = component(refs[0]), component(refs[1])
-    j.Label = "%s (%s,%s)" % (next_label(asm, mate), c1.Label, c2.Label)
+    from .asmtree import clean
+    j.Label = "%s (%s,%s)" % (next_label(asm, mate), clean(c1.Label), clean(c2.Label))
     if mate in ("coincident", "tangent"):
         j.Distance = 0.0
     elif mate == "distance":
