@@ -61,9 +61,9 @@ Legend — **FreeCAD**: ✅ engine does it · 🟡 partly / different workflow �
 | R-AS-3 Advanced mates | 🟡 limits on Cylindrical/Slider (length) and Revolute/Cylindrical (angle); ❌ width, symmetric, profile center, path, linear coupler | 🟡 1.1.3: Width (static), Limit Distance/Angle on motion joints | Limit mates via joint limits; **width / symmetric / profile center** = own constructions (computed distance joints) | **P15** |
 | R-AS-4 Mechanical mates | 🟡 Gears, Belt, RackPinion, Screw; Revolute ≈ Hinge; ❌ cam, slot, universal joint | ✅ 1.1.3 Hinge, Gear, Rack Pinion, Screw in Mate PM | Hinge = Revolute (+ angle limit); slot ≈ Slider + limits; cam/universal ❌ (document) | P15 |
 | R-AS-5 Mates folder | 🟡 "Joints" group | ✅ 1.1.4 Mates folder, SW mate names, Edit Mate (no per-component mate list) | rename to *Mates*, show mates under components, over-defined warnings | P16 |
-| R-AS-6 Move/Rotate, collision | 🟡 drag with solver; `Std_TransformManip`; ❌ collision detection | 🟡 mapped | **Collision detection while dragging** (own: stop on first boolean common > ε, highlight faces) | **P17** |
-| R-AS-7 Sub-assemblies | ✅ assembly in assembly (rigid); flexible ❌ | 🟡 | insert sub-assembly from file, rigid/flexible wording | P17 |
-| R-AS-8 Replace components | 🟡 `Std_LinkReplace` (joints may lose references) | ⬜ | Replace Components PM that re-maps joint references by face/edge type | **P17** |
+| R-AS-6 Move/Rotate, collision | 🟡 drag with solver; `Std_TransformManip`; ❌ collision detection | ✅ 1.2.0 exact moves with collision detection (free drag without) | **Collision detection while dragging** (own: stop on first boolean common > ε, highlight faces) | **P17** |
+| R-AS-7 Sub-assemblies | ✅ assembly in assembly; `AssemblyLink.Rigid` (1.1) | ✅ 1.2.0 Make Subassembly Rigid/Flexible | insert sub-assembly from file, rigid/flexible wording | P17 |
+| R-AS-8 Replace components | 🟡 `Std_LinkReplace` (joints may lose references) | ✅ 1.2.0 with mated-entity re-attachment | Replace Components PM that re-maps joint references by face/edge type | **P17** |
 | R-AS-9 Interference detection | ❌ native command | ✅ FW_Interference (pairwise volumes) | SW panel look; coincident-as-interference option | P17 |
 | R-AS-10 Assembly features | ❌ (cuts must be made in parts) | ⬜ | assembly cut = own feature applying a cut to selected components (feature scope) | later (v1.6) |
 | R-AS-11 In-context / external refs | 🟡 edit part in place, cross-document links, SubShapeBinder | 🟡 | `->` markers, lock/break references | P30 |

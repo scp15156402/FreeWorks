@@ -162,7 +162,11 @@ add("mate_belt", "Belt/Chain", "Assembly_CreateJointBelt", "mate", "Belt / chain
 add("mate", "Mate", "FW_Mate", "mate", "Positions two components relative to each other.", ["joint", "constraint", "mates"])
 add("edit_mate", "Edit Mate", "FW_EditMate", "mate", "Edits the selected mate in the Mate PropertyManager.", ["edit joint", "change mate"])
 add("fix_component", "Fix", "Assembly_ToggleGrounded", "fix_component", "Fixes (grounds) the selected component.", ["ground", "grounded", "float"])
-add("move_component", "Move Component", "Std_TransformManip", "move_component", "Moves a component within its degrees of freedom.", ["drag component"])
+add("move_component", "Move Component", "FW_MoveComponent", "move_component", "Moves a component by exact amounts (By Delta XYZ) with Collision Detection; Free Drag inside.", ["drag component", "collision detection", "translate component"])
+add("rotate_component", "Rotate Component", "FW_RotateComponent", "rotate_component", "Rotates a component about an edge, axis or assembly X/Y/Z, with Collision Detection.", ["spin component", "collision detection"])
+add("free_drag", "Free Drag", "Std_TransformManip", "move_component", "Drags a component freely with FreeCAD's dragger (no collision detection).", ["dragger", "transform"])
+add("replace_components", "Replace Components", "FW_ReplaceComponents", "insert_component", "Replaces the selected component with another part and re-attaches its mates.", ["replace part", "swap component"])
+add("sub_rigid", "Make Subassembly Rigid / Flexible", "FW_ToggleRigid", "new_assembly", "Switches a sub-assembly between rigid (one body) and flexible (its own mates move).", ["flexible", "rigid", "subassembly"])
 add("solve", "Rebuild Assembly", "Assembly_SolveAssembly", "solve_assembly", "Solves the assembly mates.", ["solve"])
 add("exploded_view", "Exploded View", "Assembly_CreateView", "exploded_view", "Creates an exploded view.", ["explode"])
 add("asm_bom", "Bill of Materials", "Assembly_CreateBom", "bom", "Inserts a bill of materials.", ["bom", "parts list"])
@@ -328,8 +332,9 @@ TABS = {
     ],
     "assembly": [
         ("Assembly", [
-            ("L", "insert_component", ["insert_component", "new_component", "fasteners"]), ("L", "mate"),
-            ("S", ["fix_component", "move_component", "solve"]), ("|",),
+            ("L", "insert_component", ["insert_component", "new_component", "replace_components", "fasteners"]), ("L", "mate"),
+            ("L", "move_component", ["move_component", "rotate_component", "free_drag"]),
+            ("S", ["fix_component", "replace_components", "solve"]), ("|",),
             ("L", "exploded_view"), ("L", "asm_bom"), ("L", "motion"), ("|",),
             ("L", "interference"), ("L", "mass_props"), ("L", "measure"),
         ]),

@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.2.0 - 2026-11-07
+Assemblies the SOLIDWORKS way (v1.2 milestone: 1.1.1 - 1.1.4 plus the items below).
+- **Move Component / Rotate Component** PropertyManager: By Delta XYZ, or rotate about an edge,
+  cylindrical face or the assembly X/Y/Z axis by an angle, with **Collision Detection** - the
+  component stops at the first contact and the component it hit is reported and selected
+  ("rotate the arm until it collides" works the way CSWP Segment 3 expects). Free Drag hands over
+  to FreeCAD's dragger.
+- **Replace Components** (right-click a component, or the Insert Components flyout): pick another
+  part file; the mates are re-attached to the matching faces/edges of the new part and the ones
+  that need attention are listed.
+- **Make Subassembly Rigid / Flexible** on sub-assemblies.
+- Milestone summary: SOLIDWORKS materials and Mass Properties, Mate PropertyManager with standard,
+  advanced and mechanical mates, SOLIDWORKS assembly tree names, Edit Mate, collision detection,
+  Replace Components. 106 automated checks plus a stress run.
+
 ## v1.1.4 - 2026-11-07
 Assembly FeatureManager.
 - Components are named like SOLIDWORKS instances: `Bracket<1>`, `Bracket<2>`; a fixed component

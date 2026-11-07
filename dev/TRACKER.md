@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** P17 – Collision detection, Replace Components, sub-assemblies, v1.2 release
+**Next part:** P26 – Equations & global variables manager (v1.3 order: P26, P27, P22, P24)
 
 Legend: ✅ done · 🔄 in progress · ⏳ next · ⬜ planned · ⛔ blocked
 Each part is sized for ≤ 30 minutes of work. Say **"continue"** to run the next part.
@@ -46,7 +46,7 @@ then P23, P25, P28 → P34.
 | P14 | Assembly | Mate engine (mates.py): selection → FreeCAD reference, entity kinds, allowed + suggested mate, SW mate → joint mapping (coincident/tangent = Distance 0, concentric = Cylindrical, lock = Fixed with offset, hinge = Revolute), SW labels `Coincident1 (A,B)`; 11 tests. Editing existing mates moves to P16 | ✅ |
 | P15 | Assembly | Advanced: Width (centred, computed from current geometry), Limit Distance / Limit Angle (limits on the Concentric/Slot/Hinge joint, offset to SW face distance/angle; enforced while dragging); Mechanical: Hinge, Gear (ratio from radii, flip = reverse), Rack Pinion (pitch diameter), Screw (distance/revolution). Symmetric, Cam, Slot, Universal Joint, Path: not possible with FreeCAD 1.1 joints (documented). 8 tests; released 1.1.3 | ✅ |
 | P16 | Assembly | Assembly FeatureManager: instance names `Bracket<1>`, `(f)` for fixed components, Mates folder, FreeCAD joints renamed as SW mates, Edit Mate (context menu) in the Mate PM with in-place type/value changes; perf: command search model built once in idle time, CommandManager panels of all environments prebuilt, 2 s startup grace for the slow-callback rule. Not done: `(-)` under-defined prefix (solver gives no per-part DOF), own Insert Components PM (FreeCAD's is used) | ✅ |
-| P17 | Assembly | Exploded view PM, collision detection, replace components, subassemblies, v1.2 release | ⬜ |
+| P17 | Assembly | Move / Rotate Component PM (By Delta XYZ, rotate About Entity / X / Y / Z) with Collision Detection (stop at first contact, bisection to 0.001 mm/deg, colliding component reported + selected), Free Drag hand-off; Replace Components with mated-entity re-attachment by geometry signature; Make Subassembly Rigid/Flexible (AssemblyLink.Rigid); v1.2.0 released. Exploded view stays FreeCAD's panel | ✅ |
 | P18 | Drawing | Sheet formats ANSI A–E / ISO A4–A0 with SW-style title blocks; sheet properties (scale, 1st/3rd angle) | ⬜ |
 | P19 | Drawing | View workflows: Model View PM, Standard 3 View, projected by drag direction, section, detail, aux, break, crop | ⬜ |
 | P20 | Drawing | Annotations: model items, smart dimension, centre marks/lines, hole callout, notes with properties, balloons/auto balloon, BOM, revision table | ⬜ |
@@ -74,6 +74,7 @@ then P23, P25, P28 → P34.
 |---|---|---|
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |
 | 2026-11-07 | P6 | Safe mode, crash sentinel, settings reset, large model mode; suite 57 checks. |
+| 2026-11-07 | P17 | Collision detection, Replace Components, rigid/flexible; 106 checks; **v1.2.0 released**. |
 | 2026-11-07 | P16 | Assembly naming (instances, (f), Mates), Edit Mate, perf fixes; 99 + 12 stress checks; released 1.1.4. |
 | 2026-11-07 | P15 | Advanced + mechanical mates in the Mate PM; released 1.1.3. |
 | 2026-11-07 | P13–P14 | Mate PropertyManager + mate engine on FreeCAD joints; pop-up mate toolbar; released 1.1.2. |

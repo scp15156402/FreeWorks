@@ -57,7 +57,10 @@ def items(recipient):
         elif o.isDerivedFrom("PartDesign::Feature") or o.isDerivedFrom("Part::Feature"):
             top += ["edit_feature", "edit_sketch", "|", "suppress", "rollback", "roll_end", "|", "toggle_vis", "appearance", "zoom_sel"]
         elif o.TypeId.startswith("Assembly") or o.TypeId == "App::Link":
-            top += ["mate", "move_component", "fix_component", "|", "toggle_vis", "appearance", "material", "zoom_sel"]
+            top += ["mate", "move_component", "rotate_component", "fix_component", "|", "replace_components"]
+            if o.TypeId == "Assembly::AssemblyLink":
+                top += ["sub_rigid"]
+            top += ["|", "toggle_vis", "appearance", "material", "zoom_sel"]
         else:
             top += ["toggle_vis", "appearance", "zoom_sel"]
     else:

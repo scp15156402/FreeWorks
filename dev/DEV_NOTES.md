@@ -97,6 +97,16 @@ a FreeCAD upgrade (see UPDATE_PROTOCOL.md).
   assembly commands; `UtilsAssembly.setJointsPickableState(doc, False)` while picking.
 - `getStandardButtons` must return an int: `(sb.Ok | sb.Close).value` in PySide6.
 
+## Collision detection and Replace Components (P17)
+- Collision = `moving.common(other).Volume > 1e-3 mm^3` after a bounding-box prefilter; touching
+  faces (coincident mates) give zero volume and don't count. Moves are sampled (0.5 mm / 2 deg) and
+  the first hit is bisected. Collision moves are user commands (`@safe_slow`).
+- `Part.getShape(link)` = component shape in assembly coordinates; `face.Surface` / `edge.Curve`
+  of a sub-shape from `Part.getShape(comp, sub, needSubElement=True)` are already transformed.
+- Replace: `link.LinkedObject = new`; references `[link, ["Tip.FaceN", same]]` re-pointed by
+  matching (kind, position, direction, radius) in `Part.getShape(link)` (same element order as
+  the body's Tip shape), then `Proxy.setJointConnectors`.
+
 ## Sandbox constraint (Claude sessions)
 Running third-party add-on code may be blocked in Claude's sandbox; test FreeWorks' own code
 only, read add-on sources instead.

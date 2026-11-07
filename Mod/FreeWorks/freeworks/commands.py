@@ -419,6 +419,21 @@ def mass_properties():
     evaluate.MassPropertiesDialog.open()
 
 
+def toggle_rigid():
+    """SOLIDWORKS: right-click a sub-assembly > Make Subassembly Flexible / Rigid."""
+    subs = [o for o in Gui.Selection.getSelection() if o.TypeId == "Assembly::AssemblyLink" and hasattr(o, "Rigid")]
+    if not subs:
+        msg("Select a sub-assembly in the FeatureManager design tree")
+        return
+    doc = subs[0].Document
+    doc.openTransaction("Rigid / Flexible")
+    for o in subs:
+        o.Rigid = not o.Rigid
+    doc.commitTransaction()
+    doc.recompute()
+    msg("%s is now %s" % (subs[0].Label, "rigid" if subs[0].Rigid else "flexible"))
+
+
 def edit_material():
     from . import evaluate
     evaluate.MaterialDialog.open()
@@ -564,6 +579,10 @@ def register():
         ("relations", add_relation, "FW_AddRelation", "sketch"),
         ("mate", mate_menu, "FW_Mate", "doc"),
         ("edit_mate", lambda: __import__("freeworks.matepm", fromlist=["edit_selected"]).edit_selected(), "FW_EditMate", "doc"),
+        ("move_component", lambda: __import__("freeworks.movepm", fromlist=["start"]).start(False), "FW_MoveComponent", "doc"),
+        ("rotate_component", lambda: __import__("freeworks.movepm", fromlist=["start"]).start(True), "FW_RotateComponent", "doc"),
+        ("replace_components", lambda: __import__("freeworks.replace", fromlist=["start"]).start(), "FW_ReplaceComponents", "doc"),
+        ("sub_rigid", toggle_rigid, "FW_ToggleRigid", "doc"),
         ("mass_props", mass_properties, "FW_MassProperties", "doc"),
         ("material", edit_material, "FW_EditMaterial", "doc"),
         ("section_props", section_properties, "FW_SectionProperties", "doc"),

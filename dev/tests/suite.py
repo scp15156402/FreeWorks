@@ -807,6 +807,89 @@ def t_assembly_tree():
     Gui.Control.closeDialog()
     App.closeDocument(doc.Name)
 
+
+@step(1200)
+def t_move_replace():
+    from freeworks import movepm, replace, mates
+    import JointObject, UtilsAssembly
+    doc = App.newDocument("FWMove")
+
+    def body(name, kind, dims):
+        b = doc.addObject("PartDesign::Body", name)
+        f = b.newObject("PartDesign::Additive" + ("Box" if kind == "box" else "Cylinder"), name + "F")
+        if kind == "box":
+            f.Length, f.Width, f.Height = dims
+        else:
+            f.Radius, f.Height = dims
+        b.Visibility = False
+        return b
+    base = body("Base", "box", (40, 40, 10))
+    blk = body("Block", "box", (10, 10, 10))
+    blk2 = body("Block2", "box", (12, 12, 12))
+    post = body("Post", "cyl", (5, 20))
+    arm = body("Arm", "box", (30, 4, 4))
+    wall = body("Wall", "box", (5, 40, 20))
+    asm = doc.addObject("Assembly::AssemblyObject", "Assembly")
+    asm.Type = "Assembly"
+    L = {}
+    for b, pos in ((base, (0, 0, 0)), (blk, (60, 15, 0)), (post, (0, 100, 0)), (arm, (10, 98, 8)), (wall, (-30, 80, 0))):
+        l = asm.newObject("App::Link", "L" + b.Name)
+        l.LinkedObject = b
+        l.Placement.Base = App.Vector(*pos)
+        L[b.Name] = l
+    doc.recompute()
+    gj = UtilsAssembly.getJointGroup(asm).newObject("App::FeaturePython", "GroundedJoint")
+    JointObject.GroundedJoint(gj, L["Base"])
+    JointObject.ViewProviderGroundedJoint(gj.ViewObject)
+    doc.recompute()
+    t, hit = movepm.apply_move(asm, L["Block"], "translate", 1.0, vec=App.Vector(-50, 0, 0), collide=True)
+    bb = _bbl(L["Block"])
+    record("collision detection: move stops at first contact", hit and hit[0][0] == L["Base"] and abs(bb[0] - 40) < 0.02, (bb, [h[0].Label for h in hit]))
+    L["Block"].Placement.Base = App.Vector(60, 15, 0)
+    doc.recompute()
+    t, hit = movepm.apply_move(asm, L["Block"], "translate", 1.0, vec=App.Vector(-50, 0, 30), collide=True)
+    record("collision detection: free path moves all the way", not hit and abs(_bbl(L["Block"])[0] - 10) < 0.01, _bbl(L["Block"]))
+    ref = mates.make_ref(asm, asm, "LPost.PostF.Face1", (5, 100, 10))
+    ax = movepm.axis_of(ref)
+    record("rotate: axis from a cylindrical face (assembly coordinates)", ax is not None and abs(ax[0].x) < 1e-6 and abs(ax[0].y - 100) < 1e-6
+           and abs(abs(ax[1].z) - 1) < 1e-6, ax and (ax[0], ax[1]))
+    t, hit = movepm.apply_move(asm, L["Arm"], "rotate", 180.0, axis=ax, collide=True)
+    import Part
+    over = Part.getShape(L["Arm"]).common(Part.getShape(L["Wall"])).Volume
+    record("collision detection: rotation stops at the wall", hit and hit[0][0] == L["Wall"] and 0 < t < 1 and over < 1e-2,
+           (round(t * 180.0, 2), over))
+    # replace components keeps the mate
+    r1 = mates.make_ref(asm, asm, "LBase.BaseF.Face6", (20, 20, 10))
+    L["Block"].Placement.Base = App.Vector(60, 15, 30)
+    doc.recompute()
+    r2 = mates.make_ref(asm, asm, "LBlock.BlockF.Face5", (65, 20, 30))
+    doc.openTransaction("Mate")
+    j = mates.create(asm, "coincident", [r1, r2])
+    doc.commitTransaction()
+    ok_before = abs(_bbl(L["Block"])[2] - 10) < 0.02
+    ok, bad = replace.replace(asm, L["Block"], blk2)
+    bb = _bbl(L["Block"])
+    record("replace components: new part, mate re-attached", ok_before and not bad and L["Block"].LinkedObject == blk2
+           and abs(bb[2] - 10) < 0.02 and abs((bb[3] - bb[0]) - 12) < 0.01 and "Block2F" in j.Reference2[1][0],
+           (ok, bad, bb, j.Reference2[1]))
+    record("replace components: instance renamed", L["Block"].Label.startswith("Block2<"), L["Block"].Label)
+    Gui.Selection.clearSelection()
+    Gui.Selection.addSelection(doc.Name, asm.Name, "LWall.")
+    movepm.start(False)
+    mp = movepm._PANEL["p"]
+    ok = mp is not None and mp.comp == L["Wall"]
+    if ok:
+        mp.d[2].setValue(5.0)
+        mp.apply()
+        txt = mp.result.text()
+        ok = "Moved 5.00 mm" in txt and abs(_bbl(L["Wall"])[2] - 5) < 0.01
+        mp.accept()
+    else:
+        txt = mp and mp.comp
+    Gui.Control.closeDialog()
+    record("move component PM: pick component, By Delta XYZ, Apply", ok, txt)
+    App.closeDocument(doc.Name)
+
 @step(800)
 def t_no_errors():
     import freeworks
