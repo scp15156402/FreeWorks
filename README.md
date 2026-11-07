@@ -4,28 +4,36 @@
 
 **A SolidWorks-style user experience on top of FreeCAD 1.1.4.** Same parametric FreeCAD engine underneath, with a SolidWorks-like interface on top: the CommandManager, FeatureManager, PropertyManager, SolidWorks names, icons, keyboard shortcuts, mouse gestures and view tools.
 
-## Install (Windows)
+## Install, update, uninstall (Windows 10/11) - one line each
 
-**Option A: one line.** Open **Windows PowerShell** and paste:
+Open **PowerShell** (Start menu → type *PowerShell*) and paste:
 
-```powershell
-irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 | iex
-```
+| | Command |
+|---|---|
+| **Install or update** | `irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 \| iex` |
+| **Uninstall** | `irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 \| iex` |
 
-**Option B: download.** Get `FreeWorks.zip` from [Releases](https://github.com/scp15156402/FreeWorks/releases/latest), or click **Code → Download ZIP**.
-1. Right-click the zip → Properties → tick **Unblock** → OK.
-2. Extract it and double-click **`Install.cmd`**.
+**Install or update**
+- The same line does both. On a new PC it installs FreeWorks and starts it. If FreeWorks is already there, it updates it in place.
+- Your **projects** live in `Documents\FreeWorks` (the default save folder), outside the program folder. Updates and uninstall never touch them.
+- Your **settings** are kept across updates.
+- If FreeWorks is open, the update waits until you have saved and closed it.
 
-Either way, the installer:
-- downloads the official portable FreeCAD 1.1.4 (about 450 MB)
-- installs everything into **`D:\FreeWorks`**, with no administrator rights needed
-- leaves any other FreeCAD on the PC untouched
+**Where it installs**
+- `D:\FreeWorks` if the PC has a D: drive with room, otherwise `%LOCALAPPDATA%\Programs\FreeWorks`.
+- To choose the folder yourself, run `$env:FREEWORKS_DIR = "E:\FreeWorks"` first.
+- No administrator rights are needed, and any other FreeCAD on the PC is left alone.
 
-Start **FreeWorks** from the Desktop or Start Menu shortcut.
+**Uninstall** asks one question (`y`) and removes the program, its settings and its shortcuts. It is also listed in **Settings → Apps → FreeWorks**. Your projects are kept.
 
-Requirements: Windows 10/11 64-bit, about 3 GB of free space, and internet during installation.
+**Updating from inside FreeWorks**
+- FreeWorks checks GitHub once a day and offers **Update now**.
+- You can also check manually under Help → *Check for FreeWorks Updates*.
 
-The installer also fetches three community add-ons, which FreeWorks integrates into its tabs:
+**What gets installed**
+- The official portable FreeCAD (version pinned in `versions.json`), with its checksum verified when one is published.
+- Downloads resume if interrupted, and an install log is written to `install.log`.
+- Three community add-ons, which FreeWorks integrates into its tabs:
 
 | Add-on | Gives you |
 |---|---|
@@ -33,25 +41,14 @@ The installer also fetches three community add-ons, which FreeWorks integrates i
 | Fasteners (shaise) | **Toolbox**: bolts, screws, nuts, washers |
 | Curves (tomate44) | **Zebra Stripes**, **Curvature**, **Draft Analysis**, advanced surfaces |
 
-**Options**
-- Install into another folder:
-  ```powershell
-  & ([scriptblock]::Create((irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1))) -InstallDir "E:\FreeWorks"
-  ```
-- `-WithRender` also installs the Render workbench (photo-realistic rendering, which needs an external renderer).
-- `-NoAddons` skips the add-ons.
-
-**Updates**
-- FreeWorks checks GitHub once a day and offers **Update now**. It closes, updates and restarts, and your settings are kept.
-- You can also check manually under Help → *Check for FreeWorks Updates*, or run `D:\FreeWorks\Update.cmd`.
-
-**Uninstall:** run `D:\FreeWorks\uninstall.ps1` (right-click → Run with PowerShell), or delete `D:\FreeWorks` and the two shortcuts.
+Offline / manual: download the repository ZIP, extract it, and double-click `Install.cmd`.
 
 ```
-D:\FreeWorks\
-  FreeWorks.exe     launcher (keeps all settings inside D:\FreeWorks\UserData)
+<install folder>\         (D:\FreeWorks or %LOCALAPPDATA%\Programs\FreeWorks)
+  FreeWorks.exe     launcher (keeps all settings inside UserData)
   FreeCAD\          official FreeCAD 1.1.4, portable, with FreeWorks branding
-  UserData\         settings, add-ons (Mod\), macros, icon theme
+  UserData\         settings, add-ons (Mod\), icon theme
+Documents\FreeWorks\   your projects and macros (never touched by updates/uninstall)
 ```
 
 ## What you get

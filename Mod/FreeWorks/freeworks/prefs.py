@@ -186,8 +186,57 @@ def install_stylesheet():
         shutil.copyfile(src, os.path.join(dst_dir, "FreeWorks.yaml"))
 
 
+def projects_dir():
+    """Documents\\FreeWorks - outside the installation, so updates and uninstall never touch it."""
+    from PySide import QtCore
+    try:
+        docs = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.DocumentsLocation)
+    except Exception:
+        docs = ""
+    return os.path.join(docs or os.path.expanduser("~"), "FreeWorks")
+
+
+def guard_save_folder():
+    """Never let File > Save default into the program folder or a temp folder
+    (those are replaced by updates and removed by uninstall)."""
+    g = P("General")
+    cur = g.GetString("FileOpenSavePath", "")
+    install = os.path.dirname(os.path.dirname(os.path.normpath(App.getHomePath())))
+    bad = (not cur or not os.path.isdir(cur)
+           or os.path.normcase(cur).startswith(os.path.normcase(install))
+           or os.path.normcase(cur).startswith(os.path.normcase(os.path.normpath(App.getUserAppDataDir())))
+           or os.path.normcase(cur).startswith(os.path.normcase(os.path.realpath(__import__("tempfile").gettempdir()))))
+    if bad:
+        d = params().GetString("ProjectsDir", "") or projects_dir()
+        try:
+            os.makedirs(d, exist_ok=True)
+            g.SetString("FileOpenSavePath", d)
+        except Exception:
+            pass
+
+
+def setup_projects_folder():
+    fw = params()
+    if fw.GetBool("ProjectsFolderSet", False):
+        return
+    d = projects_dir()
+    try:
+        os.makedirs(os.path.join(d, "Macros"), exist_ok=True)
+    except Exception:
+        return
+    P("General").SetString("FileOpenSavePath", d)
+    P("Macro").SetString("MacroPath", os.path.join(d, "Macros"))
+    fw.SetString("ProjectsDir", d)
+    fw.SetBool("ProjectsFolderSet", True)
+    log("projects folder: %s" % d)
+
+
 def apply(force=False):
     fw = params()
+    try:
+        setup_projects_folder()
+    except Exception as e:
+        log("projects folder: %s" % e)
     if not force and fw.GetInt("PrefsVersion", 0) >= PREFS_VERSION:
         install_stylesheet()
         return False

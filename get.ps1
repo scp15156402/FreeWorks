@@ -1,64 +1,139 @@
 <#
-  FreeWorks one-line installer / updater.
+  FreeWorks - one line to install or update (Windows PowerShell or PowerShell 7):
 
-  Install (Windows PowerShell):
-     irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 | iex
+      irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1 | iex
 
-  With options (e.g. another folder, or the Render add-on):
-     & ([scriptblock]::Create((irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/get.ps1))) -InstallDir "E:\FreeWorks" -WithRender
+  - Not installed yet  -> installs the latest FreeWorks (D:\FreeWorks if drive D: exists and has
+                          space, otherwise %LOCALAPPDATA%\Programs\FreeWorks) and starts it.
+  - Already installed  -> updates FreeWorks, its add-ons and (when needed) FreeCAD in place.
+                          Settings are kept; projects (Documents\FreeWorks) are never touched.
 
-  Downloads the latest FreeWorks release (or the main branch if no release exists
-  yet) and runs install.ps1 from it.
+  Uninstall (one line, one confirmation):
+      irm https://raw.githubusercontent.com/scp15156402/FreeWorks/main/uninstall.ps1 | iex
+
+  Options: set before the one-liner, e.g.  $env:FREEWORKS_DIR = "E:\FreeWorks"
+      FREEWORKS_DIR      install folder for a new installation
+      FREEWORKS_CHANNEL  "stable" (default, newest version tag) or "main" (development)
+      FREEWORKS_FORCE    "1" = reinstall even if already up to date
 #>
 param(
-    [string]$InstallDir = "D:\FreeWorks",
+    [string]$InstallDir = "",
     [switch]$UpdateOnly,
     [switch]$NoAddons,
     [switch]$WithRender,
     [switch]$NoShortcuts,
-    [int]$WaitPid = 0,        # used by the in-app updater: wait for FreeWorks to close
-    [switch]$Restart          # used by the in-app updater: start FreeWorks afterwards
+    [int]$WaitPid = 0,
+    [switch]$Restart,
+    [string]$Channel = ""
 )
-$ErrorActionPreference = "Stop"
-$ProgressPreference = "SilentlyContinue"
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$Repo = "scp15156402/FreeWorks"
-$Headers = @{ "User-Agent" = "FreeWorks-Installer"; "Accept" = "application/vnd.github+json" }
+& {
+    $ErrorActionPreference = "Stop"
+    $ProgressPreference = "SilentlyContinue"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+    $Repo = "scp15156402/FreeWorks"
+    $RegKey = "HKCU:\Software\FreeWorks"
 
-if ($WaitPid -gt 0) {
-    Write-Host "Waiting for FreeWorks to close..."
-    try { Wait-Process -Id $WaitPid -Timeout 120 -ErrorAction SilentlyContinue } catch {}
-}
+    function Say($t, $c = "Cyan") { Write-Host $t -ForegroundColor $c }
 
-$tmp = Join-Path $env:TEMP ("FreeWorks_get_" + [guid]::NewGuid().ToString("N"))
-New-Item -ItemType Directory -Force -Path $tmp | Out-Null
-$zip = Join-Path $tmp "FreeWorks.zip"
-$label = "main branch"
-try {
-    $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" -Headers $Headers
-    $asset = $rel.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1
-    $url = if ($asset) { $asset.browser_download_url } else { $rel.zipball_url }
-    $label = "release $($rel.tag_name)"
-} catch {
-    $url = "https://github.com/$Repo/archive/refs/heads/main.zip"
-}
-Write-Host "Downloading FreeWorks ($label)..." -ForegroundColor Cyan
-Invoke-WebRequest -Uri $url -OutFile $zip -Headers @{ "User-Agent" = "FreeWorks-Installer" } -UseBasicParsing
-Expand-Archive -Path $zip -DestinationPath (Join-Path $tmp "x") -Force
-$script = Get-ChildItem -Path (Join-Path $tmp "x") -Recurse -Filter "install.ps1" | Select-Object -First 1
-if (-not $script) { throw "install.ps1 not found in the downloaded package" }
+    function Find-Install {
+        if (Test-Path $RegKey) {
+            $d = (Get-ItemProperty $RegKey -ErrorAction SilentlyContinue).InstallDir
+            if ($d -and (Test-Path (Join-Path $d "FreeCAD\bin\freecad.exe"))) { return $d }
+        }
+        foreach ($d in @("D:\FreeWorks", "$env:LOCALAPPDATA\Programs\FreeWorks", "C:\FreeWorks")) {
+            if (Test-Path (Join-Path $d "FreeCAD\bin\freecad.exe")) { return $d }
+        }
+        return $null
+    }
 
-$args2 = @{ InstallDir = $InstallDir }
-if ($UpdateOnly)  { $args2.UpdateOnly = $true }
-if ($NoAddons)    { $args2.NoAddons = $true }
-if ($WithRender)  { $args2.WithRender = $true }
-if ($NoShortcuts) { $args2.NoShortcuts = $true }
-& $script.FullName @args2
+    function Default-Dir {
+        if ($env:FREEWORKS_DIR) { return $env:FREEWORKS_DIR }
+        try {
+            $d = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='D:'" -ErrorAction Stop
+            if ($d -and $d.DriveType -eq 3 -and $d.FreeSpace -gt 4GB) { return "D:\FreeWorks" }
+        } catch {}
+        return (Join-Path $env:LOCALAPPDATA "Programs\FreeWorks")
+    }
 
-Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
-if ($Restart) {
-    $exe = Join-Path $InstallDir "FreeWorks.exe"
-    if (-not (Test-Path $exe)) { $exe = Join-Path $InstallDir "FreeWorks.cmd" }
-    if (Test-Path $exe) { Start-Process -FilePath $exe }
+    function Running-In($dir) {
+        Get-Process -Name freecad -ErrorAction SilentlyContinue | Where-Object {
+            try { $_.Path -and $_.Path.StartsWith($dir, [StringComparison]::OrdinalIgnoreCase) } catch { $false }
+        }
+    }
+
+    try {
+        if ($env:OS -ne "Windows_NT") { throw "FreeWorks needs Windows 10 or 11." }
+        if (-not [Environment]::Is64BitOperatingSystem) { throw "FreeWorks needs 64-bit Windows." }
+
+        Write-Host ""
+        Say "FreeWorks - SolidWorks-style CAD on FreeCAD" "White"
+
+        $existing = Find-Install
+        if ($InstallDir) { $dir = $InstallDir } elseif ($existing) { $dir = $existing } else { $dir = Default-Dir }
+        $update = [bool]($existing -and ($existing.TrimEnd('\') -eq $dir.TrimEnd('\')))
+        if ($UpdateOnly -and -not $update -and (Test-Path (Join-Path $dir "FreeCAD\bin\freecad.exe"))) { $update = $true }
+        Say ("  " + $(if ($update) { "Updating FreeWorks in $dir" } else { "Installing FreeWorks into $dir" }))
+
+        # never update under a running FreeWorks (unsaved work must not be lost)
+        if ($WaitPid -gt 0) { try { Wait-Process -Id $WaitPid -Timeout 180 -ErrorAction SilentlyContinue } catch {} }
+        if ($update -and (Running-In $dir)) {
+            Say "  FreeWorks is open. Save your work and close it - the update continues automatically." "Yellow"
+            while (Running-In $dir) { Start-Sleep -Seconds 2 }
+        }
+
+        # which version?
+        $ch = if ($Channel) { $Channel } elseif ($env:FREEWORKS_CHANNEL) { $env:FREEWORKS_CHANNEL } else { "stable" }
+        $hdr = @{ "User-Agent" = "FreeWorks-Installer" }
+        $tag = $null
+        if ($ch -ne "main") {
+            try {
+                $tags = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/tags?per_page=100" -Headers $hdr
+                $tag = $tags | Where-Object { $_.name -match '^v\d+\.\d+\.\d+$' } |
+                    Sort-Object { [version]($_.name.Substring(1)) } | Select-Object -Last 1 -ExpandProperty name
+            } catch { Say "  (could not list versions: $($_.Exception.Message); using the latest development version)" "DarkYellow" }
+        }
+        if ($tag) { $url = "https://github.com/$Repo/archive/refs/tags/$tag.zip"; $label = $tag }
+        else { $url = "https://github.com/$Repo/archive/refs/heads/main.zip"; $label = "main" }
+
+        if ($update -and $tag -and -not $env:FREEWORKS_FORCE) {
+            $cur = (Get-ItemProperty $RegKey -ErrorAction SilentlyContinue).Version
+            if ($cur -and ("v" + $cur) -eq $tag) {
+                Say "  FreeWorks is already up to date ($tag)." "Green"
+                if ($Restart) { $exe = Join-Path $dir "FreeWorks.exe"; if (Test-Path $exe) { Start-Process $exe } }
+                return
+            }
+        }
+
+        $tmp = Join-Path $env:TEMP ("FreeWorks_" + [guid]::NewGuid().ToString("N"))
+        New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+        $zip = Join-Path $tmp "FreeWorks.zip"
+        Say "  Downloading FreeWorks $label ..."
+        Invoke-WebRequest -Uri $url -OutFile $zip -Headers $hdr -UseBasicParsing
+        Expand-Archive -Path $zip -DestinationPath (Join-Path $tmp "x") -Force
+        $script = Get-ChildItem -Path (Join-Path $tmp "x") -Recurse -Filter "install.ps1" | Select-Object -First 1
+        if (-not $script) { throw "install.ps1 not found in the download." }
+
+        # run the installer in Windows PowerShell 5.1 (works under any execution policy)
+        $a = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$($script.FullName)`"", "-InstallDir", "`"$dir`"")
+        if ($update)      { $a += "-UpdateOnly" }
+        if ($NoAddons)    { $a += "-NoAddons" }
+        if ($WithRender)  { $a += "-WithRender" }
+        if ($NoShortcuts) { $a += "-NoShortcuts" }
+        if ($tag)         { $a += @("-Version", $tag.Substring(1)) }
+        $ps = Join-Path $env:SystemRoot "System32\WindowsPowerShell\v1.0\powershell.exe"
+        $p = Start-Process -FilePath $ps -ArgumentList $a -NoNewWindow -Wait -PassThru
+        Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
+        if ($p.ExitCode -ne 0) { throw "the installer reported an error (log: $dir\install.log)" }
+
+        if ($Restart -or -not $update) {
+            $exe = Join-Path $dir "FreeWorks.exe"
+            if (-not (Test-Path $exe)) { $exe = Join-Path $dir "FreeWorks.cmd" }
+            if (Test-Path $exe) { Say "  Starting FreeWorks..."; Start-Process -FilePath $exe }
+        }
+    } catch {
+        Write-Host ""
+        Write-Host "FreeWorks setup failed: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Nothing you created was touched. Run the same command again, or see https://github.com/$Repo/issues" -ForegroundColor Red
+    }
 }

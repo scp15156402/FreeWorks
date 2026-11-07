@@ -16,8 +16,7 @@ from PySide import QtCore, QtWidgets
 from . import __version__, log, params
 
 REPO = "scp15156402/FreeWorks"
-API = "https://api.github.com/repos/%s/releases/latest" % REPO
-RAW_PKG = "https://raw.githubusercontent.com/%s/main/Mod/FreeWorks/package.xml" % REPO
+TAGS = "https://api.github.com/repos/%s/tags?per_page=100" % REPO
 GET_PS1 = "https://raw.githubusercontent.com/%s/main/get.ps1" % REPO
 
 _result = {}
@@ -46,15 +45,18 @@ def _fetch(url):
 
 
 def _check_thread():
+    """Newest version = highest vX.Y.Z tag on GitHub (the one-line installer uses the same rule)."""
     try:
-        try:
-            rel = json.loads(_fetch(API))
-            _result.update(version=rel.get("tag_name", ""), notes=rel.get("body", "") or "", url=rel.get("html_url", ""))
-        except Exception:
-            # no release published yet: use the version on the main branch
-            pkg = _fetch(RAW_PKG)
-            v = pkg.split("<version>")[1].split("</version>")[0].strip()
-            _result.update(version=v, notes="", url="https://github.com/%s" % REPO)
+        tags = json.loads(_fetch(TAGS))
+        best = None
+        for t in tags:
+            n = t.get("name", "")
+            if n.startswith("v") and n[1:].replace(".", "").isdigit() and n.count(".") == 2:
+                if best is None or _vtuple(n) > _vtuple(best):
+                    best = n
+        if best is None:
+            raise RuntimeError("no versions published yet")
+        _result.update(version=best, notes="", url="https://github.com/%s/blob/%s/CHANGELOG.md" % (REPO, best))
     except Exception as e:
         _result.update(error=str(e))
     _result["done"] = True
@@ -101,7 +103,7 @@ def _offer(latest):
         box.setDetailedText(notes)
     root = install_root()
     if root and sys.platform == "win32":
-        box.setInformativeText("Update now? FreeWorks will close, update (your settings are kept) and start again.")
+        box.setInformativeText("Update now? FreeWorks closes (it asks to save open documents), updates and starts again. Settings are kept; your projects are not affected.")
         upd = box.addButton("Update now", QtWidgets.QMessageBox.AcceptRole)
     else:
         box.setInformativeText("Download it from GitHub.")
@@ -120,7 +122,8 @@ def _offer(latest):
 def _run_update(root):
     import subprocess
     cmd = ("$s = Invoke-RestMethod -Uri '%s' -Headers @{'User-Agent'='FreeWorks-Updater'}; "
-           "& ([scriptblock]::Create($s)) -InstallDir '%s' -UpdateOnly -WaitPid %d -Restart") % (GET_PS1, root, os.getpid())
+           "& ([scriptblock]::Create($s)) -InstallDir '%s' -UpdateOnly -WaitPid %d -Restart; "
+           "Start-Sleep -Seconds 4") % (GET_PS1, root, os.getpid())
     try:
         subprocess.Popen(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", cmd],
                          creationflags=getattr(subprocess, "CREATE_NEW_CONSOLE", 0))

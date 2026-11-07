@@ -23,6 +23,8 @@ def on_activated():
         win.statusBar().showMessage("FreeWorks: loading environments...")
         QtWidgets.QApplication.processEvents()
         commands.register()
+        from . import prefs
+        prefs.guard_save_folder()
         shell.preload_all()
         if Gui.activeWorkbench().name() != "FreeWorksWorkbench":
             Gui.activateWorkbench("FreeWorksWorkbench")

@@ -75,6 +75,12 @@ reviewed by reading; ask the owner to report results.
 
 ## Git
 
-Commit regularly. Tags `vX.Y.Z` mark releases; `Mod/FreeWorks/package.xml`,
-`freeworks/__init__.py` and `versions.json` carry the version.
+Commit regularly. **A `vX.Y.Z` tag is a release**: the one-line installer and the in-app update
+check install the highest such tag, so only tag tested work. `Mod/FreeWorks/package.xml`,
+`freeworks/__init__.py` and `versions.json` (`freeworks`) carry the version of the latest
+release and are bumped only in release commits. Never move or delete a published tag.
+
+Install/update/uninstall entry points (Windows): `get.ps1` (install-or-update, one line),
+`uninstall.ps1` (one line, one confirmation), `install.ps1` (does the work; registers in
+HKCU\Software\FreeWorks and Settings → Apps). Projects live in `Documents\FreeWorks`.
 Release zip: `dev/make_release.sh` → `dist/FreeWorks.zip` → attach to the GitHub release.
