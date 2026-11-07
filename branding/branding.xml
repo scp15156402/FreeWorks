@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Branding>
+  <WindowTitle>FreeWorks</WindowTitle>
+  <WindowIcon>freeworks.png</WindowIcon>
+  <SplashScreen>splash.png</SplashScreen>
+  <SplashAlignment>Bottom|Left</SplashAlignment>
+  <SplashTextColor>#3A3F47</SplashTextColor>
+</Branding>
