@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** W2 (W1 done 2026-11-08; notes in docs/swref/screens/01_*.md and SA_*.md) – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
+**Next part:** SCREENSHOT INTAKE (owner is preparing batches of SOLIDWORKS 2026 screenshots; method `dev/research/SCREENSHOT_INTAKE.md`; replaces most of W2–W11/H; transcripts still give workflows). Old W2 (W1 done 2026-11-08; notes in docs/swref/screens/01_*.md and SA_*.md) – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
 watch playlists 02 + 11.07–11.09 + S-E (sketch environment) — [W1 was: playlist 01 + supplementary set S-A (22 short videos:
 keys, view orientation, breadcrumbs, selection filters, box/lasso, Select Other/Loop/Chain,
 hide/isolate, FeatureManager tips, rollback/freeze, System Options)]. Seek to the capture timestamps in
