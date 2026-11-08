@@ -1,5 +1,11 @@
 # FreeWorks 2.x master plan — own code, simple → complex
 
+> **Gate (owner, 2026-11-08 08:59 IST):** no development until the video research is complete.
+> Steps R1–R11 in `docs/swref/video_index.md` (owner's 183-video course, watched frame by frame
+> in the built-in browser + transcripts, then cross-checked with the 2025/2026 help) come first.
+> Their findings may change the PM specs and decisions below (notably D1 and D8: screenshots
+> are now available from the videos).
+
 Rewritten 2026-11-08 after the research phase. Inputs: `docs/swref/` (catalogue with sources),
 `docs/SW_BEHAVIOR_SPEC.md` (acceptance IDs), `docs/swref/95_gap_matrix.md`.
 Owner direction: *"Plan features from simple to complex. This may now require your own code.

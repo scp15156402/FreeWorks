@@ -1,8 +1,9 @@
 # FreeWorks project tracker
 
-**Next part:** P40 – Stage A: owner profile + standard profile (keys, trimetric, transitions,
-arrow increment). Full ordered plan (simple → complex, own code, decisions D1–D8 replacing the
-open questions) in `dev/V2_PLAN.md`.
+**Next part:** R1 – watch playlists 02 + 03 of the owner's video course (sketching) in the
+built-in browser: frames of the left pane / top pane / graphics area + transcripts → notes in
+`docs/swref/screens/`. **No development until R1–R11 are done** (owner, 2026-11-08). Steps and
+video list: `docs/swref/video_index.md`. Build plan (starts after R11): `dev/V2_PLAN.md`.
 
 ## FreeWorks 2.0 (owner direction 2026-11-08)
 "Even a regular SOLIDWORKS user shouldn't feel a difference." Research first, then build.
