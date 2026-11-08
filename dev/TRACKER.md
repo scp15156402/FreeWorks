@@ -4,6 +4,8 @@
 built-in browser: frames of the left pane / top pane / graphics area + transcripts → notes in
 `docs/swref/screens/`. **No development until R1–R11 are done** (owner, 2026-11-08). Steps and
 video list: `docs/swref/video_index.md`. Build plan (starts after R11): `dev/V2_PLAN.md`.
+**2.x target = SOLIDWORKS as shown in the course (≈2020); 2021–2026 behaviour = version 3**
+(owner, 2026-11-08).
 
 ## FreeWorks 2.0 (owner direction 2026-11-08)
 "Even a regular SOLIDWORKS user shouldn't feel a difference." Research first, then build.

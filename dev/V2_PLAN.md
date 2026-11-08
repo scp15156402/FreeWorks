@@ -5,6 +5,10 @@
 > in the built-in browser + transcripts, then cross-checked with the 2025/2026 help) come first.
 > Their findings may change the PM specs and decisions below (notably D1 and D8: screenshots
 > are now available from the videos).
+>
+> **Target (owner, 2026-11-08 09:25 IST):** 2.x matches SOLIDWORKS *as shown in the course*
+> (≈2020 UI). "Even if you get to the level in the videos, that's enough. Building up to 2026
+> can be version 3." Everything newer moves to the **v3 backlog** at the end of this file.
 
 Rewritten 2026-11-08 after the research phase. Inputs: `docs/swref/` (catalogue with sources),
 `docs/SW_BEHAVIOR_SPEC.md` (acceptance IDs), `docs/swref/95_gap_matrix.md`.
@@ -275,3 +279,16 @@ with collision.
   stage (the table there lists stages; this file holds part detail).
 - Each part: commit + tests; each stage: alpha version bump, CHANGELOG, push `main`.
 - Catalogue corrections go into `docs/swref/` first, then the PM spec table, then code.
+
+
+## v3 backlog — SOLIDWORKS 2021–2026 behaviour (not in 2.x)
+From `docs/swref/91_release_changes.md` and the owner's 2026 settings; build after 2.x ships.
+- Simplified Interface layout (2025 FD04) and customisable Manager Pane tabs (2026).
+- Shift while sketching a rectangle = square (2025 SP2); Flip Endpoint Tangent (2025 SP1).
+- Fillet/Chamfer pushpin (2026), relation groups (2026 SP1), feature/component selection filters
+  and filter shortcuts (2026), smarter command search (2026), Esc cancels long operations (2026 SP3).
+- Reference points by XYZ, Select Bodies by Size, bounding box from a coordinate system,
+  automatic geometry-pattern activation, Hole Wizard retained options (2026).
+- Dismissed-messages status-bar icon, large-move warning in assemblies, Modify box placement
+  changes (2026); DSPBR appearances; drawing auto-generation and magnetic annotation lines.
+- Anything the R11 cross-check finds that differs between the course era and 2026.

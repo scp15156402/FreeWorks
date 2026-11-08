@@ -24,7 +24,7 @@ Status: ⬜ not watched · 🔄 in progress · ✅ notes written
 | R8 | 16 Mechanical mates, 21 Project | 18 | 135 |
 | R9 | 17 Basics of drawing, 18 Adding annotations | 20 | 160 |
 | R10 | 19 Managing drawing, 20 Assembly drawing | 15 | 113 |
-| R11 | Cross-check against SOLIDWORKS 2025/2026 help (browser) for every PM seen; 2026 differences | — | — |
+| R11 | Fill option lists for every PM seen from the help of the same era (2019–2021 help, browser); list anything the course never showed. 2021–2026 changes are **not** needed (version 3) | — | — |
 
 ## Playlists and videos (id · length · title)
 

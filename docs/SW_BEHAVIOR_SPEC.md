@@ -4,7 +4,11 @@ Distilled from the research catalogue in `docs/swref/` (sources and confidence t
 Each item is an **acceptance criterion**: a FreeWorks build passes it when a SOLIDWORKS 2026 user
 doing the described action sees the described result. IDs are stable; tests in
 `dev/tests/` reference them. Severity S1/S2/S3 as in `docs/swref/95_gap_matrix.md`.
-Target behaviour = SOLIDWORKS 2026 SP1 with the owner's settings (`docs/swref` tag [O]).
+Target behaviour for **2.x** = SOLIDWORKS as shown in the owner's video course (≈SOLIDWORKS 2020
+UI, see `docs/swref/video_index.md`) with the owner's keyboard/gesture/option settings (tag [O]).
+Features added after that (2021–2026, e.g. Simplified Interface, Shift-square rectangles,
+Fillet/Chamfer pushpin, relation groups, 2026 selection filters) are **version 3** — see
+`docs/swref/91_release_changes.md` and the v3 backlog in `dev/V2_PLAN.md` (owner, 2026-11-08).
 
 ## 1. PropertyManager framework (PM)  — catalogue 01 §1.1–1.2
 - **PM-1 (S1)** Every FreeWorks command that has a SOLIDWORKS PropertyManager opens one in the
