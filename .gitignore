@@ -8,3 +8,4 @@ Thumbs.db
 dist/
 dev/.freecad/
 dev/tests/out/
+dev/refshots/
