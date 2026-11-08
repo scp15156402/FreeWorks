@@ -1,11 +1,10 @@
 # FreeWorks project tracker
 
-**Next part:** W1 (in progress: 01.02 partly noted; continue with 01.03) – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
-watch playlist 01 of the owner's course (9 of 11 videos) + supplementary set S-A (23 short videos:
+**Next part:** W2 (W1 done 2026-11-08; notes in docs/swref/screens/01_*.md and SA_*.md) – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
+watch playlists 02 + 11.07–11.09 + S-E (sketch environment) — [W1 was: playlist 01 + supplementary set S-A (22 short videos:
 keys, view orientation, breadcrumbs, selection filters, box/lasso, Select Other/Loop/Chain,
-hide/isolate, FeatureManager tips, rollback/freeze, System Options) in the built-in browser; seek
-to the capture timestamps listed in `docs/swref/triage/01.md` and `SUPPLEMENTARY.md` → notes in
-`docs/swref/screens/`. **No development until W1–W11, H and C are done and signed off** (owner,
+hide/isolate, FeatureManager tips, rollback/freeze, System Options)]. Seek to the capture timestamps in
+`docs/swref/triage/02.md`, `11.md`, `SUPPLEMENTARY.md` → notes in `docs/swref/screens/`. **No development until W1–W11, H and C are done and signed off** (owner,
 2026-11-08). Build plan (starts after C): `dev/V2_PLAN.md`.
 **2.x target = SOLIDWORKS as shown in the course (≈2020); 2021–2026 behaviour = version 3**
 (owner, 2026-11-08).
