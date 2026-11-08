@@ -99,3 +99,9 @@ window.fwGo=async(t,x,y,w,h)=>{await fwSeek(t);fwShow(x,y,w,h);await new Promise
 ```
 Whole 1280×720 frames are barely legible at pane size: crop the top bar (0,0,1280,170), the left pane
 (0,150,420,570) or a dialog separately.
+
+## Frame economy (owner feedback, 2026-11-08)
+Do not take frames at fixed times. Run `fwScanStart` first; look only at moments where the left pane,
+top bar or a dialog changes AND the transcript names something not yet in the catalogue. One crop per
+new panel/dialog/option list (small region, not whole frames). Behaviour fully described in the
+transcript (zoom, pan, wheel, simple clicks) is recorded from the transcript without frames.
