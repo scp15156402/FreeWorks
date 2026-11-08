@@ -1,5 +1,5 @@
 # S-A view orientation dialog, Alt-hide faces, Select flyout  (Cqwt0Yjst18, PcvGvTBo9AA, RWwnjhM2UWg, gERKKea7t5c) — from transcripts
-Source [id m:ss]. (gERKKea7t5c second half is in the next section once read.)
+Source [id m:ss]. 
 
 ## View Orientation dialog [Cqwt0Yjst18 (SW 2013), PcvGvTBo9AA]
 - **Spacebar** opens it; layout: standard views (Front, Back, Left, Right, Top, Bottom) plus the offset/isometric group; icon at the **top-left** = **New View** → small name prompt; saved custom views are listed [Cqwt 0:15–2:34; Pcqv 1:30].
@@ -16,7 +16,13 @@ Source [id m:ss]. (gERKKea7t5c second half is in the next section once read.)
 - Box selection: left→right = completely enclosed; right→left = touched. Lasso: same rules, freeform.
 - **Select Over Geometry**: lets a box/lasso window start while the cursor is over geometry (when zoomed in with no empty space); otherwise the click selects the face/edge.
 - **Volume Select**: rectangle defines a 3D volume; items completely inside (or crossing, by drag direction) are selected.
-- **Select Suppressed**: selects all suppressed components of the assembly.
+- **Select Suppressed**: selects all suppressed components; right-click ▸ Unsuppress affects them all [4:54].
+- **Select Hidden**: selects all hidden components and shows a transparent preview; right-click ▸ Show [5:16].
+- **Select Mated To**: with it active, picking a component highlights the components mated to it [5:40].
+- **Select Identical Components**: selects all instances (pattern instances, Toolbox parts) for hide/suppress [5:58].
+- **Select Internal Components**; **Select by Size** (e.g. components under 10 % of the assembly size); **Select by View** (a view orientation; option "Current View" = only what is visible now) [7:01–7:56].
+- **Select Toolbox**: selects all Toolbox components (highlighted in the tree) [8:06].
+- The same Select list also appears in the **right-click menu** [8:30].
 
 ## Corrections/additions to the catalogue
 - 02_view_navigation: View Orientation dialog New View / Save, custom views reach View Palette.
