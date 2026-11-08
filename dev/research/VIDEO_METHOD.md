@@ -89,3 +89,13 @@ saved to a file in the workspace automatically — use that to move bulk text ou
 Notes: `fwScanStart` is untested at scale (verify in W1; if the hidden pane throttles timers,
 use step 3–4 s). Canvas reads work on YouTube's own video (same origin). Screenshots are not
 committed (third-party frames) — the notes describe them.
+
+## Capture timing fix (W1, 2026-11-08)
+With the pane hidden, `fwShow` right after `fwSeek` can draw a stale frame. Use these instead
+(then `computer` → `zoom` on the drawn region; the pane is ~762×796 px, so crop small regions):
+```js
+window.fwSeek=async(t)=>{const v=document.querySelector('video');v.pause();const p=new Promise(r=>v.addEventListener('seeked',r,{once:true}));v.currentTime=t;await p;await Promise.race([new Promise(r=>v.requestVideoFrameCallback(()=>r())),new Promise(r=>setTimeout(r,1500))]);await new Promise(r=>setTimeout(r,1200));return v.currentTime;};
+window.fwGo=async(t,x,y,w,h)=>{await fwSeek(t);fwShow(x,y,w,h);await new Promise(r=>setTimeout(r,900));return fwShow(x,y,w,h);};
+```
+Whole 1280×720 frames are barely legible at pane size: crop the top bar (0,0,1280,170), the left pane
+(0,150,420,570) or a dialog separately.

@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** W1 – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
+**Next part:** W1 (in progress: 01.02 partly noted; continue with 01.03) – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
 watch playlist 01 of the owner's course (9 of 11 videos) + supplementary set S-A (23 short videos:
 keys, view orientation, breadcrumbs, selection filters, box/lasso, Select Other/Loop/Chain,
 hide/isolate, FeatureManager tips, rollback/freeze, System Options) in the built-in browser; seek
