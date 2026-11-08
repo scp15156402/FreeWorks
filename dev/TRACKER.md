@@ -1,6 +1,6 @@
 # FreeWorks project tracker
 
-**Next part:** R1 – watch playlists 02 + 03 of the owner's video course (sketching) in the
+**Next part:** R1 – (method: `dev/research/VIDEO_METHOD.md`) watch playlists 02 + 03 of the owner's video course (sketching) in the
 built-in browser: frames of the left pane / top pane / graphics area + transcripts → notes in
 `docs/swref/screens/`. **No development until R1–R11 are done** (owner, 2026-11-08). Steps and
 video list: `docs/swref/video_index.md`. Build plan (starts after R11): `dev/V2_PLAN.md`.
