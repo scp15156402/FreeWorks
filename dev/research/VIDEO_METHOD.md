@@ -1,22 +1,26 @@
-# How to watch the course videos (steps R1–R10)
+# How to watch the course videos (steps W1–W11)
 
 Any model doing a research step follows this so the notes come out the same. **No development**
 during research steps — only notes in `docs/swref/screens/` and corrections to `docs/swref/*`.
+The step list (which videos, which supplementary videos) is in `docs/swref/triage/00_README.md`.
 
 ## 0. Setup (once per session)
 1. Load the built-in browser tools (`ToolSearch` query `mcp__remote-devices__Claude_Browser__`,
    max 64) after reading the `built-in-browser` skill. The pane runs in the owner's Claude
    desktop app; if it is offline, stop and say so.
-2. Read `docs/swref/video_index.md` (the step's videos) and the catalogue files for the step's
-   topic (e.g. 05/06 for sketching) so you know what is already known and what is `[K]`.
+2. Read the step's triage files (`docs/swref/triage/<playlist>.md`, plus `SUPPLEMENTARY.md` for
+   S-A / S-E / S-I videos) and the catalogue files for the step's topic (e.g. 05/06 for
+   sketching) so you know what is already known and what is `[K]`. The triage file gives, per
+   video, the verdict, the ranges to watch and the timestamps to capture.
 
 ## 1. Per video
 1. `navigate` to `https://www.youtube.com/watch?v=<id>`; wait ~3 s.
 2. Install the helpers below (one `javascript_tool` call), then `fwHQ()` to force the highest
    quality, and `fwInfo()` for duration and resolution.
-3. Transcript: `await fwPanelTranscript()` (opens the transcript panel, returns "m:ss text"
-   lines). Skim it to find the moments where commands start, options are explained, or the
-   presenter clicks something.
+3. Transcript: already read during triage — start from the triage file's capture timestamps.
+   If you need the wording around a moment, `fwTr[id]` (loaded from `localStorage.fwTr` by
+   `fwLoadTr()`) or `await fwFetchTr(id)` returns `[[m:ss, text], …]` without touching the
+   panel. SKIP videos are not opened; PARTIAL videos only in their listed ranges.
 4. Change scan (runs in the page; poll it): `fwScanStart(2, regions)` with regions in video
    pixels — calibrate on the first frame: `left` = the Manager Pane (PropertyManager/tree),
    `top` = CommandManager + menu bar, `gfx` = graphics area. Poll `fwScanStatus()` every ~20 s
@@ -71,6 +75,17 @@ window.fwPanelTranscript=async()=>{fwHide();const e=document.querySelector('#des
 window.fwScanStart=(step,regions)=>{window.fwScan={done:false,t:0,out:[]};(async()=>{const v=document.querySelector('video');const c=document.createElement('canvas');c.width=32;c.height=48;const g=c.getContext('2d',{willReadFrequently:true});const sig=r=>{g.drawImage(v,r[0],r[1],r[2],r[3],0,0,32,48);return g.getImageData(0,0,32,48).data;};const d=(a,b)=>{let s=0;for(let i=0;i<a.length;i+=4)s+=Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2]);return s/(a.length/4)/3;};const prev={};for(let t=0;t<v.duration;t+=step){await fwSeek(t);fwScan.t=t;for(const k in regions){const s=sig(regions[k]);if(prev[k]){const x=d(prev[k],s);if(x>6)fwScan.out.push([Math.round(t),k,Math.round(x)]);}prev[k]=s;}}fwScan.done=true;})();return 'started';};
 window.fwScanStatus=()=>[fwScan.done,Math.round(fwScan.t),fwScan.out];
 ```
-Notes: `fwScanStart` is untested at scale (verify in R1; if the hidden pane throttles timers,
+Transcript helpers (YouTube moved transcripts to the "modern transcript view" in 2026: the
+`get_transcript` API answers FAILED_PRECONDITION and the panel shows the *previous* video's text
+after in-page navigation; the `get_panel` call below works for any video id):
+```js
+window.fwParams=(id)=>btoa(String.fromCharCode(0xaa,0x09,0x0f,0x0a,0x0b)+id+String.fromCharCode(0x18,0x02));
+window.fwFetchTr=async(id)=>{const r=await fetch('/youtubei/v1/get_panel?prettyPrint=false',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({context:ytcfg.get('INNERTUBE_CONTEXT'),panelId:'PAmodern_transcript_view',params:fwParams(id)})});if(r.status!==200)return {err:'http '+r.status};const j=await r.json();const segs=[];const walk=(o)=>{if(!o||typeof o!=='object')return;if(o.timelineItemViewModel){const v=o.timelineItemViewModel;const t=(v.contentItems||[]).map(c=>c.transcriptSegmentViewModel?(c.transcriptSegmentViewModel.simpleText||''):'').join(' ').replace(/\s+/g,' ').trim();if(t)segs.push([v.timestamp,t]);return;}for(const k in o)walk(o[k]);};walk(j);return {segs};};
+window.fwLoadTr=()=>{try{window.fwTr=JSON.parse(localStorage.getItem('fwTr')||'{}');}catch(e){window.fwTr={};}return Object.keys(fwTr).length;};
+```
+`fwPanelTranscript` above is obsolete (old panel markup). Large `javascript_tool` results are
+saved to a file in the workspace automatically — use that to move bulk text out of the browser.
+
+Notes: `fwScanStart` is untested at scale (verify in W1; if the hidden pane throttles timers,
 use step 3–4 s). Canvas reads work on YouTube's own video (same origin). Screenshots are not
 committed (third-party frames) — the notes describe them.

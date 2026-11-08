@@ -1,9 +1,12 @@
 # FreeWorks project tracker
 
-**Next part:** R1 – (method: `dev/research/VIDEO_METHOD.md`) watch playlists 02 + 03 of the owner's video course (sketching) in the
-built-in browser: frames of the left pane / top pane / graphics area + transcripts → notes in
-`docs/swref/screens/`. **No development until R1–R11 are done** (owner, 2026-11-08). Steps and
-video list: `docs/swref/video_index.md`. Build plan (starts after R11): `dev/V2_PLAN.md`.
+**Next part:** W1 – (method: `dev/research/VIDEO_METHOD.md`, schedule: `docs/swref/triage/00_README.md`)
+watch playlist 01 of the owner's course (9 of 11 videos) + supplementary set S-A (23 short videos:
+keys, view orientation, breadcrumbs, selection filters, box/lasso, Select Other/Loop/Chain,
+hide/isolate, FeatureManager tips, rollback/freeze, System Options) in the built-in browser; seek
+to the capture timestamps listed in `docs/swref/triage/01.md` and `SUPPLEMENTARY.md` → notes in
+`docs/swref/screens/`. **No development until W1–W11, H and C are done and signed off** (owner,
+2026-11-08). Build plan (starts after C): `dev/V2_PLAN.md`.
 **2.x target = SOLIDWORKS as shown in the course (≈2020); 2021–2026 behaviour = version 3**
 (owner, 2026-11-08).
 
@@ -99,6 +102,7 @@ then P23, P25, P28 → P34.
 ## Session log
 | Date (IST) | Part | Summary |
 |---|---|---|
+| 2026-11-08 | Triage | Owner: read every transcript, classify full/partial/skip, rethink plan (course misses things). All 183 transcripts fetched (YouTube get_panel API; 182 captioned) and read; per-video verdicts, watch ranges and capture timestamps in `docs/swref/triage/01–21.md` (168 FULL, 11 PARTIAL, 4 SKIP; 1,270 of 1,305 min). Coverage map of ~150 topics (`COVERAGE.md`); 31 supplementary videos for the gaps, transcripts checked (`SUPPLEMENTARY.md`). Research steps R1–R11 replaced by W1–W11 + H + C (`triage/00_README.md`). |
 | 2026-11-08 | P39 | Plan rewritten as the full 2.x master plan (owner: plan simple → complex, own code; cannot supply screenshots): decisions D1–D8 replace the open questions; FreeCAD 1.1.4 APIs for own code verified (AdditivePython/SubtractivePython, Body.insertObject, Suppressed, Sketch trim/setDatum/label APIs, variable makeFillet, makeOffset2D; no Python rotation-centre API → own orbit); stages A–J, P40–P140. Screenshots could not be viewed (image fetches fail, Chrome not connected), so layouts come from documented text with per-PM unverified flags. |
 | 2026-11-08 | P37–P39 | Research phase for 2.0 (owner: research before any development): ~90 searches/fetches of SOLIDWORKS help (help.solidworks.com now serves a JS shell; search snippets, nexthelp and reseller/blog pages used), tips, What's New 2026, community threads → `docs/swref/` catalogue, gap matrix, behaviour spec, 2.0 plan. Key findings: wheel zoom pulls the pointed point toward the centre (zoom-out about centre); rotate pivot rules with magenta marker; PMs accept picks any time; Fillet/Extrude/Trim/Rectangle/Line full option sets; owner's S key = Quick Snaps. |
 | 2026-11-07 | v1.0 | FreeWorks v1.0.0 built and tested headless on FreeCAD 1.1.4; installer + one-line installer + update check. |

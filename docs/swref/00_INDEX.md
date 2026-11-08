@@ -51,14 +51,17 @@ What's New notes, and forum threads. Where sources disagree the newest SOLIDWORK
 | 16_18_options_files_visual.md | System Options / Document Properties pages, New/Open/Save, visual style and colours | draft 1 (mostly K) |
 | 90_hidden_interactions.md | Ctrl / Shift / Alt / Tab / RMB / double-click / drag behaviours, pointer cues | draft 1 (help "Time Saving Keyboard Shortcuts" + blogs) |
 | 91_release_changes.md | milestones 2008–2025, SOLIDWORKS 2026 SP0–SP5 behaviour changes | draft 1 |
+| video_index.md | the owner's course: 21 playlists, 183 video ids, lengths, titles | complete |
+| triage/ | every course transcript read (2026-11-08): per-video FULL/PARTIAL/SKIP, watch ranges, timestamps to capture (`01.md`…`21.md`); `COVERAGE.md` topic → video map with gaps; `SUPPLEMENTARY.md` 31 videos for the gaps; `00_README.md` research schedule W1–W11, H, C | complete |
+| screens/ | per-video watch notes from steps W1–W11 | empty (W1 next) |
 
 Verified after the first draft (2026-11-08): Mirror, Axis, Coordinate System, Begin Assembly /
 Insert Components, Instant3D rulers, Design Table, Add Configuration / Configuration Table,
 Interference Detection.
 
 Remaining verification queue (items still tagged [K]): Replace Components; Exploded View;
-Spline/Ellipse/Text/Point PMs; **per-selection context toolbar contents (needs owner
-screenshots — V2_PLAN Q1)**; System Options page lists; Section View PM (parts); sketch status
+Spline/Ellipse/Text/Point PMs; **per-selection context toolbar contents (now from the
+course videos, W steps)**; System Options page lists; Section View PM (parts); sketch status
 colours for dangling/not solved/invalid; Revolve auto-axis from a single centerline; Extrude
 preview colours and depth callout; FeatureManager rollback details; Shortcut-menu contents.
 

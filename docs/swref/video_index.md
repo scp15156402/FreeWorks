@@ -10,21 +10,12 @@ feedback (previews, callouts, handles, pop-ups, cursors). Findings go into
 `docs/swref/screens/<playlist>_<video>.md` and are merged into the topic files 01–18.
 Screenshots themselves are not committed (third-party video frames); notes describe them.
 
-Status: ⬜ not watched · 🔄 in progress · ✅ notes written
+Status: ⬜ not watched · 🔄 in progress · ✅ notes written · ⏭ SKIP (see triage)
 
-| Step | Playlists | Videos | Minutes |
-|---|---|---|---|
-| R1 (pilot) | 02 Introduction to sketching, 03 Modifying sketches | 18 | 129 |
-| R2 | 04 Basic part modeling, 05 Reference geometries and properties | 15 | 123 |
-| R3 | 01 Getting started with the basics, 06 3D patterns and properties | 21 | 146 |
-| R4 | 07 Sweep, 08 Splines/curves/conics | 18 | 114 |
-| R5 | 09 Boundary and loft, 10 Solid body features | 16 | 125 |
-| R6 | 11 Advanced features, 12 Blocks, 13 Configurations and equations | 21 | 173 |
-| R7 | 14 Basic assembling, 15 Advanced mates and analysis | 21 | 158 |
-| R8 | 16 Mechanical mates, 21 Project | 18 | 135 |
-| R9 | 17 Basics of drawing, 18 Adding annotations | 20 | 160 |
-| R10 | 19 Managing drawing, 20 Assembly drawing | 15 | 113 |
-| R11 | Fill option lists for every PM seen from the help of the same era (2019–2021 help, browser); list anything the course never showed. 2021–2026 changes are **not** needed (version 3) | — | — |
+**Superseded 2026-11-08:** the R1–R11 steps are replaced by steps **W1–W11, H, C** after every
+transcript was read and every video classified FULL / PARTIAL / SKIP. Schedule, verdicts, coverage
+gaps and supplementary videos: `docs/swref/triage/00_README.md` (per-playlist detail in
+`docs/swref/triage/01.md` … `21.md`).
 
 ## Playlists and videos (id · length · title)
 

@@ -1,10 +1,10 @@
 # FreeWorks 2.x master plan — own code, simple → complex
 
-> **Gate (owner, 2026-11-08 08:59 IST):** no development until the video research is complete.
-> Steps R1–R11 in `docs/swref/video_index.md` (owner's 183-video course, watched frame by frame
-> in the built-in browser + transcripts, then cross-checked with the 2025/2026 help) come first.
-> Their findings may change the PM specs and decisions below (notably D1 and D8: screenshots
-> are now available from the videos).
+> **Gate (owner, 2026-11-08):** no development until the video research is complete and signed
+> off. Steps W1–W11 (owner's course, triaged from every transcript, plus 31 supplementary videos
+> for topics the course skips), H (option lists from the 2019–2021 help) and C (consolidation +
+> owner sign-off) — schedule in `docs/swref/triage/00_README.md`. Their findings may change the
+> PM specs and decisions below (notably D1 and D8: screenshots are now available from the videos).
 >
 > **Target (owner, 2026-11-08 09:25 IST):** 2.x matches SOLIDWORKS *as shown in the course*
 > (≈2020 UI). "Even if you get to the level in the videos, that's enough. Building up to 2026
@@ -291,4 +291,4 @@ From `docs/swref/91_release_changes.md` and the owner's 2026 settings; build aft
   automatic geometry-pattern activation, Hole Wizard retained options (2026).
 - Dismissed-messages status-bar icon, large-move warning in assemblies, Modify box placement
   changes (2026); DSPBR appearances; drawing auto-generation and magnetic annotation lines.
-- Anything the R11 cross-check finds that differs between the course era and 2026.
+- Anything the H step finds that differs between the course era and 2026.
